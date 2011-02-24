@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<eclipse-userlibraries version="2">
+    <library name="slick" systemlibrary="false">
+        <archive path="/jCurve/lib/slick/lib/hiero.jar" source="/jCurve/lib/slick/src"/>
+        <archive path="/jCurve/lib/slick/lib/ibxm.jar" source="/jCurve/lib/slick/src"/>
+        <archive path="/jCurve/lib/slick/lib/jinput.jar" source="/jCurve/lib/slick/src"/>
+        <archive path="/jCurve/lib/slick/lib/jnlp.jar" source="/jCurve/lib/slick/src"/>
+        <archive path="/jCurve/lib/slick/lib/jogg-0.0.7.jar" source="/jCurve/lib/slick/src"/>
+        <archive path="/jCurve/lib/slick/lib/jorbis-0.0.15.jar" source="/jCurve/lib/slick/src"/>
+        <archive path="/jCurve/lib/slick/lib/lwjgl.jar" source="/jCurve/lib/slick/src"/>
+        <archive path="/jCurve/lib/slick/lib/natives-linux.jar" source="/jCurve/lib/slick/src"/>
+        <archive path="/jCurve/lib/slick/lib/natives-mac.jar" source="/jCurve/lib/slick/src"/>
+        <archive path="/jCurve/lib/slick/lib/natives-win32.jar" source="/jCurve/lib/slick/src"/>
+        <archive path="/jCurve/lib/slick/lib/packulike.jar" source="/jCurve/lib/slick/src"/>
+        <archive path="/jCurve/lib/slick/lib/pedigree.jar" source="/jCurve/lib/slick/src"/>
+        <archive path="/jCurve/lib/slick/lib/scalar.jar" source="/jCurve/lib/slick/src"/>
+        <archive path="/jCurve/lib/slick/lib/slick.jar" source="/jCurve/lib/slick/src"/>
+        <archive path="/jCurve/lib/slick/lib/slick-examples.jar" source="/jCurve/lib/slick/src"/>
+        <archive path="/jCurve/lib/slick/lib/slick-sources.jar" source="/jCurve/lib/slick/src"/>
+        <archive path="/jCurve/lib/slick/lib/slick-util.jar" source="/jCurve/lib/slick/src"/>
+        <archive path="/jCurve/lib/slick/lib/slick-util-src.zip" source="/jCurve/lib/slick/src"/>
+        <archive path="/jCurve/lib/slick/lib/tinylinepp.jar" source="/jCurve/lib/slick/src"/>
+    </library>
+</eclipse-userlibraries>
