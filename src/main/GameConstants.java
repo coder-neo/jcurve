@@ -1,6 +1,6 @@
 package main;
 
-public class Globals {
+public class GameConstants {
 
 	public final static String APP_NAME = "JCurve";
 
