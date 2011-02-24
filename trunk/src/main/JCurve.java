@@ -17,7 +17,7 @@ public class JCurve extends StateBasedGame {
 	}
 
 	public static void main(String[] args) throws SlickException {
-		AppGameContainer app = new AppGameContainer(new JCurve(Globals.APP_NAME), Globals.APP_WIDHT, Globals.APP_HEIGHT, Globals.APP_IS_FULLSCREEN);
+		AppGameContainer app = new AppGameContainer(new JCurve(GameConstants.APP_NAME), GameConstants.APP_WIDHT, GameConstants.APP_HEIGHT, GameConstants.APP_IS_FULLSCREEN);
 		app.setVSync(true);
 		app.setTargetFrameRate(60);
 		app.start();
