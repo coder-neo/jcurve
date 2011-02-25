@@ -5,6 +5,8 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
+import states.GameState;
+
 public class JCurve extends StateBasedGame {
 
 	public JCurve(String name) {
@@ -13,7 +15,7 @@ public class JCurve extends StateBasedGame {
 
 	@Override
 	public void initStatesList(GameContainer container) throws SlickException {
-
+		addState(new GameState(GameConstants.STATE_GAME));
 	}
 
 	public static void main(String[] args) throws SlickException {
