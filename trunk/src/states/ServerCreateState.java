@@ -1,6 +1,6 @@
 package states;
 
-import main.client.CurveClient;
+import main.GameConstants;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -8,38 +8,25 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-import utils.ResourceManager;
-
-import com.esotericsoftware.kryonet.Client;
-
-public abstract class JCurveState extends BasicGameState {
-
-	private int id;
-
-	public JCurveState(int id) {
-		this.id = id;
-	}
+public class ServerCreateState extends BasicGameState {
 
 	@Override
 	public int getID() {
-		return id;
+		return GameConstants.STATE_SERVER_CREATE;
 	}
 
 	@Override
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
-		ResourceManager.addFont("chatFont", "data/fonts/tempesta.ttf", 12, false, false);
 	}
 
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
+
 	}
 
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
-	}
 
-	public Client getClient() {
-		return CurveClient.getInstance().getClient();
 	}
 
 }

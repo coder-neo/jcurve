@@ -11,23 +11,21 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
+import utils.ResourceManager;
+
 public class GameState extends JCurveState {
-	private CurveServer curveServer;
 	
+	private CurveServer curveServer;
+
 	public GameState(int id) {
 		super(id);
 		curveServer = new CurveServer();
 	}
 
 	@Override
-	public void init(GameContainer container, StateBasedGame game) throws SlickException {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
-		// TODO Auto-generated method stub
+		ResourceManager.getFont("chatFont").drawString(300, 300, "Hallo, dies ist eine Chatnachricht! XD");
+		ResourceManager.getFont("chatFont").drawString(300, 324, "Hallo, dies ist eine zweite möp möp Chatnachricht! XD");
 	}
 
 	@Override
@@ -38,9 +36,9 @@ public class GameState extends JCurveState {
 		}
 		if (curveServer != null) {
 			// Serverberechnungen
-			while (curveServer.getPlayerCons().values().iterator().hasNext()){
+			while (curveServer.getPlayerCons().values().iterator().hasNext()) {
 				Player p = curveServer.getPlayerCons().values().iterator().next();
-				
+
 			}
 		}
 

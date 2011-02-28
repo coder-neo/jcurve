@@ -13,5 +13,11 @@ public class GameConstants {
 	public final static int PORT_UDP = 54777;
 	
 	public final static int STATE_GAME = 1;
+	
+	/**
+	 * State IDs
+	 */
+	
+	public final static int STATE_SERVER_CREATE = 1;
 
 }
