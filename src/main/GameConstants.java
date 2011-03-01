@@ -6,8 +6,8 @@ public class GameConstants {
 
 	public static final boolean APP_IS_FULLSCREEN = false;
 
-	public final static int APP_WIDHT = 1024;
-	public final static int APP_HEIGHT = 768;
+	public final static int APP_WIDHT = 700;
+	public final static int APP_HEIGHT = 525;
 	
 	public final static int PORT_TCP = 54555;
 	public final static int PORT_UDP = 54777;

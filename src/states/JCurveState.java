@@ -32,6 +32,7 @@ public abstract class JCurveState extends BasicGameState {
 
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
+		g.setAntiAlias(true);
 	}
 
 	@Override
