@@ -13,21 +13,52 @@ public class Player {
 	private String name;
 	private int score;
 	private Color color;
-	private float angle;
-	private float speed;
-	
-	public Player(String name, Connection connection) {
-		this.name = name;
-		this.connection = connection;
-	}
+	private float angle = 70;
+	private float lastAngle;
+	private float speed = 3;
+	private boolean dirLeft = false;
+	private boolean dirRight = false;
+	private boolean isReady = false;
 	
 	public Player(Connection connection){
 		this.connection = connection;
+		lastAngle = angle;
+		points.add(new Point(50,50));
+		points.add(new Point(51,51));
 	}
 	
 	public void move(){
-//		Math.
-//		Point nextPoint = new 
+		Point lastPoint = points.lastElement();
+		int deltaX = (int)Math.round(Math.cos(angle)*speed);
+		int deltaY = (int)Math.round(Math.sin(angle)*speed);
+		int nextX = lastPoint.x + deltaX;
+		int nextY = lastPoint.y + deltaY;
+		if (dirLeft) {
+			angle -= .1;
+		} else if (dirRight){
+			angle += .1;
+		}
+		if (lastAngle == angle){
+			points.remove(points.size()-1);
+		}
+		lastAngle = angle;
+		Point nextPoint = new Point(nextX, nextY);
+		points.add(nextPoint);
+	}
+	
+	public void steerLeft(){
+		dirLeft = true;
+		dirRight = false;
+	}
+	
+	public void steerRight(){
+		dirLeft = false;
+		dirRight = true;
+	}
+	
+	public void steerStraight(){
+		dirLeft = false;
+		dirRight = false;
 	}
 	
 	public Vector<Point> getPoints() {
@@ -55,9 +86,6 @@ public class Player {
 	public float getAngle() {
 		return angle;
 	}
-	public void setAngle(float angle) {
-		this.angle = angle;
-	}
 
 	public Connection getConnection() {
 		return connection;
@@ -73,5 +101,13 @@ public class Player {
 
 	public void setSpeed(float speed) {
 		this.speed = speed;
+	}
+
+	public boolean isReady() {
+		return isReady;
+	}
+
+	public void setReady(boolean isReady) {
+		this.isReady = isReady;
 	}
 }

@@ -1,7 +1,9 @@
 package main.server;
 
+import java.awt.Point;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import main.GameConstants;
 import main.NetworkConstants;
@@ -40,24 +42,33 @@ public class CurveServer extends Listener {
 	@Override
 	public void received(Connection connection, Object object) {
 		super.received(connection, object);
+		Player p = playerCons.get(connection.getID());
 		if (object instanceof Integer) {
 			switch (Integer.valueOf(object.toString())) {
 			case NetworkConstants.GAME_START:
-				System.out.println("game start!!!");
+				p.setReady(true);
+				break;
+			case NetworkConstants.PLAYER_MOVE_LEFT:
+				p.steerLeft();
+				break;
+			case NetworkConstants.PLAYER_MOVE_RIGHT:
+				p.steerRight();
+				break;
+			case NetworkConstants.PLAYER_MOVE_STRAIGHT:
+				p.steerStraight();
 				break;
 			default:
 				break;
 			}
 		} else if (object instanceof PlayerOptions){
 			PlayerOptions pOptions = (PlayerOptions)object;
-			Player p = playerCons.get(connection.getID());
+			System.out.println("Color: "+Integer.valueOf(pOptions.getColor(), 16).intValue());
 			p.setColor(new Color(Integer.valueOf(pOptions.getColor(), 16).intValue()));
 			p.setName(pOptions.getName());
 			System.out.println("size: "+playerCons.size());
 			System.out.println("name: "+playerCons.get(connection.getID()).getName());
 			System.out.println("name: "+playerCons.get(connection.getID()).getColor().toString());
 		}
-		
 	}
 
 	public HashMap<Integer, Player> getPlayerCons() {
@@ -66,6 +77,16 @@ public class CurveServer extends Listener {
 
 	public void setPlayerCons(HashMap<Integer, Player> playerCons) {
 		this.playerCons = playerCons;
+	}
+	
+	public void sendAllPlayerCoordinates(){
+		HashMap<Integer, Point> newPoints = new HashMap<Integer, Point>();
+		Iterator<Integer> conIDs = playerCons.keySet().iterator();
+		while (conIDs.hasNext()){
+			int conID = (int)conIDs.next();
+			newPoints.put(conID, playerCons.get(conID).getPoints().lastElement());
+		}
+		server.sendToAllUDP(newPoints);
 	}
 
 }

@@ -35,7 +35,6 @@ public class CurveClient extends Listener {
 	@Override
 	public void received(Connection connection, Object object) {
 		super.received(connection, object);
-		System.out.println(object.toString());
 	}
 	
 	public Client getClient(){
