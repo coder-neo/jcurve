@@ -24,5 +24,4 @@ public class JCurve extends StateBasedGame {
 		app.setTargetFrameRate(60);
 		app.start();
 	}
-
 }

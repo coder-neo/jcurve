@@ -7,9 +7,9 @@ import main.Player;
 import main.PlayerOptions;
 import main.server.CurveServer;
 
-import org.lwjgl.Sys;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
@@ -17,36 +17,37 @@ import org.newdawn.slick.state.StateBasedGame;
 import utils.ResourceManager;
 
 public class GameState extends JCurveState {
-	
+
 	private CurveServer curveServer;
 	private int playerDelta = 30;
 	private int playerCurDelta = 0;
-	
+
 	private long loopDuration;
 
 	public GameState(int id) {
 		super(id);
 		curveServer = new CurveServer();
 	}
-	
+
 	@Override
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
 		super.init(container, game);
+		ResourceManager.addImage("laser", "data/images/laser.png");
 		getClient().sendUDP(new PlayerOptions("adam", "ff0000"));
 	}
 
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
 		super.render(container, game, g);
-		ResourceManager.getFont("chatFont").drawString(300, 300, "Hallo, dies ist eine Chatnachricht! XD");
-		ResourceManager.getFont("chatFont").drawString(300, 324, "Hallo, dies ist eine zweite möp möp Chatnachricht! XD");
 		Iterator<Player> players = curveServer.getPlayerCons().values().iterator();
-		g.setLineWidth(3);
-		while (players.hasNext()){
+		while (players.hasNext()) {
 			Player p = players.next();
 			g.setColor(p.getColor());
-			for (int i = 0; i < p.getPoints().size() - 1; i++){
-				g.drawLine(p.getPoints().get(i).x, p.getPoints().get(i).y, p.getPoints().get(i+1).x, p.getPoints().get(i+1).y);
+			Image tmpImg;
+			for (int i = 0; i < p.getPoints().size() - 1; i++) {
+				tmpImg = p.getImage().copy();
+				tmpImg.setRotation((float) Math.toDegrees(p.getPoints().get(i).getAngle()));
+				g.drawImage(tmpImg, p.getPoints().get(i).x, p.getPoints().get(i).y, p.getColor());
 			}
 		}
 	}
@@ -63,15 +64,15 @@ public class GameState extends JCurveState {
 		} else {
 			getClient().sendUDP(NetworkConstants.PLAYER_MOVE_STRAIGHT);
 		}
-		
-		// -----------------------   Serverberechnungen  ---------------------------
+
+		// ----------------------- Serverberechnungen ---------------------------
 		playerCurDelta += delta;
 		if (playerCurDelta > playerDelta - loopDuration) {
 			loopDuration = System.currentTimeMillis();
 			playerCurDelta = 0;
 			if (curveServer != null) {
 				Iterator<Player> players = curveServer.getPlayerCons().values().iterator();
-				while (players.hasNext()){
+				while (players.hasNext()) {
 					Player p = players.next();
 					p.move();
 				}
