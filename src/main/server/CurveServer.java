@@ -9,6 +9,7 @@ import main.GameConstants;
 import main.NetworkConstants;
 import main.Player;
 import main.PlayerOptions;
+import main.PlayerPoint;
 
 import org.newdawn.slick.Color;
 
@@ -80,7 +81,7 @@ public class CurveServer extends Listener {
 	}
 	
 	public void sendAllPlayerCoordinates(){
-		HashMap<Integer, Point> newPoints = new HashMap<Integer, Point>();
+		HashMap<Integer, PlayerPoint> newPoints = new HashMap<Integer, PlayerPoint>();
 		Iterator<Integer> conIDs = playerCons.keySet().iterator();
 		while (conIDs.hasNext()){
 			int conID = (int)conIDs.next();

@@ -19,7 +19,7 @@ public class CurveClient extends Listener {
 		client.addListener(this);
 		client.start();
 		try {
-			client.connect(5000, "localhost", GameConstants.PORT_TCP, GameConstants.PORT_UDP);
+			client.connect(5000, "192.168.22.1", GameConstants.PORT_TCP, GameConstants.PORT_UDP);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -35,6 +35,7 @@ public class CurveClient extends Listener {
 	@Override
 	public void received(Connection connection, Object object) {
 		super.received(connection, object);
+		System.out.println(object.toString());
 	}
 	
 	public Client getClient(){
