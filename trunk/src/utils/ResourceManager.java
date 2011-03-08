@@ -24,6 +24,7 @@ public class ResourceManager {
 				UnicodeFont font = new UnicodeFont(fileName, fontSize, isBold, isItalic);
 				font.getEffects().add(new ColorEffect(java.awt.Color.white));
 				font.addAsciiGlyphs();
+				font.addGlyphs("дцья");
 				font.loadGlyphs();
 				fonts.put(fontName, font);
 			} catch (SlickException e) {
