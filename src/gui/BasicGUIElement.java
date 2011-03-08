@@ -22,7 +22,7 @@ public abstract class BasicGUIElement {
 
 	private float x, y;
 	private int width, height;
-	private Color backgroundColor, fontColor;
+	private Color backgroundColor, fontColor, borderColor;
 	private Image image;
 	private Rectangle border;
 
@@ -37,9 +37,30 @@ public abstract class BasicGUIElement {
 		this.height = height;
 	}
 
-	public abstract void render(Graphics g);
+	public void render(Graphics g) {
+		if (backgroundColor != null)
+			g.setBackground(backgroundColor);
 
-	public abstract void update(int delta);
+		if (fontColor != null)
+			g.setColor(fontColor);
+
+		if (image != null)
+			image.draw(x, y);
+
+		if (border != null) {
+			g.setColor(borderColor);
+			if (backgroundColor != null)
+				g.fill(border);
+			else
+				g.draw(border);
+		}
+
+		g.setColor(Color.white);
+		g.setBackground(Color.black);
+	}
+
+	public void update(int delta) {
+	}
 
 	public void setParent(BasicGUIElement parent) {
 		this.parent = parent;
@@ -129,8 +150,8 @@ public abstract class BasicGUIElement {
 		return border;
 	}
 
-	public void setBorder(Rectangle border) {
-		this.border = border;
+	public void setBorder(Color borderColor) {
+		this.borderColor = borderColor;
+		this.border = new Rectangle(x, y, width, height);
 	}
-
 }
