@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.util.HashMap;
 
 import main.PlayerOptions;
+import main.PlayerPoint;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
@@ -14,6 +15,7 @@ public class Network {
 		Kryo kryo = ep.getKryo();
 		kryo.register(PlayerOptions.class);
 		kryo.register(HashMap.class);
+		kryo.register(PlayerPoint.class);
 		kryo.register(Point.class);
 	}
 
