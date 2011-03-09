@@ -2,8 +2,6 @@ package main;
 
 import java.util.Vector;
 
-import org.newdawn.slick.Color;
-
 /**
  * PlayerProperties ist eine Klasse, die Spieler Informationen enthält für die Übertragung über das Netzwerk.
  * Sie enthält nur die Informationen, die für jeden Client zum rendern notwendig sind.
