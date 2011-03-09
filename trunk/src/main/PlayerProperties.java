@@ -14,7 +14,8 @@ public class PlayerProperties {
 	private Vector<PlayerPoint> points = new Vector<PlayerPoint>();
 	private String name;
 	private int score;
-	private Color color;
+//	private Color color;
+	private int colorCode;
 	private String imageKey;
 //	private Image image;
 	
@@ -36,12 +37,12 @@ public class PlayerProperties {
 	public void setScore(int score) {
 		this.score = score;
 	}
-	public Color getColor() {
-		return color;
-	}
-	public void setColor(Color color) {
-		this.color = color;
-	}
+//	public Color getColor() {
+//		return color;
+//	}
+//	public void setColor(Color color) {
+//		this.color = color;
+//	}
 //	public Image getImage() {
 //		return image;
 //	}
@@ -53,6 +54,12 @@ public class PlayerProperties {
 	}
 	public void setImageKey(String imageKey) {
 		this.imageKey = imageKey;
+	}
+	public int getColorCode() {
+		return colorCode;
+	}
+	public void setColorCode(int colorCode) {
+		this.colorCode = colorCode;
 	}
 
 }
