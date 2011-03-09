@@ -44,12 +44,12 @@ public class GameState extends JCurveState {
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
 		super.render(container, game, g);
+		Image tmpImg;
 		if (curveServer != null) {
 			Iterator<Player> players = curveServer.getPlayerCons().values().iterator();
 			while (players.hasNext()) {
 				Player p = players.next();
 				Color color = new Color(p.getProperties().getColorCode());
-				Image tmpImg;
 				for (int i = 0; i < p.getProperties().getPoints().size() - 1; i++) {
 					tmpImg = ResourceManager.getImage(p.getProperties().getImageKey()).copy();
 					tmpImg.setRotation((float) Math.toDegrees(p.getProperties().getPoints().get(i).getAngle()));
@@ -58,8 +58,16 @@ public class GameState extends JCurveState {
 			}
 		} else {
 			HashMap<Integer, Vector<PlayerPoint>> coordinates = CurveClient.getInstance().getCoordinates();
-			for (int i = 0; i < coordinates.size(); i++) {
-				
+			Iterator<Integer> conIDs = coordinates.keySet().iterator();
+			while(conIDs.hasNext()){
+				int conID = conIDs.next();
+//				tmpImg = ResourceManager.getImage(p.getProperties().getImageKey()).copy();
+//				tmpImg.setRotation((float) Math.toDegrees(p.getProperties().getPoints().get(i).getAngle()));
+//				g.drawImage(tmpImg, p.getProperties().getPoints().get(i).x, p.getProperties().getPoints().get(i).y, color);
+				for (int i = 0; i < coordinates.get(conID).size(); i++){
+					PlayerPoint pp = coordinates.get(conID).get(i);
+					g.fillOval((float)pp.getX(), (float)pp.getY(), 5, 5);
+				}
 			}
 		}
 	}

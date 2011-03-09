@@ -79,7 +79,7 @@ public class CurveServer extends Listener {
 			p.getProperties().setName(pOptions.getName());
 			System.out.println("size: "+playerCons.size());
 			System.out.println("name: "+playerCons.get(connection.getID()).getProperties().getName());
-			System.out.println("name: "+playerCons.get(connection.getID()).getProperties().getColorCode());
+			System.out.println("color: "+playerCons.get(connection.getID()).getProperties().getColorCode());
 		}
 	}
 

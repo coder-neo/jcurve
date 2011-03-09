@@ -50,7 +50,7 @@ public class CurveClient extends Listener {
 	public void received(Connection connection, Object object) {
 		super.received(connection, object);
 		if (object instanceof HashMap) {
-			if (((HashMap<?, ?>) object).values() instanceof PlayerPoint) {
+//			if (((HashMap<?, ?>) object).values() instanceof PlayerPoint) {
 				System.out.println("KO received: " + object.toString());
 				@SuppressWarnings("unchecked")
 				HashMap<Integer, PlayerPoint> points = (HashMap<Integer, PlayerPoint>) object;
@@ -65,10 +65,13 @@ public class CurveClient extends Listener {
 						coordinates.put(conID, playerPoints);
 					}
 				}
-			}
+//			}
 			// coordinates.putAll(points);
 			// points.put(pp.g, value)
-		} else if (object instanceof PlayerProperties){
+		} else if (object instanceof Vector){
+			@SuppressWarnings("unchecked")
+			Vector<PlayerProperties> props = (Vector<PlayerProperties>) object;
+			
 			System.out.println("properties!");
 		}
 	}
