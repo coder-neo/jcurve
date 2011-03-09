@@ -2,12 +2,15 @@ package main.server;
 
 import java.awt.Point;
 import java.util.HashMap;
+import java.util.Vector;
 
 import main.PlayerOptions;
 import main.PlayerPoint;
+import main.PlayerProperties;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
+import com.esotericsoftware.kryonet.Server;
 
 public class Network {
 	
@@ -17,6 +20,9 @@ public class Network {
 		kryo.register(HashMap.class);
 		kryo.register(PlayerPoint.class);
 		kryo.register(Point.class);
+		kryo.register(Vector.class);
+		kryo.register(Server.class);
+		kryo.register(PlayerProperties.class);
 	}
 
 }

@@ -1,10 +1,14 @@
 package states;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Vector;
 
 import main.NetworkConstants;
 import main.Player;
 import main.PlayerOptions;
+import main.PlayerPoint;
+import main.client.CurveClient;
 import main.server.CurveServer;
 
 import org.newdawn.slick.GameContainer;
@@ -39,15 +43,22 @@ public class GameState extends JCurveState {
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
 		super.render(container, game, g);
-		Iterator<Player> players = curveServer.getPlayerCons().values().iterator();
-		while (players.hasNext()) {
-			Player p = players.next();
-			g.setColor(p.getColor());
-			Image tmpImg;
-			for (int i = 0; i < p.getPoints().size() - 1; i++) {
-				tmpImg = p.getImage().copy();
-				tmpImg.setRotation((float) Math.toDegrees(p.getPoints().get(i).getAngle()));
-				g.drawImage(tmpImg, p.getPoints().get(i).x, p.getPoints().get(i).y, p.getColor());
+		if (curveServer != null) {
+			Iterator<Player> players = curveServer.getPlayerCons().values().iterator();
+			while (players.hasNext()) {
+				Player p = players.next();
+				g.setColor(p.getProperties().getColor());
+				Image tmpImg;
+				for (int i = 0; i < p.getProperties().getPoints().size() - 1; i++) {
+					tmpImg = ResourceManager.getImage(p.getProperties().getImageKey()).copy();
+					tmpImg.setRotation((float) Math.toDegrees(p.getProperties().getPoints().get(i).getAngle()));
+					g.drawImage(tmpImg, p.getProperties().getPoints().get(i).x, p.getProperties().getPoints().get(i).y, p.getProperties().getColor());
+				}
+			}
+		} else {
+			HashMap<Integer, Vector<PlayerPoint>> coordinates = CurveClient.getInstance().getCoordinates();
+			for (int i = 0; i < coordinates.size(); i++) {
+				
 			}
 		}
 	}
