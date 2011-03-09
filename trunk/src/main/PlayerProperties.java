@@ -9,6 +9,7 @@ import java.util.Vector;
  *
  */
 public class PlayerProperties {
+	private int connectionID;
 	private Vector<PlayerPoint> points = new Vector<PlayerPoint>();
 	private String name;
 	private int score;
@@ -16,6 +17,10 @@ public class PlayerProperties {
 	private int colorCode;
 	private String imageKey;
 //	private Image image;
+	
+	public PlayerProperties(int connectionID) {
+		this.connectionID = connectionID;
+	}
 	
 	public Vector<PlayerPoint> getPoints() {
 		return points;
@@ -58,6 +63,12 @@ public class PlayerProperties {
 	}
 	public void setColorCode(int colorCode) {
 		this.colorCode = colorCode;
+	}
+	public int getConnectionID() {
+		return connectionID;
+	}
+	public void setConnectionID(int connectionID) {
+		this.connectionID = connectionID;
 	}
 
 }

@@ -1,13 +1,12 @@
 package states;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
 import main.NetworkConstants;
 import main.Player;
 import main.PlayerOptions;
-import main.PlayerPoint;
+import main.PlayerProperties;
 import main.client.CurveClient;
 import main.server.CurveServer;
 
@@ -57,16 +56,14 @@ public class GameState extends JCurveState {
 				}
 			}
 		} else {
-			HashMap<Integer, Vector<PlayerPoint>> coordinates = CurveClient.getInstance().getCoordinates();
-			Iterator<Integer> conIDs = coordinates.keySet().iterator();
-			while(conIDs.hasNext()){
-				int conID = conIDs.next();
-//				tmpImg = ResourceManager.getImage(p.getProperties().getImageKey()).copy();
-//				tmpImg.setRotation((float) Math.toDegrees(p.getProperties().getPoints().get(i).getAngle()));
-//				g.drawImage(tmpImg, p.getProperties().getPoints().get(i).x, p.getProperties().getPoints().get(i).y, color);
-				for (int i = 0; i < coordinates.get(conID).size(); i++){
-					PlayerPoint pp = coordinates.get(conID).get(i);
-					g.fillOval((float)pp.getX(), (float)pp.getY(), 5, 5);
+			Vector<PlayerProperties> playerProperties = CurveClient.getInstance().getPlayerProperties();
+			for (int i = 0; i < playerProperties.size(); i++){
+				PlayerProperties pp = playerProperties.get(i);
+				Color color = new Color(playerProperties.get(i).getColorCode());
+				for (int j = 0; j < pp.getPoints().size(); j++){
+					tmpImg = ResourceManager.getImage(pp.getImageKey()).copy();
+					tmpImg.setRotation((float) Math.toDegrees(pp.getPoints().get(i).getAngle()));
+					g.drawImage(tmpImg, pp.getPoints().get(i).x, pp.getPoints().get(i).y, color);
 				}
 			}
 		}

@@ -12,8 +12,6 @@ import main.PlayerOptions;
 import main.PlayerPoint;
 import main.PlayerProperties;
 
-import org.newdawn.slick.Color;
-
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;

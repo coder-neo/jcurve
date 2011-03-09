@@ -41,10 +41,10 @@ public class Player {
 	 */
 	public Player(Connection connection){
 		this.connection = connection;
-		properties = new PlayerProperties();
-		initPlayerPosition();
+		properties = new PlayerProperties(connection.getID());
 //		this.image = ResourceManager.getImage("laser");
 		properties.setImageKey("laser");
+		initPlayerPosition();
 //		properties.setImage(ResourceManager.getImage("laser"));
 		players.add(this);
 	}
