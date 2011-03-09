@@ -3,7 +3,6 @@ package main;
 import java.awt.Point;
 import java.util.Vector;
 
-import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
@@ -24,16 +23,17 @@ import com.esotericsoftware.kryonet.Connection;
 public class Player {
 	private static Vector<Player> players = new Vector<Player>();
 	private Connection connection;
-	private Vector<PlayerPoint> points = new Vector<PlayerPoint>();
-	private String name;
-	private int score;
-	private Color color;
+//	private Vector<PlayerPoint> points = new Vector<PlayerPoint>();
+//	private String name;
+//	private int score;
+//	private Color color;
+//	private Image image;
+	private PlayerProperties properties;
 	private float angle = 70;
 	private float speed = 3;
 	private boolean dirLeft = false;
 	private boolean dirRight = false;
 	private boolean isReady = false;
-	private Image image;
 	
 	/**
 	 * Erstellt einen neuen Player und knüpft ihn an eine Connection
@@ -41,8 +41,11 @@ public class Player {
 	 */
 	public Player(Connection connection){
 		this.connection = connection;
+		properties = new PlayerProperties();
 		initPlayerPosition();
-		this.image = ResourceManager.getImage("laser");
+//		this.image = ResourceManager.getImage("laser");
+		properties.setImageKey("laser");
+//		properties.setImage(ResourceManager.getImage("laser"));
 		players.add(this);
 	}
 	
@@ -56,7 +59,8 @@ public class Player {
 		} else {
 			angle = (float) Math.atan((middleY-y)/(double)(middleX-x));
 		}
-		points.add(new PlayerPoint(x,y, angle));
+//		points.add(new PlayerPoint(x,y, angle));
+		properties.getPoints().add(new PlayerPoint(x,y, angle));
 	}
 	
 	/**
@@ -65,7 +69,7 @@ public class Player {
 	 * @author Adam Laszlo
 	 */
 	public boolean move(){
-		Point lastPoint = points.lastElement();
+		Point lastPoint = properties.getPoints().lastElement();
 		int deltaX = (int)Math.round(Math.cos(angle)*speed);
 		int deltaY = (int)Math.round(Math.sin(angle)*speed);
 		int nextX = lastPoint.x + deltaX;
@@ -76,7 +80,7 @@ public class Player {
 			angle += .1;
 		}
 		PlayerPoint nextPoint = new PlayerPoint(nextX, nextY, angle);
-		points.add(nextPoint);
+		properties.getPoints().add(nextPoint);
 		return !checkCollision();
 	}
 	
@@ -88,7 +92,7 @@ public class Player {
 	private boolean checkCollision(){
 		for (int i = 0; i < players.size(); i++){
 			Player other = players.get(i);
-			int end = other.points.size();
+			int end = other.getProperties().getPoints().size();
 			if (this == other){
 				// damit die Schlange nicht in jedem Durchgang mit den vorherigen Punkten kollidiert,
 				// werden die letzten Punkte ignoriert, wenn die eigene Schlange geprüft wird.
@@ -96,13 +100,14 @@ public class Player {
 			}
 			// ----- grobe Prüfung -----
 			for (int j = 0; j < end; j++){
-				PlayerPoint p = other.points.get(j);
-				if (this.points.lastElement().distance(p) < 10){
+				PlayerPoint p = other.getProperties().getPoints().get(j);
+				if (this.getProperties().getPoints().lastElement().distance(p) < 10){
 					// ----- pixelgenaue Prüfung -----
-					Shape rect = new Rectangle(p.x, p.y, image.getWidth(), image.getHeight());
+					Image img = ResourceManager.getImage(properties.getImageKey());
+					Shape rect = new Rectangle(p.x, p.y, img.getWidth(), img.getHeight());
 					rect = rect.transform(Transform.createRotateTransform(p.getAngle(), rect.getCenterX(), rect.getCenterY()));
-					Shape rect2 = new Rectangle(this.points.lastElement().x, this.points.lastElement().y, image.getWidth(), image.getHeight());
-					rect2 = rect2.transform(Transform.createRotateTransform(this.points.lastElement().getAngle(), rect2.getCenterX(), rect2.getCenterY()));
+					Shape rect2 = new Rectangle(this.getProperties().getPoints().lastElement().x, properties.getPoints().lastElement().y, img.getWidth(), img.getHeight());
+					rect2 = rect2.transform(Transform.createRotateTransform(this.getProperties().getPoints().lastElement().getAngle(), rect2.getCenterX(), rect2.getCenterY()));
 					if (rect.intersects(rect2)){
 						return true;
 					}
@@ -129,28 +134,28 @@ public class Player {
 	
 	// ------------------- Getter & Setter ---------------------
 	
-	public Vector<PlayerPoint> getPoints() {
-		return points;
-	}
-	
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public int getScore() {
-		return score;
-	}
-	public void setScore(int score) {
-		this.score = score;
-	}
-	public Color getColor() {
-		return color;
-	}
-	public void setColor(Color color) {
-		this.color = color;
-	}
+//	public Vector<PlayerPoint> getPoints() {
+//		return points;
+//	}
+//	
+//	public String getName() {
+//		return name;
+//	}
+//	public void setName(String name) {
+//		this.name = name;
+//	}
+//	public int getScore() {
+//		return score;
+//	}
+//	public void setScore(int score) {
+//		this.score = score;
+//	}
+//	public Color getColor() {
+//		return color;
+//	}
+//	public void setColor(Color color) {
+//		this.color = color;
+//	}
 	public float getAngle() {
 		return angle;
 	}
@@ -179,15 +184,19 @@ public class Player {
 		this.isReady = isReady;
 	}
 
-	public Image getImage() {
-		return image;
-	}
-
-	public void setImage(Image image) {
-		this.image = image;
-	}
+//	public Image getImage() {
+//		return image;
+//	}
+//
+//	public void setImage(Image image) {
+//		this.image = image;
+//	}
 
 	public static Vector<Player> getPlayers() {
 		return players;
+	}
+
+	public PlayerProperties getProperties() {
+		return properties;
 	}
 }
