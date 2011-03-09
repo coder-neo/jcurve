@@ -13,30 +13,31 @@ import utils.ResourceManager;
 import com.esotericsoftware.kryonet.Connection;
 
 /**
- * Die Klasse Player repräsentiert den Spieler bzw. seine "Schlange".
- * Sie beinhaltet statisch alle Spieler, alle Connections, alle Punkte der jeweiligen Schlange,
- * sowie alle relevanten Spielerinformationen.
+ * Die Klasse Player repräsentiert den Spieler bzw. seine "Schlange". Sie
+ * beinhaltet statisch alle Spieler, alle Connections, alle Punkte der
+ * jeweiligen Schlange, sowie alle relevanten Spielerinformationen.
  * 
  * @author Adam Laszlo
- *
+ * 
  */
 public class Player {
 	private static Vector<Player> players = new Vector<Player>();
 	private Connection connection;
-//	private Vector<PlayerPoint> points = new Vector<PlayerPoint>();
-//	private String name;
-//	private int score;
-//	private Color color;
-//	private Image image;
+	// private Vector<PlayerPoint> points = new Vector<PlayerPoint>();
+	// private String name;
+	// private int score;
+	// private Color color;
+	// private Image image;
 	private PlayerProperties properties;
 	private float angle = 70;
 	private float speed = 3;
 	private boolean dirLeft = false;
 	private boolean dirRight = false;
 	private boolean isReady = false;
-	
+
 	/**
 	 * Erstellt einen neuen Player und knüpft ihn an eine Connection
+	 * 
 	 * @param connection
 	 */
 	public Player(Connection connection){
