@@ -4,6 +4,8 @@ import java.awt.Point;
 import java.util.HashMap;
 import java.util.Vector;
 
+import org.newdawn.slick.Color;
+
 import main.PlayerOptions;
 import main.PlayerPoint;
 import main.PlayerProperties;
@@ -22,6 +24,7 @@ public class Network {
 		kryo.register(Point.class);
 		kryo.register(Vector.class);
 		kryo.register(Server.class);
+		kryo.register(Color.class);
 		kryo.register(PlayerProperties.class);
 	}
 

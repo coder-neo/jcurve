@@ -11,6 +11,7 @@ import main.PlayerPoint;
 import main.client.CurveClient;
 import main.server.CurveServer;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -47,12 +48,12 @@ public class GameState extends JCurveState {
 			Iterator<Player> players = curveServer.getPlayerCons().values().iterator();
 			while (players.hasNext()) {
 				Player p = players.next();
-				g.setColor(p.getProperties().getColor());
+				Color color = new Color(p.getProperties().getColorCode());
 				Image tmpImg;
 				for (int i = 0; i < p.getProperties().getPoints().size() - 1; i++) {
 					tmpImg = ResourceManager.getImage(p.getProperties().getImageKey()).copy();
 					tmpImg.setRotation((float) Math.toDegrees(p.getProperties().getPoints().get(i).getAngle()));
-					g.drawImage(tmpImg, p.getProperties().getPoints().get(i).x, p.getProperties().getPoints().get(i).y, p.getProperties().getColor());
+					g.drawImage(tmpImg, p.getProperties().getPoints().get(i).x, p.getProperties().getPoints().get(i).y, color);
 				}
 			}
 		} else {
