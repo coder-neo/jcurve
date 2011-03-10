@@ -27,10 +27,6 @@ public class PlayerProperties {
 	
 	public PlayerProperties(){}
 	
-	public PlayerProperties(int connectionID) {
-		this.connectionID = connectionID;
-	}
-	
 	public Vector<PlayerPoint> getPoints() {
 		return points;
 	}
