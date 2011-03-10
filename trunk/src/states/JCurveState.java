@@ -40,6 +40,9 @@ public abstract class JCurveState extends BasicGameState {
 	@Override
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
 		ResourceManager.addFont("chatFont", "data/fonts/tempesta.ttf", 12, false, false);
+		ResourceManager.addFont("header", "data/fonts/cool.ttf", 60, false, false);
+		ResourceManager.addFont("standard", "data/fonts/cool.ttf", 30, false, false);
+		ResourceManager.addFont("small", "data/fonts/cool.ttf", 12, false, false);
 	}
 
 	@Override
