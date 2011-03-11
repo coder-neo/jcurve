@@ -8,7 +8,7 @@ public class GameConstants {
 	public final static String APP_VERSION = "v 1.0 Beta";
 
 	public static final boolean APP_IS_FULLSCREEN = true;
-	
+
 	public final static int APP_WIDHT = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0].getDisplayMode().getWidth();
 	public final static int APP_HEIGHT = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0].getDisplayMode().getHeight();
 
@@ -25,7 +25,9 @@ public class GameConstants {
 	 */
 
 	public final static int STATE_GAME = 1;
-	public final static int STATE_SERVER_CREATE = 2;
 	public final static int STATE_MAIN_MENU = 3;
+	public final static int STATE_LOBBY = 4;
+	public final static int STATE_SERVER_LIST = 5;
+	public final static int STATE_OPTIONS = 6;
 
 }

@@ -49,10 +49,8 @@ public abstract class JCurveState extends BasicGameState {
 
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
-
 		for (int i = 0; i < guiElements.size(); i++) {
 			guiElements.get(i).render(g);
-
 		}
 	}
 
@@ -60,7 +58,6 @@ public abstract class JCurveState extends BasicGameState {
 	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
 		for (int i = 0; i < guiElements.size(); i++) {
 			guiElements.get(i).update(delta);
-
 		}
 	}
 

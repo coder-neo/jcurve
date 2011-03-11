@@ -5,6 +5,7 @@ import gui.GUIButton;
 import java.util.Random;
 
 import main.GameConstants;
+import main.JCurve;
 import main.Player;
 import main.PlayerPoint;
 
@@ -13,6 +14,8 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.gui.AbstractComponent;
+import org.newdawn.slick.gui.ComponentListener;
 import org.newdawn.slick.state.StateBasedGame;
 
 import utils.ResourceManager;
@@ -20,8 +23,6 @@ import utils.ResourceManager;
 public class MainMenuState extends JCurveState {
 
 	private static final int BORDER_MAX_DISTANCE = 50;
-
-	private GUIButton buttonPlay = null;
 
 	private String lastDirection = null;
 	private Random random = new Random();
@@ -39,15 +40,45 @@ public class MainMenuState extends JCurveState {
 		bot = new Player();
 		bot.getProperties().getPoints().add(new PlayerPoint((GameConstants.APP_WIDHT / 2) + 140, 200, 0));
 		botColor = new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255));
-
-		addGUIElements(buttonPlay);
 	}
 
 	@Override
-	public void init(GameContainer container, StateBasedGame game) throws SlickException {
+	public void init(GameContainer container, final StateBasedGame game) throws SlickException {
 		super.init(container, game);
 
-		buttonPlay = new GUIButton("Neues Spiel starten", container, 100, 250);
+		GUIButton buttonPlay = new GUIButton("Neues Spiel starten", container, 100, 250);
+		buttonPlay.addListener(new ComponentListener() {
+			@Override
+			public void componentActivated(AbstractComponent source) {
+				game.enterState(GameConstants.STATE_LOBBY);
+			}
+		});
+
+		GUIButton buttonJoin = new GUIButton("Spiel beitreten", container, 100, 300);
+		buttonJoin.addListener(new ComponentListener() {
+			@Override
+			public void componentActivated(AbstractComponent source) {
+				game.enterState(GameConstants.STATE_SERVER_LIST);
+			}
+		});
+
+		GUIButton buttonOptions = new GUIButton("Optionen", container, 100, 350);
+		buttonOptions.addListener(new ComponentListener() {
+			@Override
+			public void componentActivated(AbstractComponent source) {
+				game.enterState(GameConstants.STATE_OPTIONS);
+			}
+		});
+
+		GUIButton buttonQuit = new GUIButton("Beenden", container, 100, 450);
+		buttonQuit.addListener(new ComponentListener() {
+			@Override
+			public void componentActivated(AbstractComponent source) {
+				JCurve.app.exit();
+			}
+		});
+
+		addGUIElements(buttonPlay, buttonJoin, buttonOptions, buttonQuit);
 	}
 
 	@Override
@@ -58,13 +89,15 @@ public class MainMenuState extends JCurveState {
 
 		ResourceManager.getFont("header").drawString(100, 100, GameConstants.APP_NAME, Color.red);
 
-		ResourceManager.getFont("standard").drawString(100, 250, "Neues Spiel starten");
-		ResourceManager.getFont("standard").drawString(100, 300, "Spiel beitreten");
-		ResourceManager.getFont("standard").drawString(100, 350, "Optionen");
-		ResourceManager.getFont("standard").drawString(100, 450, "Beenden");
-
 		int strWidth = ResourceManager.getFont("small").getWidth(GameConstants.APP_VERSION) / 2;
 		ResourceManager.getFont("small").drawString(GameConstants.APP_WIDHT - (strWidth * 2) - 20, GameConstants.APP_HEIGHT - strWidth, GameConstants.APP_VERSION);
+	}
+
+	@Override
+	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
+		super.update(container, game, delta);
+
+		updateBotSnake(delta);
 	}
 
 	/**
@@ -108,11 +141,9 @@ public class MainMenuState extends JCurveState {
 			atBorder = true;
 			if (lastDirection == null) {
 				if (angle > 0 && angle < 270) {
-					System.out.println(">   steerRight");
 					bot.steerRight();
 					lastDirection = "RIGHT";
 				} else {
-					System.out.println(">   steerLeft");
 					bot.steerLeft();
 					lastDirection = "LEFT";
 				}
@@ -128,11 +159,9 @@ public class MainMenuState extends JCurveState {
 			atBorder = true;
 			if (lastDirection == null) {
 				if (angle > 180) {
-					System.out.println(">   steerRight");
 					bot.steerRight();
 					lastDirection = "RIGHT";
 				} else {
-					System.out.println(">   steerLeft");
 					bot.steerLeft();
 					lastDirection = "LEFT";
 				}
@@ -148,11 +177,9 @@ public class MainMenuState extends JCurveState {
 			atBorder = true;
 			if (lastDirection == null) {
 				if (angle > 90 && angle < 180) {
-					System.out.println(">   steerRight");
 					bot.steerRight();
 					lastDirection = "RIGHT";
 				} else {
-					System.out.println(">   steerLeft");
 					bot.steerLeft();
 					lastDirection = "LEFT";
 				}
@@ -168,11 +195,9 @@ public class MainMenuState extends JCurveState {
 			atBorder = true;
 			if (lastDirection == null) {
 				if (angle > 270) {
-					System.out.println(">   steerRight");
 					bot.steerRight();
 					lastDirection = "RIGHT";
 				} else {
-					System.out.println(">   steerLeft");
 					bot.steerLeft();
 					lastDirection = "LEFT";
 				}
@@ -197,13 +222,6 @@ public class MainMenuState extends JCurveState {
 		}
 
 		bot.move();
-	}
-
-	@Override
-	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
-		super.update(container, game, delta);
-
-		updateBotSnake(delta);
 	}
 
 }
