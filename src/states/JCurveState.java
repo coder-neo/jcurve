@@ -24,17 +24,17 @@ import com.esotericsoftware.kryonet.Client;
  */
 public abstract class JCurveState extends BasicGameState {
 
-	private int id;
+	private int stateID;
 
-	private Vector<BasicGUIElement> elements = new Vector<BasicGUIElement>();
+	private Vector<BasicGUIElement> guiElements = new Vector<BasicGUIElement>();
 
 	public JCurveState(int id) {
-		this.id = id;
+		this.stateID = id;
 	}
 
 	@Override
 	public int getID() {
-		return id;
+		return stateID;
 	}
 
 	@Override
@@ -48,15 +48,15 @@ public abstract class JCurveState extends BasicGameState {
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
 
-		for (int i = 0; i < elements.size(); i++) {
-			elements.get(i).render(g);
+		for (int i = 0; i < guiElements.size(); i++) {
+			guiElements.get(i).render(g);
 		}
 	}
 
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
-		for (int i = 0; i < elements.size(); i++) {
-			elements.get(i).update(delta);
+		for (int i = 0; i < guiElements.size(); i++) {
+			guiElements.get(i).update(delta);
 		}
 	}
 
@@ -77,7 +77,7 @@ public abstract class JCurveState extends BasicGameState {
 	 */
 	public void addGUIElements(BasicGUIElement... e) {
 		for (int i = 0; i < e.length; i++)
-			elements.add(e[i]);
+			guiElements.add(e[i]);
 	}
 
 }
