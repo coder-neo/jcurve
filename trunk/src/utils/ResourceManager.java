@@ -32,13 +32,13 @@ public class ResourceManager {
 			}
 		}
 	}
-	
+
 	public static UnicodeFont getFont(String fontName) {
 		return fonts.get(fontName);
 	}
 
-	public static void addImage(String key, String path){
-		if (!images.containsKey(key)){
+	public static void addImage(String key, String path) {
+		if (!images.containsKey(key)) {
 			try {
 				images.put(key, new Image(path));
 			} catch (SlickException e) {
@@ -46,8 +46,8 @@ public class ResourceManager {
 			}
 		}
 	}
-	
-	public static Image getImage(String key){
+
+	public static Image getImage(String key) {
 		return images.get(key);
 	}
 }
