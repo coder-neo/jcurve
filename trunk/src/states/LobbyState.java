@@ -95,6 +95,14 @@ public class LobbyState extends JCurveState {
 	}
 
 	@Override
+	public void leave(GameContainer container, StateBasedGame game) throws SlickException {
+		super.leave(container, game);
+
+		chatGUI.clear();
+		playerList.clear();
+	}
+
+	@Override
 	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
 		super.update(container, game, delta);
 

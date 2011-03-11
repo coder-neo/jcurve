@@ -2,6 +2,9 @@ package states;
 
 import gui.GUIButton;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Random;
 
 import main.GameConstants;
@@ -16,10 +19,19 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.gui.AbstractComponent;
 import org.newdawn.slick.gui.ComponentListener;
+import org.newdawn.slick.muffin.FileMuffin;
 import org.newdawn.slick.state.StateBasedGame;
 
 import utils.ResourceManager;
 
+/**
+ * Die erste State, die der Spieler sieht. Hier kann er ein Spiel starten oder
+ * auf ein bestehendes joinen (beitreten). Auch kann er diverse Optionen
+ * anpassen, wie seinen Namen und seine Spielerfarbe. Als kleines Gimmick huscht
+ * rechts auf dem Bildschirm eine Schlange umher.
+ * 
+ * @author Benjamin
+ */
 public class MainMenuState extends JCurveState {
 
 	private static final int BORDER_MAX_DISTANCE = 50;
@@ -40,6 +52,9 @@ public class MainMenuState extends JCurveState {
 		bot = new Player();
 		bot.getProperties().getPoints().add(new PlayerPoint((GameConstants.APP_WIDHT / 2) + 140, 200, 0));
 		botColor = new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255));
+
+		saveConfigFile();
+		readConfigFile();
 	}
 
 	@Override
@@ -79,6 +94,33 @@ public class MainMenuState extends JCurveState {
 		});
 
 		addGUIElements(buttonPlay, buttonJoin, buttonOptions, buttonQuit);
+	}
+
+	// TODO: in optionState
+	private void saveConfigFile() {
+		FileMuffin file = new FileMuffin();
+		HashMap<Object, Object> data = new HashMap<Object, Object>();
+		data.put("name", "peter");
+		data.put("color", "orangepink");
+		data.put("ability", "jump");
+		try {
+			file.saveFile(data, GameConstants.APP_LOCAL_OPTIONS_FILENAME);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void readConfigFile() {
+		FileMuffin file = new FileMuffin();
+		try {
+			HashMap<Object, Object> data = file.loadFile(GameConstants.APP_LOCAL_OPTIONS_FILENAME);
+			Iterator<Object> it = data.values().iterator();
+			while (it.hasNext()) {
+				System.out.println(it.next());
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override

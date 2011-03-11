@@ -60,6 +60,13 @@ public class GUIChat extends BasicGUIElement {
 	}
 
 	/**
+	 * Löscht alle vorhandenen Nachrichten im Chat.
+	 */
+	public void clear() {
+		messages.removeAllElements();
+	}
+
+	/**
 	 * Fügt eine neue Nachricht des Systems in den Chat hinzu, zB wenn ein
 	 * Spieler die Lobby betritt oder verlässt.
 	 * 
