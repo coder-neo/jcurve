@@ -40,6 +40,8 @@ public class OptionsState extends JCurveState {
 	public void init(GameContainer container, final StateBasedGame game) throws SlickException {
 		super.init(container, game);
 
+		farbButtons = new Vector<GUIButton>();
+		
 		farben = new Vector<Color>();
 		farben.add(Color.red);
 		farben.add(Color.green);
@@ -47,8 +49,8 @@ public class OptionsState extends JCurveState {
 		farben.add(Color.yellow);
 
 		int y = 400;
-		for (int i = 1; i < 0; farben.size()) {
-			farbButtons.add(new GUIButton(container, farben.get(i), 150, y, 50, 50));
+		for (int i = 0; i < farben.size(); i++) {
+			farbButtons.add(new GUIButton(container, farben.get(i), y, 150, 50, 50));
 			y += 100;
 			addGUIElements(farbButtons.get(i));
 		}
