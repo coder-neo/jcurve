@@ -35,4 +35,11 @@ public class GUIPlayerList extends BasicGUIElement {
 		this.players = players;
 	}
 
+	/**
+	 * Löscht alle Spieler aus der Lobby.
+	 */
+	public void clear() {
+		players.removeAllElements();
+	}
+
 }
