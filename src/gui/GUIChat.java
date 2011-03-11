@@ -5,6 +5,7 @@ import java.util.Vector;
 import org.newdawn.slick.Graphics;
 
 import utils.ResourceManager;
+import utils.StaticUtils;
 
 /**
  * Der Chat in der Lobby des Spiels. TODO: scrolling vielleicht?
@@ -43,17 +44,30 @@ public class GUIChat extends BasicGUIElement {
 	public void update(int delta) {
 		super.update(delta);
 
+		ChatMessage hiddenOne = null;
 		if (curWriteLine > curMaxView) {
 			boolean hidden = false;
 			for (int i = 0; i < messages.size(); i++) {
 				messages.get(i).setLine(messages.get(i).getLine() - 1);
 				if (messages.get(i).isVisible() && !hidden) {
 					messages.get(i).setVisible(false);
+					hiddenOne = messages.get(i);
 					hidden = true;
 				}
 			}
-			curWriteLine--;
+			curWriteLine -= hiddenOne.getLineCount();
 		}
+	}
+
+	/**
+	 * Fügt eine neue Nachricht des Systems in den Chat hinzu, zB wenn ein
+	 * Spieler die Lobby betritt oder verlässt.
+	 * 
+	 * @param msg
+	 *            - die Nachricht
+	 */
+	public void addSystemMessage(String msg) {
+		addMessage("System", msg);
 	}
 
 	/**
@@ -94,6 +108,7 @@ public class GUIChat extends BasicGUIElement {
 			msg = newMsg;
 
 		ChatMessage chatMsg = new ChatMessage(msg.trim(), curWriteLine);
+		chatMsg.setLineCount(StaticUtils.countCharacter(chatMsg.getText(), CHAT_LINE_BREAK));
 		messages.add(chatMsg);
 
 		curWriteLine += curLine;
@@ -116,6 +131,7 @@ public class GUIChat extends BasicGUIElement {
 	public class ChatMessage {
 		private String text;
 		private int line;
+		private int lineCount;
 		private boolean visible = true;
 
 		public ChatMessage(String txt, int line) {
@@ -145,6 +161,14 @@ public class GUIChat extends BasicGUIElement {
 
 		public void setLine(int line) {
 			this.line = line;
+		}
+
+		public int getLineCount() {
+			return lineCount;
+		}
+
+		public void setLineCount(int lineCount) {
+			this.lineCount = lineCount + 1;
 		}
 	}
 
