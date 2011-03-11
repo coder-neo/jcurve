@@ -34,7 +34,7 @@ public class LobbyState extends JCurveState {
 
 	public static final String MSG_PLAYER_CONNECTED = "%s hat sich dem Spiel angeschlossen";
 	public static final String MSG_PLAYER_DISCONNECTED = "%s hat uns verlassen";
-	public static final String MSG_WAIT = "WARTE AUF MITSPIELER";
+	public static final String MSG_WAIT = "Warte auf Mitspieler";
 	public static final String MSG_WAIT_DOTS = "...";
 
 	private Vector<Player> players = new Vector<Player>();
@@ -42,6 +42,7 @@ public class LobbyState extends JCurveState {
 	private GUIChat chatGUI = null;
 	private GUIPlayerList playerList = null;
 	private GUITextField chatField = null;
+	private GUIButton buttonPlay = null, buttonCancel = null;
 
 	private int dotDelta = 0;
 	private int maxDotDelta = 500;
@@ -54,7 +55,7 @@ public class LobbyState extends JCurveState {
 	}
 
 	@Override
-	public void init(GameContainer container, StateBasedGame game) throws SlickException {
+	public void init(GameContainer container, final StateBasedGame game) throws SlickException {
 		super.init(container, game);
 
 		chatGUI = new GUIChat(0, GameConstants.APP_HEIGHT - 300, 300, 300);
@@ -70,16 +71,27 @@ public class LobbyState extends JCurveState {
 		chatField.addListener(new ComponentListener() {
 			@Override
 			public void componentActivated(AbstractComponent e) {
-				GUITextField field = (GUITextField) e;
-				String playerName = "todo";
-				chatGUI.addMessage(playerName, field.getText());
-				field.setText("");
+				enterChatMessage(e);
 			}
 		});
 
-		GUIButton buttonPlay = new GUIButton("Spiel starten", container, 500, 500);
+		buttonPlay = new GUIButton("Spiel starten", container, GameConstants.APP_WIDHT / 2 - 100, GameConstants.APP_HEIGHT - 100);
+		buttonPlay.addListener(new ComponentListener() {
+			@Override
+			public void componentActivated(AbstractComponent source) {
+				game.enterState(GameConstants.STATE_GAME);
+			}
+		});
 
-		addGUIElements(chatGUI, playerList, buttonPlay);
+		buttonCancel = new GUIButton("Abbrechen", container, GameConstants.APP_WIDHT / 2 + 100, GameConstants.APP_HEIGHT - 100);
+		buttonCancel.addListener(new ComponentListener() {
+			@Override
+			public void componentActivated(AbstractComponent source) {
+				game.enterState(GameConstants.STATE_MAIN_MENU);
+			}
+		});
+
+		addGUIElements(chatGUI, playerList, buttonPlay, buttonCancel);
 	}
 
 	@Override
@@ -89,6 +101,7 @@ public class LobbyState extends JCurveState {
 		playerList.updatePlayerVector(players);
 
 		if (players.size() == 0) {
+			buttonPlay.setEnabled(false);
 			dotDelta += delta;
 			if (dotDelta >= maxDotDelta) {
 				dotDelta = 0;
@@ -96,11 +109,13 @@ public class LobbyState extends JCurveState {
 				if (curDotPos > 3)
 					curDotPos = 1;
 			}
+		} else {
+			if (!buttonPlay.isEnabled())
+				buttonPlay.setEnabled(true);
 		}
 
-		if (container.getInput().isKeyPressed(Input.KEY_ENTER) && !chatField.hasFocus()) {
+		if (container.getInput().isKeyPressed(Input.KEY_ENTER) && !chatField.hasFocus())
 			chatField.setFocus(true);
-		}
 
 		if (container.getInput().isKeyPressed(Input.KEY_F1)) {
 			Player p = new Player();
@@ -109,6 +124,31 @@ public class LobbyState extends JCurveState {
 		} else if (container.getInput().isKeyPressed(Input.KEY_F2)) {
 			removePlayer(0);
 		}
+	}
+
+	@Override
+	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
+		super.render(container, game, g);
+
+		if (players.size() == 0) {
+			int strWidth = ResourceManager.getFont("standard").getWidth(MSG_WAIT) / 2;
+			ResourceManager.getFont("standard").drawString(GameConstants.APP_WIDHT / 2 - strWidth, GameConstants.APP_HEIGHT / 2, MSG_WAIT + " " + MSG_WAIT_DOTS.substring(0, curDotPos));
+		}
+
+		chatField.render(container, g);
+	}
+
+	/**
+	 * Trägt eine neue Chatnachricht eines Spielers ein.
+	 * 
+	 * @param e
+	 *            - das TextField, bzw. Eingabefeld in der Lobby
+	 */
+	private void enterChatMessage(AbstractComponent e) {
+		GUITextField field = (GUITextField) e;
+		String playerName = "todo";
+		chatGUI.addMessage(playerName, field.getText());
+		field.setText("");
 	}
 
 	/**
@@ -152,15 +192,4 @@ public class LobbyState extends JCurveState {
 		chatGUI.addSystemMessage(MSG_PLAYER_CONNECTED.replace("%s", p.getProperties().getName()));
 	}
 
-	@Override
-	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
-		super.render(container, game, g);
-
-		if (players.size() == 0) {
-			int strWidth = ResourceManager.getFont("chatFont").getWidth(MSG_WAIT) / 2;
-			ResourceManager.getFont("chatFont").drawString(GameConstants.APP_WIDHT / 2 - strWidth, GameConstants.APP_HEIGHT / 2, MSG_WAIT + " " + MSG_WAIT_DOTS.substring(0, curDotPos));
-		}
-
-		chatField.render(container, g);
-	}
 }
