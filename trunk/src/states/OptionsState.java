@@ -30,6 +30,7 @@ public class OptionsState extends JCurveState {
 	GUITextField nameText = null;
 	Vector<Color> farben = null;
 	Vector<GUIButton> farbButtons = null;
+	Color spielerfarbe = null;
 
 	public OptionsState(int id) {
 		super(id);
@@ -41,7 +42,7 @@ public class OptionsState extends JCurveState {
 		super.init(container, game);
 
 		farbButtons = new Vector<GUIButton>();
-		
+
 		farben = new Vector<Color>();
 		farben.add(Color.red);
 		farben.add(Color.green);
@@ -49,9 +50,23 @@ public class OptionsState extends JCurveState {
 		farben.add(Color.yellow);
 
 		int y = 400;
+		// initallisiert die Rechtecke mit den Farben
 		for (int i = 0; i < farben.size(); i++) {
 			farbButtons.add(new GUIButton(container, farben.get(i), y, 150, 50, 50));
 			y += 100;
+
+			// Sollte ein Farbe angeklickt werden so wird in der Klassenvariable
+			// spielerfarbe gespeichert
+			farbButtons.get(i).addListener(new ComponentListener() {
+				@Override
+				public void componentActivated(AbstractComponent source) {
+					for (int i = 0; i < farbButtons.size(); i++) {
+						if (source.equals(farbButtons.get(i).getMouseOverArea())) {
+							spielerfarbe = farbButtons.get(i).getFillColor();
+						}
+					}
+				}
+			});
 			addGUIElements(farbButtons.get(i));
 		}
 
@@ -87,5 +102,4 @@ public class OptionsState extends JCurveState {
 
 		nameText.render(container, g);
 	}
-
 }
