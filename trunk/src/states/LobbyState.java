@@ -100,7 +100,7 @@ public class LobbyState extends JCurveState {
 		}
 
 		if (container.getInput().isKeyPressed(Input.KEY_F1)) {
-			Player p = new Player(null);
+			Player p = new Player();
 			p.getProperties().setName(new Date().getTime() + "");
 			addPlayer(p);
 		} else if (container.getInput().isKeyPressed(Input.KEY_F2)) {
