@@ -24,7 +24,7 @@ public class GUIButton extends BasicGUIElement {
 	private GUIContext context = null;
 	private MouseOverArea area = null;
 
-	private Image button = null;
+	private Color normalColor = Color.white, mouseOverColor = Color.orange, disabledColor = Color.gray;
 
 	/**
 	 * Erstellt einen neuen Button an der bestimmten Position.
@@ -40,22 +40,136 @@ public class GUIButton extends BasicGUIElement {
 	 *            - die yPos
 	 */
 	public GUIButton(String text, GUIContext context, float x, float y) {
-		super(x, y, ResourceManager.getFont("standard").getWidth(text), ResourceManager.getFont("standard").getHeight(text));
+		this(text, context, x, y, "standard");
+	}
+
+	/**
+	 * @see GUIButton#GUIButton(String, GUIContext, float, float)
+	 */
+	public GUIButton(String text, GUIContext context, float x, float y, String fontName) {
+		super(x, y, ResourceManager.getFont(fontName).getWidth(text), ResourceManager.getFont(fontName).getHeight(text));
 
 		this.text = text;
 		this.context = context;
 
+		Image button = null;
 		try {
 			button = new Image(getWidth(), getHeight());
 			texture = button.getGraphics();
-			texture.setFont(ResourceManager.getFont("standard"));
+			texture.setFont(ResourceManager.getFont(fontName));
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
 
 		Rectangle shape = new Rectangle(x, y, getWidth(), getHeight());
+
 		area = new MouseOverArea(context, button, shape);
-		area.setMouseOverColor(Color.orange);
+		setNormalColor(normalColor);
+		setMouseOverColor(mouseOverColor);
+	}
+
+	public GUIButton(GUIContext context, Color color, float x, float y, int width, int height) {
+		super(x, y, width, height);
+
+		this.text = "";
+		this.context = context;
+
+		Image button = null;
+		try {
+			button = new Image(getWidth(), getHeight());
+			texture = button.getGraphics();
+			texture.setColor(color);
+		} catch (SlickException e) {
+			e.printStackTrace();
+		}
+
+		Rectangle shape = new Rectangle(x, y, getWidth(), getHeight());
+
+		area = new MouseOverArea(context, button, shape);
+		setNormalColor(normalColor);
+		setMouseOverColor(mouseOverColor);
+	}
+
+	@Override
+	public void render(Graphics g) {
+		super.render(g);
+
+		if (text != "")
+			texture.drawString(text, 0, 0);
+		else
+			texture.fillRect(0, 0, getWidth(), getHeight());
+
+		texture.flush();
+
+		area.render(context, g);
+	}
+
+	/**
+	 * Legt die Textfarbe des Buttons fest.
+	 * 
+	 * @param c
+	 *            - die Farbe
+	 */
+	public void setNormalColor(Color c) {
+		normalColor = c;
+		area.setNormalColor(normalColor);
+	}
+
+	/**
+	 * Legt die MouseOver-Farbe des Buttons fest.
+	 * 
+	 * @param c
+	 *            - die Farbe
+	 */
+	public void setMouseOverColor(Color c) {
+		mouseOverColor = c;
+		area.setMouseOverColor(mouseOverColor);
+	}
+
+	/**
+	 * Legt die Farbe für den Button im deaktivierten Zustand fest.
+	 * 
+	 * @param c
+	 *            - die Farbe
+	 */
+	public void setDisabledColor(Color c) {
+		disabledColor = c;
+	}
+
+	/**
+	 * Liefert die MouseOverArea dieses Button.
+	 * 
+	 * @return MouseOverArea
+	 */
+	public MouseOverArea getMouseOverArea() {
+		return area;
+	}
+
+	/**
+	 * Gibt an, ob dieser Button aktiviert ist, d.h. auf Eingaben reagiert.
+	 * 
+	 * @return boolean
+	 */
+	public boolean isEnabled() {
+		return area.isAcceptingInput();
+	}
+
+	/**
+	 * Setzt diesen Button aktiv, bzw. inaktiv.
+	 * 
+	 * @param enable
+	 *            - true für aktiv
+	 */
+	public void setEnabled(boolean enable) {
+		if (enable) {
+			area.setNormalColor(normalColor);
+			area.setMouseOverColor(mouseOverColor);
+			area.setAcceptingInput(true);
+		} else {
+			area.setNormalColor(disabledColor);
+			area.setMouseOverColor(disabledColor);
+			area.setAcceptingInput(false);
+		}
 	}
 
 	/**
@@ -66,16 +180,6 @@ public class GUIButton extends BasicGUIElement {
 	 */
 	public void addListener(ComponentListener listener) {
 		area.addListener(listener);
-	}
-
-	@Override
-	public void render(Graphics g) {
-		super.render(g);
-
-		texture.drawString(text, 0, 0);
-		texture.flush();
-
-		area.render(context, g);
 	}
 
 }
