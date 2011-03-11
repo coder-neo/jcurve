@@ -36,6 +36,7 @@ public class GameState extends JCurveState {
 	@Override
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
 		ResourceManager.addImage("laser", "data/images/laser.png");
+		ResourceManager.addImage("bullet", "data/images/shot.png");
 		super.init(container, game);
 		getClient().sendUDP(new PlayerOptions("adam", "ff0000"));
 	}
@@ -61,9 +62,6 @@ public class GameState extends JCurveState {
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
 		// ------------------------- Client Eingaben ----------------------------
-		if (container.getInput().isKeyPressed(Input.KEY_SPACE)) {
-			getClient().sendUDP(NetworkConstants.GAME_START);
-		}
 		if (container.getInput().isKeyDown(Input.KEY_LEFT) || container.getInput().isKeyDown(Input.KEY_A)) {
 			getClient().sendUDP(NetworkConstants.PLAYER_MOVE_LEFT);
 		} else if (container.getInput().isKeyDown(Input.KEY_RIGHT) || container.getInput().isKeyDown(Input.KEY_D)) {
@@ -79,6 +77,9 @@ public class GameState extends JCurveState {
 				getClient().sendUDP(NetworkConstants.PLAYER_BOOST_DISABLE);
 				playerBoost = false;
 			}
+		}
+		if (container.getInput().isKeyPressed(Input.KEY_SPACE)) {
+			getClient().sendUDP(NetworkConstants.PLAYER_SHOOT);
 		}
 
 		// ----------------------- Serverberechnungen ---------------------------
