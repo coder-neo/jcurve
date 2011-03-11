@@ -3,6 +3,8 @@ package states;
 import gui.GUIButton;
 import gui.GUITextField;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.Vector;
 
 import main.GameConstants;
@@ -13,6 +15,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.gui.AbstractComponent;
 import org.newdawn.slick.gui.ComponentListener;
+import org.newdawn.slick.muffin.FileMuffin;
 import org.newdawn.slick.state.StateBasedGame;
 
 import utils.ResourceManager;
@@ -23,83 +26,96 @@ import utils.ResourceManager;
  * gespeichert werden
  * 
  * @author Benedikt
- * 
+ * @author Benjamin
  */
 public class OptionsState extends JCurveState {
 
-	GUITextField nameText = null;
-	Vector<Color> farben = null;
-	Vector<GUIButton> farbButtons = null;
-	Color spielerfarbe = null;
+	private GUITextField playerName = null;
+	private Color playerColor = null;
 
 	public OptionsState(int id) {
 		super(id);
-
 	}
 
 	@Override
 	public void init(GameContainer container, final StateBasedGame game) throws SlickException {
 		super.init(container, game);
 
-		farbButtons = new Vector<GUIButton>();
+		Vector<Color> colors = new Vector<Color>();
+		colors.add(Color.red);
+		colors.add(Color.green);
+		colors.add(Color.blue);
+		colors.add(Color.yellow);
+		colors.add(Color.pink);
+		colors.add(Color.orange);
+		colors.add(Color.magenta);
+		colors.add(Color.gray);
+		colors.add(Color.cyan);
 
-		farben = new Vector<Color>();
-		farben.add(Color.red);
-		farben.add(Color.green);
-		farben.add(Color.blue);
-		farben.add(Color.yellow);
-
-		int y = 400;
-		// initallisiert die Rechtecke mit den Farben
-		for (int i = 0; i < farben.size(); i++) {
-			farbButtons.add(new GUIButton(container, farben.get(i), y, 150, 50, 50));
-			y += 100;
-
-			// Sollte ein Farbe angeklickt werden so wird in der Klassenvariable
-			// spielerfarbe gespeichert
-			farbButtons.get(i).addListener(new ComponentListener() {
+		int x = 350;
+		for (int i = 0; i < colors.size(); i++) {
+			final GUIButton button = new GUIButton(container, colors.get(i), x, 300, 50, 50);
+			button.setMouseOverColor(colors.get(i));
+			button.addListener(new ComponentListener() {
 				@Override
 				public void componentActivated(AbstractComponent source) {
-					for (int i = 0; i < farbButtons.size(); i++) {
-						if (source.equals(farbButtons.get(i).getMouseOverArea())) {
-							spielerfarbe = farbButtons.get(i).getFillColor();
-						}
-					}
+					playerColor = button.getFillColor();
 				}
 			});
-			addGUIElements(farbButtons.get(i));
+
+			addGUIElements(button);
+
+			x += 75;
 		}
 
-		nameText = new GUITextField(container, ResourceManager.getFont("standard"), 400, 100, 200, 30);
-		nameText.setBackgroundColor(Color.green);
+		playerName = new GUITextField(container, ResourceManager.getFont("chatFont"), 350, 250, 300, 25);
+		playerName.setBackgroundColor(Color.white);
+		playerName.setTextColor(Color.black);
 
-		GUIButton speichern = new GUIButton("speichern", container, 100, 350);
-		speichern.addListener(new ComponentListener() {
+		GUIButton buttonSave = new GUIButton("Speichern", container, 100, 450);
+		buttonSave.addListener(new ComponentListener() {
 			@Override
 			public void componentActivated(AbstractComponent source) {
-				// TODO Optionen auslesen und in XML speichern
-
+				saveConfigFile();
+				game.enterState(GameConstants.STATE_MAIN_MENU);
 			}
 		});
 
-		GUIButton zurueck = new GUIButton("zurück", container, 100, 450);
-		zurueck.addListener(new ComponentListener() {
+		GUIButton buttonCancel = new GUIButton("Abbrechen", container, 100, 500);
+		buttonCancel.addListener(new ComponentListener() {
 			@Override
 			public void componentActivated(AbstractComponent source) {
 				game.enterState(GameConstants.STATE_MAIN_MENU);
 			}
 		});
 
-		addGUIElements(zurueck, speichern);
+		addGUIElements(buttonCancel, buttonSave);
+	}
+
+	/**
+	 * Speichert die Einstellungen des Spielers in einer Datei auf dem PC.
+	 */
+	private void saveConfigFile() {
+		FileMuffin file = new FileMuffin();
+		HashMap<Object, Object> data = new HashMap<Object, Object>();
+		data.put("Name", playerName.getText());
+		data.put("Color", playerColor);
+		try {
+			file.saveFile(data, GameConstants.APP_LOCAL_OPTIONS_FILENAME);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
 		super.render(container, game, g);
 
-		ResourceManager.getFont("standard").drawString(300, 100, "Name:");
-		ResourceManager.getFont("standard").drawString(300, 150, "Farbe:");
+		ResourceManager.getFont("header").drawString(100, 100, "Optionen", Color.red);
 
-		nameText.render(container, g);
+		ResourceManager.getFont("standard").drawString(100, 250, "Name:");
+		ResourceManager.getFont("standard").drawString(100, 300, "Farbe:");
+
+		playerName.render(container, g);
 	}
 }

@@ -7,7 +7,7 @@ public class GameConstants {
 	public final static String APP_NAME = "JCurve";
 	public final static String APP_VERSION = "v 1.0 Beta";
 	public static final String APP_LOCAL_OPTIONS_FILENAME = "jCurvePlayerOptions";
-	public static final boolean APP_IS_FULLSCREEN = false;
+	public static final boolean APP_IS_FULLSCREEN = true;
 
 	public final static int APP_WIDHT = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0].getDisplayMode().getWidth();
 	public final static int APP_HEIGHT = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0].getDisplayMode().getHeight();

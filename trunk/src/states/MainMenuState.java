@@ -53,7 +53,6 @@ public class MainMenuState extends JCurveState {
 		bot.getProperties().getPoints().add(new PlayerPoint((GameConstants.APP_WIDHT / 2) + 140, 200, 0));
 		botColor = new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255));
 
-		saveConfigFile();
 		readConfigFile();
 	}
 
@@ -94,20 +93,6 @@ public class MainMenuState extends JCurveState {
 		});
 
 		addGUIElements(buttonPlay, buttonJoin, buttonOptions, buttonQuit);
-	}
-
-	// TODO: in optionState
-	private void saveConfigFile() {
-		FileMuffin file = new FileMuffin();
-		HashMap<Object, Object> data = new HashMap<Object, Object>();
-		data.put("name", "peter");
-		data.put("color", "orangepink");
-		data.put("ability", "jump");
-		try {
-			file.saveFile(data, GameConstants.APP_LOCAL_OPTIONS_FILENAME);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	private void readConfigFile() {
