@@ -21,10 +21,14 @@ public class PlayerProperties {
 
 	// private Image image;
 
+	public PlayerProperties() {
+		this.connectionID = -1;
+	}
+
 	public PlayerProperties(int connectionID) {
 		this.connectionID = connectionID;
 	}
-	
+
 	public PlayerProperties(){}
 	
 	public Vector<PlayerPoint> getPoints() {
@@ -78,9 +82,11 @@ public class PlayerProperties {
 	public void setColorCode(int colorCode) {
 		this.colorCode = colorCode;
 	}
+
 	public int getConnectionID() {
 		return connectionID;
 	}
+
 	public void setConnectionID(int connectionID) {
 		this.connectionID = connectionID;
 	}

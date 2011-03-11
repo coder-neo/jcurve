@@ -24,39 +24,52 @@ import com.esotericsoftware.kryonet.Client;
  */
 public abstract class JCurveState extends BasicGameState {
 
+	private int id;
+	protected GameContainer container = null;
+
+	private Vector<BasicGUIElement> elements = new Vector<BasicGUIElement>();
 	private int stateID;
 
-	private Vector<BasicGUIElement> guiElements = new Vector<BasicGUIElement>();
+	private Vector<BasicGUIElement> elements = new Vector<BasicGUIElement>();
 
 	public JCurveState(int id) {
+		this.id = id;
 		this.stateID = id;
 	}
 
 	@Override
 	public int getID() {
+		return id;
 		return stateID;
 	}
 
 	@Override
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
+		this.container = container;
+		
 		ResourceManager.addFont("chatFont", "data/fonts/tempesta.ttf", 12, false, false);
 		ResourceManager.addFont("header", "data/fonts/cool.ttf", 60, false, false);
 		ResourceManager.addFont("standard", "data/fonts/cool.ttf", 30, false, false);
 		ResourceManager.addFont("small", "data/fonts/cool.ttf", 12, false, false);
+		ResourceManager.addFont("small", "data/fonts/cool.ttf", 20, false, false);
 	}
 
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
 
-		for (int i = 0; i < guiElements.size(); i++) {
-			guiElements.get(i).render(g);
+		for (int i = 0; i < elements.size(); i++) {
+			elements.get(i).render(g);
+
+
 		}
 	}
 
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
-		for (int i = 0; i < guiElements.size(); i++) {
-			guiElements.get(i).update(delta);
+		for (int i = 0; i < elements.size(); i++) {
+			elements.get(i).update(delta);
+
+
 		}
 	}
 
@@ -77,7 +90,8 @@ public abstract class JCurveState extends BasicGameState {
 	 */
 	public void addGUIElements(BasicGUIElement... e) {
 		for (int i = 0; i < e.length; i++)
-			guiElements.add(e[i]);
+			elements.add(e[i]);
+
 	}
 
 }
