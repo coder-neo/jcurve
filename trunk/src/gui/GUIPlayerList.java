@@ -33,15 +33,6 @@ public class GUIPlayerList extends BasicGUIElement {
 		}
 	}
 
-	public void addPlayers(List<Player> players) {
-		players.addAll(players);
-	}
-
-	public void addPlayer(Player player) {
-		players.add(player);
-	}
-
-	public void setPlayers(Vector<Player> players) {
 	public void updatePlayerVector(Vector<Player> players) {
 		this.players = players;
 	}
