@@ -37,6 +37,8 @@ public class LobbyState extends JCurveState {
 	public static final String MSG_WAIT = "Warte auf Mitspieler";
 	public static final String MSG_WAIT_DOTS = "...";
 
+	public static final int MIN_PLAYERS_TO_PLAY = 2;
+
 	private Vector<Player> players = new Vector<Player>();
 
 	private GUIChat chatGUI = null;
@@ -108,7 +110,7 @@ public class LobbyState extends JCurveState {
 
 		playerList.updatePlayerVector(players);
 
-		if (players.size() == 0) {
+		if (players.size() < MIN_PLAYERS_TO_PLAY) {
 			buttonPlay.setEnabled(false);
 			dotDelta += delta;
 			if (dotDelta >= maxDotDelta) {
@@ -138,7 +140,7 @@ public class LobbyState extends JCurveState {
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
 		super.render(container, game, g);
 
-		if (players.size() == 0) {
+		if (players.size() < MIN_PLAYERS_TO_PLAY) {
 			int strWidth = ResourceManager.getFont("standard").getWidth(MSG_WAIT) / 2;
 			ResourceManager.getFont("standard").drawString(GameConstants.APP_WIDHT / 2 - strWidth, GameConstants.APP_HEIGHT / 2, MSG_WAIT + " " + MSG_WAIT_DOTS.substring(0, curDotPos));
 		}

@@ -23,7 +23,7 @@ public class GUIButton extends BasicGUIElement {
 	private String text = null;
 
 	private Graphics texture = null;
-	private GUIContext context = null;   
+	private GUIContext context = null;
 	private MouseOverArea area = null;
 
 	private Color normalColor = Color.white, mouseOverColor = Color.orange, disabledColor = Color.gray;
@@ -185,7 +185,12 @@ public class GUIButton extends BasicGUIElement {
 	public void addListener(ComponentListener listener) {
 		area.addListener(listener);
 	}
-	
+
+	/**
+	 * Liefert die Füllfarbe des Buttons, falls vorhanden.
+	 * 
+	 * @return Color
+	 */
 	public Color getFillColor() {
 		return fillColor;
 	}

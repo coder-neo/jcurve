@@ -8,6 +8,7 @@ import org.newdawn.slick.state.StateBasedGame;
 import states.GameState;
 import states.LobbyState;
 import states.MainMenuState;
+import states.OptionsState;
 
 public class JCurve extends StateBasedGame {
 
@@ -21,6 +22,7 @@ public class JCurve extends StateBasedGame {
 	public void initStatesList(GameContainer container) throws SlickException {
 		addState(new MainMenuState(GameConstants.STATE_MAIN_MENU));
 		addState(new LobbyState(GameConstants.STATE_LOBBY));
+		addState(new OptionsState(GameConstants.STATE_OPTIONS));
 		addState(new GameState(GameConstants.STATE_GAME));
 
 		enterState(GameConstants.STATE_MAIN_MENU);
