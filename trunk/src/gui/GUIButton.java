@@ -23,10 +23,11 @@ public class GUIButton extends BasicGUIElement {
 	private String text = null;
 
 	private Graphics texture = null;
-	private GUIContext context = null;
+	private GUIContext context = null;   
 	private MouseOverArea area = null;
 
 	private Color normalColor = Color.white, mouseOverColor = Color.orange, disabledColor = Color.gray;
+	private Color fillColor;
 
 	/**
 	 * Erstellt einen neuen Button an der bestimmten Position.
@@ -75,12 +76,13 @@ public class GUIButton extends BasicGUIElement {
 
 		this.text = "";
 		this.context = context;
+		this.fillColor = color;
 
 		Image button = null;
 		try {
 			button = new Image(getWidth(), getHeight());
 			texture = button.getGraphics();
-			texture.setColor(color);
+			texture.setColor(fillColor);
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
@@ -182,6 +184,10 @@ public class GUIButton extends BasicGUIElement {
 	 */
 	public void addListener(ComponentListener listener) {
 		area.addListener(listener);
+	}
+	
+	public Color getFillColor() {
+		return fillColor;
 	}
 
 }
