@@ -51,7 +51,6 @@ public class CurveClient extends Listener {
                 super.received(connection, object);
                 if (object instanceof HashMap) {
                         // hier werden Koordinaten empfangen
-                        System.out.println("KO received: " + object.toString());
                         @SuppressWarnings("unchecked")
                         HashMap<Integer, PlayerPoint> newPoints = (HashMap<Integer, PlayerPoint>) object;
                         for (int i = 0; i < playerProperties.size(); i++) {

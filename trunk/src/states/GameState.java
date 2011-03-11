@@ -10,10 +10,8 @@ import main.PlayerProperties;
 import main.client.CurveClient;
 import main.server.CurveServer;
 
-import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
@@ -22,81 +20,83 @@ import utils.ResourceManager;
 
 public class GameState extends JCurveState {
 
-        private CurveServer curveServer;
-        private int playerDelta = 30;
-        private int playerCurDelta = 0;
+	private CurveServer curveServer;
+	private int playerDelta = 30;
+	private int playerCurDelta = 0;
+	
+	private boolean playerBoost = false;
 
-        private long loopDuration;
+	private long loopDuration;
 
-        public GameState(int id) {
-                super(id);
-                curveServer = new CurveServer();
-        }
+	public GameState(int id) {
+		super(id);
+		curveServer = new CurveServer();
+	}
 
-        @Override
-        public void init(GameContainer container, StateBasedGame game) throws SlickException {
-                super.init(container, game);
-                ResourceManager.addImage("laser", "data/images/laser.png");
-                getClient().sendUDP(new PlayerOptions("adam", "ff0000"));
-        }
+	@Override
+	public void init(GameContainer container, StateBasedGame game) throws SlickException {
+		ResourceManager.addImage("laser", "data/images/laser.png");
+		super.init(container, game);
+		getClient().sendUDP(new PlayerOptions("adam", "ff0000"));
+	}
 
-        @Override
-        public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
-                super.render(container, game, g);
-                Image tmpImg;
-                if (curveServer != null) {
-                        Iterator<Player> players = curveServer.getPlayerCons().values().iterator();
-                        while (players.hasNext()) {
-                                Player p = players.next();
-                                Color color = new Color(p.getProperties().getColorCode());
-                                for (int i = 0; i < p.getProperties().getPoints().size() - 1; i++) {
-                                        tmpImg = ResourceManager.getImage(p.getProperties().getImageKey()).copy();
-                                        tmpImg.setRotation((float) Math.toDegrees(p.getProperties().getPoints().get(i).getAngle()));
-                                        g.drawImage(tmpImg, p.getProperties().getPoints().get(i).x, p.getProperties().getPoints().get(i).y, color);
-                                }
-                        }
-                } else {
-                        Vector<PlayerProperties> playerProperties = CurveClient.getInstance().getPlayerProperties();
-                        for (int i = 0; i < playerProperties.size(); i++){
-                                PlayerProperties pp = playerProperties.get(i);
-                                Color color = new Color(playerProperties.get(i).getColorCode());
-                                for (int j = 0; j < pp.getPoints().size(); j++){
-                                        tmpImg = ResourceManager.getImage(pp.getImageKey()).copy();
-                                        tmpImg.setRotation((float) Math.toDegrees(pp.getPoints().get(i).getAngle()));
-                                        g.drawImage(tmpImg, pp.getPoints().get(i).x, pp.getPoints().get(i).y, color);
-                                }
-                        }
-                }
-        }
+	@Override
+	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
+		super.render(container, game, g);
+		if (curveServer != null) {
+			Iterator<Player> players = curveServer.getPlayerCons().values().iterator();
+			while (players.hasNext()) {
+				Player p = players.next();
+				p.render(g);
+			}
+		} else {
+			Vector<PlayerProperties> playerProperties = CurveClient.getInstance().getPlayerProperties();
+			for (int i = 0; i < playerProperties.size(); i++) {
+				PlayerProperties pp = playerProperties.get(i);
+				pp.render(g);
+			}
+		}
+	}
 
-        @Override
-        public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
-                if (container.getInput().isKeyPressed(Input.KEY_SPACE)) {
-                        getClient().sendUDP(NetworkConstants.GAME_START);
-                }
-                if (container.getInput().isKeyDown(Input.KEY_LEFT) || container.getInput().isKeyDown(Input.KEY_A)) {
-                        getClient().sendUDP(NetworkConstants.PLAYER_MOVE_LEFT);
-                } else if (container.getInput().isKeyDown(Input.KEY_RIGHT) || container.getInput().isKeyDown(Input.KEY_D)) {
-                        getClient().sendUDP(NetworkConstants.PLAYER_MOVE_RIGHT);
-                } else {
-                        getClient().sendUDP(NetworkConstants.PLAYER_MOVE_STRAIGHT);
-                }
+	@Override
+	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
+		// ------------------------- Client Eingaben ----------------------------
+		if (container.getInput().isKeyPressed(Input.KEY_SPACE)) {
+			getClient().sendUDP(NetworkConstants.GAME_START);
+		}
+		if (container.getInput().isKeyDown(Input.KEY_LEFT) || container.getInput().isKeyDown(Input.KEY_A)) {
+			getClient().sendUDP(NetworkConstants.PLAYER_MOVE_LEFT);
+		} else if (container.getInput().isKeyDown(Input.KEY_RIGHT) || container.getInput().isKeyDown(Input.KEY_D)) {
+			getClient().sendUDP(NetworkConstants.PLAYER_MOVE_RIGHT);
+		} else {
+			getClient().sendUDP(NetworkConstants.PLAYER_MOVE_STRAIGHT);
+		}
+		if (container.getInput().isKeyDown(Input.KEY_LSHIFT)) {
+			getClient().sendUDP(NetworkConstants.PLAYER_BOOST_ENABLE);
+			playerBoost = true;
+		} else {
+			if (playerBoost) {
+				getClient().sendUDP(NetworkConstants.PLAYER_BOOST_DISABLE);
+				playerBoost = false;
+			}
+		}
 
-                // ----------------------- Serverberechnungen ---------------------------
-                playerCurDelta += delta;
-                if (playerCurDelta > playerDelta - loopDuration) {
-                        loopDuration = System.currentTimeMillis();
-                        playerCurDelta = 0;
-                        if (curveServer != null) {
-                                Iterator<Player> players = curveServer.getPlayerCons().values().iterator();
-                                while (players.hasNext()) {
-                                        Player p = players.next();
-                                        p.move();
-                                }
-                                curveServer.sendAllPlayerCoordinates();
-                        }
-                        loopDuration = System.currentTimeMillis() - loopDuration;
-                }
-        }
+		// ----------------------- Serverberechnungen ---------------------------
+		playerCurDelta += delta;
+		if (playerCurDelta > playerDelta - loopDuration) {
+			loopDuration = System.currentTimeMillis();
+			playerCurDelta = 0;
+			if (curveServer != null) {
+				Iterator<Player> players = curveServer.getPlayerCons().values().iterator();
+				while (players.hasNext()) {
+					Player p = players.next();
+					p.update(delta);
+					p.move();
+				}
+				curveServer.sendAllPlayerCoordinates();
+			}
+			loopDuration = System.currentTimeMillis() - loopDuration;
+		}
+	}
 
 }

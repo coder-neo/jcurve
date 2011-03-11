@@ -53,6 +53,11 @@ public class CurveServer extends Listener {
 		super.received(connection, object);
 		Player p = playerCons.get(connection.getID());
 		if (object instanceof Integer) {
+//			int cmd = Integer.valueOf(object.toString());
+//			if (cmd != NetworkConstants.PLAYER_BOOST && p.isBoost()){
+//				p.setBoost(false);
+//				System.out.println("disable boost");
+//			}
 			switch (Integer.valueOf(object.toString())) {
 			case NetworkConstants.GAME_START:
 				p.setReady(true);
@@ -65,6 +70,12 @@ public class CurveServer extends Listener {
 				break;
 			case NetworkConstants.PLAYER_MOVE_STRAIGHT:
 				p.steerStraight();
+				break;
+			case NetworkConstants.PLAYER_BOOST_ENABLE:
+				p.setBoost(true);
+				break;
+			case NetworkConstants.PLAYER_BOOST_DISABLE:
+				p.setBoost(false);
 				break;
 			default:
 				break;
