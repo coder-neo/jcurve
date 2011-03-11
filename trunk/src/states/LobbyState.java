@@ -4,6 +4,7 @@ import gui.GUIChat;
 import gui.GUIPlayerList;
 import gui.GUITextField;
 
+import java.util.Date;
 import java.util.Vector;
 
 import main.GameConstants;
@@ -29,6 +30,11 @@ import utils.ResourceManager;
  * @author Benjamin
  */
 public class LobbyState extends JCurveState {
+
+	public static final String MSG_PLAYER_CONNECTED = "%s hat sich dem Spiel angeschlossen";
+	public static final String MSG_PLAYER_DISCONNECTED = "%s hat uns verlassen";
+	public static final String MSG_WAIT = "WARTE AUF MITSPIELER";
+	public static final String MSG_WAIT_DOTS = "...";
 
 	private Vector<Player> players = new Vector<Player>();
 
@@ -64,7 +70,7 @@ public class LobbyState extends JCurveState {
 			@Override
 			public void componentActivated(AbstractComponent e) {
 				GUITextField field = (GUITextField) e;
-				String playerName = "Test";
+				String playerName = "todo";
 				chatGUI.addMessage(playerName, field.getText());
 				field.setText("");
 			}
@@ -77,19 +83,70 @@ public class LobbyState extends JCurveState {
 	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
 		super.update(container, game, delta);
 
-		playerList.setPlayers(players);
+		playerList.updatePlayerVector(players);
 
-		dotDelta += delta;
-		if (dotDelta >= maxDotDelta) {
-			dotDelta = 0;
-			curDotPos++;
-			if (curDotPos > 3)
-				curDotPos = 1;
+		if (players.size() == 0) {
+			dotDelta += delta;
+			if (dotDelta >= maxDotDelta) {
+				dotDelta = 0;
+				curDotPos++;
+				if (curDotPos > 3)
+					curDotPos = 1;
+			}
 		}
 
-		if (container.getInput().isKeyDown(Input.KEY_ENTER) && !chatField.hasFocus()) {
+		if (container.getInput().isKeyPressed(Input.KEY_ENTER) && !chatField.hasFocus()) {
 			chatField.setFocus(true);
 		}
+
+		if (container.getInput().isKeyPressed(Input.KEY_F1)) {
+			Player p = new Player(null);
+			p.getProperties().setName(new Date().getTime() + "");
+			addPlayer(p);
+		} else if (container.getInput().isKeyPressed(Input.KEY_F2)) {
+			removePlayer(0);
+		}
+	}
+
+	/**
+	 * Entfernt einen Spieler aus der Lobby anhand des Vector-Index.
+	 * 
+	 * @param index
+	 *            - der Index
+	 */
+	public void removePlayer(int index) {
+		if (!players.contains(players.get(index)))
+			return;
+
+		String name = players.get(index).getProperties().getName();
+		players.remove(index);
+		chatGUI.addSystemMessage(MSG_PLAYER_DISCONNECTED.replace("%s", name));
+	}
+
+	/**
+	 * Entfernt einen Spieler aus der Lobby anhand des Player-Objektes
+	 * 
+	 * @param p
+	 *            - das Objekt
+	 */
+	public void removePlayer(Player p) {
+		for (int i = 0; i < players.size(); i++) {
+			if (players.get(i).equals(p)) {
+				removePlayer(i);
+			}
+		}
+	}
+
+	/**
+	 * Registriert einen neuen Spieler in dieser Lobby.
+	 * 
+	 * @param p
+	 *            - das Spielerobjekt
+	 */
+	public void addPlayer(Player p) {
+		p.setReady(false);
+		players.add(p);
+		chatGUI.addSystemMessage(MSG_PLAYER_CONNECTED.replace("%s", p.getProperties().getName()));
 	}
 
 	@Override
@@ -97,10 +154,8 @@ public class LobbyState extends JCurveState {
 		super.render(container, game, g);
 
 		if (players.size() == 0) {
-			String waitMsg = "WARTE AUF SPIELER";
-			String dots = "...";
-			int strWidth = ResourceManager.getFont("chatFont").getWidth(waitMsg) / 2;
-			ResourceManager.getFont("chatFont").drawString(GameConstants.APP_WIDHT / 2 - strWidth, GameConstants.APP_HEIGHT / 2, waitMsg + " " + dots.substring(0, curDotPos));
+			int strWidth = ResourceManager.getFont("chatFont").getWidth(MSG_WAIT) / 2;
+			ResourceManager.getFont("chatFont").drawString(GameConstants.APP_WIDHT / 2 - strWidth, GameConstants.APP_HEIGHT / 2, MSG_WAIT + " " + MSG_WAIT_DOTS.substring(0, curDotPos));
 		}
 
 		chatField.render(container, g);
