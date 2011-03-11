@@ -1,5 +1,6 @@
 package states;
 
+import gui.GUIButton;
 import gui.GUIChat;
 import gui.GUIPlayerList;
 import gui.GUITextField;
@@ -76,7 +77,9 @@ public class LobbyState extends JCurveState {
 			}
 		});
 
-		addGUIElements(chatGUI, playerList);
+		GUIButton buttonPlay = new GUIButton("Spiel starten", container, 500, 500);
+
+		addGUIElements(chatGUI, playerList, buttonPlay);
 	}
 
 	@Override
