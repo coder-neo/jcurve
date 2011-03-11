@@ -12,7 +12,9 @@ import org.newdawn.slick.gui.MouseOverArea;
 import utils.ResourceManager;
 
 /**
- * Ein Button, der eine gewisse Aktion ausführen kann.
+ * Ein Button, der eine gewisse Aktion ausführen kann. Der Button kann entweder
+ * beschriftet sein, wie etwa ein Menüpunkt, oder einfach eine mit Farbe
+ * gefüllte Fläche sein, zB. wenn der Spieler seine Farbe wählt.
  * 
  * @author Benjamin
  */
