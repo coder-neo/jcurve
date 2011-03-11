@@ -20,21 +20,12 @@ import com.esotericsoftware.kryonet.Connection;
 /**
  * Die Klasse Player repräsentiert den Spieler bzw. seine "Schlange". Sie beinhaltet statisch alle Spieler, alle Connections, alle Punkte der jeweiligen Schlange, sowie alle relevanten Spielerinformationen.
  * 
- * 
- * 
- * 
  * @author Adam Laszlo
  * 
  */
 public class Player {
 	private static Vector<Player> players = new Vector<Player>();
 	private Connection connection;
-	// private Vector<PlayerPoint> points = new Vector<PlayerPoint>();
-	// private String name;
-	// private int score;
-	// private Color color;
-	// private Image image;
-
 	private PlayerProperties properties;
 	private PlayerPoint nextPoint;
 	private float angle = 70;
@@ -48,7 +39,9 @@ public class Player {
 	private boolean isWrappedUp = false;
 	private ParticleSystem boostSystem = null;
 	private ConfigurableEmitter emitter = null;
-
+	
+	private Vector<Bullet> bullets = new Vector<Bullet>();
+	
 	public Player() {
 		properties = new PlayerProperties();
 		properties.setImageKey("laser");
@@ -86,7 +79,6 @@ public class Player {
 		} else {
 			angle = (float) Math.atan((middleY - y) / (double) (middleX - x));
 		}
-		// points.add(new PlayerPoint(x,y, angle));
 		properties.getPoints().add(new PlayerPoint(x, y, angle));
 		PlayerPoint pp = new PlayerPoint(x, y, angle);
 		properties.getPoints().add(pp);
@@ -95,14 +87,22 @@ public class Player {
 
 	public void render(Graphics g) {
 		properties.render(g);
-		// if (boost){
 		boostSystem.render();
-		// }
+		for(int i = 0; i < bullets.size(); i++){
+			bullets.get(i).render(g);
+		}
 	}
 
 	public void update(int delta) {
 		emitter.setPosition(nextPoint.x, nextPoint.y);
 		boostSystem.update(delta);
+		for(int i = 0; i < bullets.size(); i++){
+			Bullet b = bullets.get(i);
+			b.update(delta);
+			if (!b.isInsideScreen()){
+				bullets.remove(b);
+			}
+		}
 	}
 
 	/**
@@ -128,10 +128,10 @@ public class Player {
 		int nextY = lastPoint.y + deltaY;
 		nextPoint = new PlayerPoint(nextX + deltaX, nextY + deltaY, angle);
 		if (dirLeft) {
-			angle -= .1;
+			angle -= .12;
 		} else if (dirRight) {
 
-			angle += .1;
+			angle += .12;
 		}
 		PlayerPoint nextPoint = new PlayerPoint(nextX, nextY, angle);
 		properties.getPoints().add(nextPoint);
@@ -152,14 +152,11 @@ public class Player {
 				// damit die Schlange nicht in jedem Durchgang mit den vorherigen Punkten kollidiert,
 				// werden die letzten Punkte ignoriert, wenn die eigene Schlange geprüft wird.
 				end -= 5;
-
 			}
 			// ----- grobe Prüfung -----
 			for (int j = 0; j < end; j++) {
-
 				PlayerPoint p = other.getProperties().getPoints().get(j);
 				if (this.getProperties().getPoints().lastElement().distance(p) < 10) {
-
 					// ----- pixelgenaue Prüfung -----
 					Image img = ResourceManager.getImage(properties.getImageKey());
 					Shape rect = new Rectangle(p.x, p.y, img.getWidth(), img.getHeight());
@@ -167,7 +164,6 @@ public class Player {
 					Shape rect2 = new Rectangle(this.getProperties().getPoints().lastElement().x, properties.getPoints().lastElement().y, img.getWidth(), img.getHeight());
 					rect2 = rect2.transform(Transform.createRotateTransform(this.getProperties().getPoints().lastElement().getAngle(), rect2.getCenterX(), rect2.getCenterY()));
 					if (rect.intersects(rect2)) {
-
 						return true;
 					}
 				}
@@ -177,21 +173,22 @@ public class Player {
 	}
 
 	public void steerLeft() {
-
 		dirLeft = true;
 		dirRight = false;
 	}
 
 	public void steerRight() {
-
 		dirLeft = false;
 		dirRight = true;
 	}
 
 	public void steerStraight() {
-
 		dirLeft = false;
 		dirRight = false;
+	}
+	
+	public void shoot() {
+		bullets.add(new Bullet(nextPoint));
 	}
 
 	public void setBoost(boolean b) {
@@ -224,29 +221,6 @@ public class Player {
 
 	// ------------------- Getter & Setter ---------------------
 
-	// public Vector<PlayerPoint> getPoints() {
-	// return points;
-	// }
-	//
-	// public String getName() {
-	// return name;
-	// }
-	// public void setName(String name) {
-	// this.name = name;
-	// }
-	// public int getScore() {
-	// return score;
-	// }
-	// public void setScore(int score) {
-	// this.score = score;
-	// }
-	// public Color getColor() {
-	// return color;
-	// }
-	// public void setColor(Color color) {
-	// this.color = color;
-	// }
-
 	public float getAngle() {
 		return angle;
 	}
@@ -275,14 +249,6 @@ public class Player {
 		this.isReady = isReady;
 	}
 
-	// public Image getImage() {
-	// return image;
-	// }
-	//
-	// public void setImage(Image image) {
-	// this.image = image;
-	// }
-
 	public static Vector<Player> getPlayers() {
 		return players;
 	}
@@ -290,4 +256,5 @@ public class Player {
 	public PlayerProperties getProperties() {
 		return properties;
 	}
+
 }

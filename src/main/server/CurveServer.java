@@ -77,6 +77,9 @@ public class CurveServer extends Listener {
 			case NetworkConstants.PLAYER_BOOST_DISABLE:
 				p.setBoost(false);
 				break;
+			case NetworkConstants.PLAYER_SHOOT:
+				p.shoot();
+				break;
 			default:
 				break;
 			}
