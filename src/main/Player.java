@@ -87,7 +87,9 @@ public class Player {
 
 	public void render(Graphics g) {
 		properties.render(g);
-		boostSystem.render();
+		if (boostSystem != null){
+			boostSystem.render();
+		}
 		for(int i = 0; i < bullets.size(); i++){
 			bullets.get(i).render(g);
 		}
@@ -95,7 +97,9 @@ public class Player {
 
 	public void update(int delta) {
 		emitter.setPosition(nextPoint.x, nextPoint.y);
-		boostSystem.update(delta);
+		if (boostSystem != null){
+			boostSystem.update(delta);
+		}
 		for(int i = 0; i < bullets.size(); i++){
 			Bullet b = bullets.get(i);
 			b.update(delta);
@@ -126,15 +130,15 @@ public class Player {
 
 		int nextX = lastPoint.x + deltaX;
 		int nextY = lastPoint.y + deltaY;
-		nextPoint = new PlayerPoint(nextX + deltaX, nextY + deltaY, angle);
 		if (dirLeft) {
 			angle -= .12;
 		} else if (dirRight) {
 
 			angle += .12;
 		}
-		PlayerPoint nextPoint = new PlayerPoint(nextX, nextY, angle);
-		properties.getPoints().add(nextPoint);
+		PlayerPoint comingPoint = new PlayerPoint(nextX, nextY, angle);
+		nextPoint = new PlayerPoint(nextX + deltaX, nextY + deltaY, angle);
+		properties.getPoints().add(comingPoint);
 	}
 
 	/**
@@ -145,7 +149,6 @@ public class Player {
 	 */
 	private boolean checkCollision() {
 		for (int i = 0; i < players.size(); i++) {
-
 			Player other = players.get(i);
 			int end = other.getProperties().getPoints().size();
 			if (this == other) {
@@ -156,6 +159,9 @@ public class Player {
 			// ----- grobe Prüfung -----
 			for (int j = 0; j < end; j++) {
 				PlayerPoint p = other.getProperties().getPoints().get(j);
+				if (!p.isActive()){
+					continue;
+				}
 				if (this.getProperties().getPoints().lastElement().distance(p) < 10) {
 					// ----- pixelgenaue Prüfung -----
 					Image img = ResourceManager.getImage(properties.getImageKey());
@@ -168,8 +174,39 @@ public class Player {
 					}
 				}
 			}
+			checkCollisionBullets();
 		}
 		return false;
+	}
+	
+	private void checkCollisionBullets(){
+		for (int i = 0; i < players.size(); i++){
+			Player p = players.get(i);
+			for (int j = 0; j < p.getBullets().size(); j++){
+				Bullet b = p.getBullets().get(j);
+				int numPoints = p.getProperties().getPoints().size();
+				// falls die Schlange weniger als 10 Elemente hat, wird keine Kollision erkannt
+				if (numPoints < 10) {
+					continue;
+				}
+				for (int k = 0; k < numPoints - 10; k++){
+					PlayerPoint pp = p.getProperties().getPoints().get(k);
+					if (!pp.isActive()) {
+						continue;
+					}
+					if (b.getPosition().distance(pp) < 13) {
+						// Schuss kollidiert mit Schlange
+						p.getBullets().remove(b);
+						for(int l = -7; l < 7; l++){
+							if (p.getProperties().getPoints().size() > k+l && k+l > 0) {
+								p.getProperties().getPoints().get(k+l).setActive(false);
+							}
+						}
+						return;
+					}
+				}
+			}
+		}
 	}
 
 	public void steerLeft() {
@@ -215,11 +252,11 @@ public class Player {
 		boost = b;
 	}
 
+	// ------------------- Getter & Setter ---------------------
+	
 	public boolean isBoost() {
 		return boost;
 	}
-
-	// ------------------- Getter & Setter ---------------------
 
 	public float getAngle() {
 		return angle;
@@ -255,6 +292,10 @@ public class Player {
 
 	public PlayerProperties getProperties() {
 		return properties;
+	}
+
+	public Vector<Bullet> getBullets() {
+		return bullets;
 	}
 
 }

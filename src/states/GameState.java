@@ -36,7 +36,7 @@ public class GameState extends JCurveState {
 	@Override
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
 		ResourceManager.addImage("laser", "data/images/laser.png");
-		ResourceManager.addImage("bullet", "data/images/shot.png");
+		ResourceManager.addImage("bullet", "data/images/shot2.png");
 		super.init(container, game);
 		getClient().sendUDP(new PlayerOptions("adam", "ff0000"));
 	}

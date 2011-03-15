@@ -9,9 +9,7 @@ import org.newdawn.slick.Image;
 import utils.ResourceManager;
 
 /**
- * PlayerProperties ist eine Klasse, die Spieler Informationen enthält für die
- * Übertragung über das Netzwerk. Sie enthält nur die Informationen, die für
- * jeden Client zum rendern notwendig sind.
+ * PlayerProperties ist eine Klasse, die Spieler Informationen enthält für die Übertragung über das Netzwerk. Sie enthält nur die Informationen, die für jeden Client zum rendern notwendig sind.
  * 
  * @author Adam Laszlo
  * 
@@ -36,12 +34,14 @@ public class PlayerProperties {
 		Image tmpImg = null;
 		Color color = new Color(colorCode);
 		for (int i = 0; i < points.size(); i++) {
-			tmpImg = ResourceManager.getImage(imageKey).copy();
-			tmpImg.setRotation((float) Math.toDegrees(points.get(i).getAngle()));
-			g.drawImage(tmpImg, points.get(i).x - tmpImg.getWidth()/2, points.get(i).y - tmpImg.getHeight()/2, color);
+			if (points.get(i).isActive()) {
+				tmpImg = ResourceManager.getImage(imageKey).copy();
+				tmpImg.setRotation((float) Math.toDegrees(points.get(i).getAngle()));
+				g.drawImage(tmpImg, points.get(i).x - tmpImg.getWidth() / 2, points.get(i).y - tmpImg.getHeight() / 2, color);
+			}
 		}
 	}
-	
+
 	public Vector<PlayerPoint> getPoints() {
 		return points;
 	}
