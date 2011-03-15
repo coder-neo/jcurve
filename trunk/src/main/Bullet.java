@@ -7,36 +7,32 @@ import utils.ResourceManager;
 
 public class Bullet {
 	private PlayerPoint position;
-	private int speed = 10;
+	private int speed = 4;
 	private Image img;
 	
 	private int curDelta = 0;
-	private int maxDelta = 3;
+	private int maxDelta = 1;
 	
 	public Bullet(PlayerPoint position) {
 		this.position = position;
-		quantizeAngle();
+//		quantizeAngle();
 		img = ResourceManager.getImage("bullet").copy();
 		
 		img.setRotation((float) Math.toDegrees(this.position.getAngle()) + 90);
 	}
 	
-	private void quantizeAngle(){
-		double angleDegrees = Math.toDegrees(this.position.getAngle());
-		System.out.println("exact: "+angleDegrees);
-		angleDegrees = Math.round(angleDegrees / 15) * 15;
-		this.position.setAngle((float) Math.toRadians(angleDegrees));
-		System.out.println("rounded: "+angleDegrees);
-	}
+//	private void quantizeAngle(){
+//		double angleDegrees = Math.toDegrees(this.position.getAngle());
+//		angleDegrees = Math.round(angleDegrees / 22.5) * 22.5;
+//		this.position.setAngle((float) Math.toRadians(angleDegrees));
+//	}
 	
 	public void update(int delta) {
 		curDelta += delta;
 		if (curDelta > maxDelta) {
 			curDelta = 0;
-			System.out.println("draw: "+Math.toDegrees(position.getAngle()));
-			position.setAngle((float) Math.toRadians(180.00000));
-			position.x += Math.cos(position.getAngle()) * speed;
-			position.y += Math.sin(position.getAngle()) * speed;
+			position.x += Math.round(Math.cos(position.getAngle()) * 3) * speed;
+			position.y += Math.round(Math.sin(position.getAngle()) * 3) * speed;
 		}
 	}
 	
