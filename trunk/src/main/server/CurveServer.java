@@ -36,7 +36,6 @@ public class CurveServer extends Listener {
 	public void connected(Connection connection) {
 		super.connected(connection);
 		playerCons.put(connection.getID(), new Player(connection));
-		server.sendToTCP(connection.getID(), "server: hallo client");
 		
 		// TODO: erst schicken, wenn alle spieler bereit sind
 		Vector<PlayerProperties> props = new Vector<PlayerProperties>();
@@ -85,7 +84,6 @@ public class CurveServer extends Listener {
 			}
 		} else if (object instanceof PlayerOptions){
 			PlayerOptions pOptions = (PlayerOptions)object;
-			System.out.println("Color: "+Integer.valueOf(pOptions.getColor(), 16).intValue());
 			p.getProperties().setColorCode((Integer.valueOf(pOptions.getColor(), 16).intValue()));
 			p.getProperties().setName(pOptions.getName());
 			System.out.println("size: "+playerCons.size());
