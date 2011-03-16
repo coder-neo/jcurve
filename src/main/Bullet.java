@@ -1,7 +1,12 @@
 package main;
 
+import java.io.IOException;
+
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.particles.ConfigurableEmitter;
+import org.newdawn.slick.particles.ParticleIO;
+import org.newdawn.slick.particles.ParticleSystem;
 
 import utils.ResourceManager;
 
@@ -10,22 +15,24 @@ public class Bullet {
 	private int speed = 4;
 	private Image img;
 	
+	private ParticleSystem bulletSystem = null;
+	private ConfigurableEmitter emitter = null;
+	
 	private int curDelta = 0;
 	private int maxDelta = 1;
 	
 	public Bullet(PlayerPoint position) {
 		this.position = position;
-//		quantizeAngle();
 		img = ResourceManager.getImage("bullet").copy();
-		
 		img.setRotation((float) Math.toDegrees(this.position.getAngle()) + 90);
+		try {
+			bulletSystem = new ParticleSystem("data/emitters/particle.tga", 1000);
+			emitter = ParticleIO.loadEmitter("data/emitters/shootEmitter.xml");
+			bulletSystem.addEmitter(emitter);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
-	
-//	private void quantizeAngle(){
-//		double angleDegrees = Math.toDegrees(this.position.getAngle());
-//		angleDegrees = Math.round(angleDegrees / 22.5) * 22.5;
-//		this.position.setAngle((float) Math.toRadians(angleDegrees));
-//	}
 	
 	public void update(int delta) {
 		curDelta += delta;
@@ -33,11 +40,14 @@ public class Bullet {
 			curDelta = 0;
 			position.x += Math.round(Math.cos(position.getAngle()) * 3) * speed;
 			position.y += Math.round(Math.sin(position.getAngle()) * 3) * speed;
+			emitter.setPosition(position.x, position.y);
 		}
+		bulletSystem.update(delta);
 	}
 	
 	public void render(Graphics g) {
 		img.drawCentered(position.x, position.y);
+		bulletSystem.render();
 	}
 
 	public PlayerPoint getPosition() {

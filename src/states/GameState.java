@@ -8,6 +8,7 @@ import main.Player;
 import main.PlayerOptions;
 import main.PlayerProperties;
 import main.client.CurveClient;
+import main.powerup.Powerup;
 import main.server.CurveServer;
 
 import org.newdawn.slick.GameContainer;
@@ -37,6 +38,9 @@ public class GameState extends JCurveState {
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
 		ResourceManager.addImage("laser", "data/images/laser.png");
 		ResourceManager.addImage("bullet", "data/images/shot2.png");
+		ResourceManager.addImage("puShot", "data/images/puShot.png");
+		ResourceManager.addImage("puBoost", "data/images/puBoost.png");
+		ResourceManager.addImage("shotThumb", "data/images/shotThumb.png");
 		super.init(container, game);
 		getClient().sendUDP(new PlayerOptions("adam", "ff0000"));
 	}
@@ -49,6 +53,9 @@ public class GameState extends JCurveState {
 			while (players.hasNext()) {
 				Player p = players.next();
 				p.render(g);
+			}
+			for (int i = 0; i < Powerup.getPowerups().size(); i++){
+				Powerup.getPowerups().get(i).render();
 			}
 		} else {
 			Vector<PlayerProperties> playerProperties = CurveClient.getInstance().getPlayerProperties();
@@ -92,11 +99,17 @@ public class GameState extends JCurveState {
 				while (players.hasNext()) {
 					Player p = players.next();
 					p.update(delta);
-					p.move();
+					if (!p.move()){
+						p.die();
+					}
 				}
 				curveServer.sendAllPlayerCoordinates();
 			}
 			loopDuration = System.currentTimeMillis() - loopDuration;
+		}
+		Powerup.powerupSpawner();
+		for (int i = 0; i < Powerup.getPowerups().size(); i++){
+			Powerup.getPowerups().get(i).update(delta);
 		}
 	}
 
