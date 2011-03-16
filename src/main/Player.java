@@ -456,4 +456,8 @@ public class Player {
 	public boolean isAlive() {
 		return alive;
 	}
+
+	public void setProperties(PlayerProperties properties) {
+		this.properties = properties;
+	}
 }
