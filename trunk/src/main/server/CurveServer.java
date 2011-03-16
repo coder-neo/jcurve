@@ -84,6 +84,7 @@ public class CurveServer extends Listener {
 			}
 		} else if (object instanceof PlayerOptions){
 			PlayerOptions pOptions = (PlayerOptions)object;
+			System.out.println(pOptions.getColor());
 			p.getProperties().setColorCode((Integer.valueOf(pOptions.getColor(), 16).intValue()));
 			p.getProperties().setName(pOptions.getName());
 			System.out.println("size: "+playerCons.size());
