@@ -8,5 +8,6 @@ public class NetworkConstants {
 	public static final int PLAYER_BOOST_ENABLE = 5;
 	public static final int PLAYER_BOOST_DISABLE = 6;
 	public static final int PLAYER_SHOOT = 7;
+	public static final int PLAYER_DISCONNECT = 8;
 
 }

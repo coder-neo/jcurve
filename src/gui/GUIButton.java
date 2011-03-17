@@ -26,7 +26,11 @@ public class GUIButton extends BasicGUIElement {
 	private GUIContext context = null;
 	private MouseOverArea area = null;
 
-	private Color normalColor = Color.white, mouseOverColor = Color.orange, disabledColor = Color.gray;
+	private Object value = null;
+
+	private Color normalColor = Color.white;
+	private Color mouseOverColor = Color.orange;
+	private Color disabledColor = Color.gray;
 	private Color fillColor;
 
 	/**
@@ -67,10 +71,13 @@ public class GUIButton extends BasicGUIElement {
 		Rectangle shape = new Rectangle(x, y, getWidth(), getHeight());
 
 		area = new MouseOverArea(context, button, shape);
-		setNormalColor(normalColor);
-		setMouseOverColor(mouseOverColor);
+		area.setNormalColor(normalColor);
+		area.setMouseOverColor(mouseOverColor);
 	}
 
+	/**
+	 * @see GUIButton#GUIButton(String, GUIContext, float, float)
+	 */
 	public GUIButton(GUIContext context, Color color, float x, float y, int width, int height) {
 		super(x, y, width, height);
 
@@ -90,8 +97,8 @@ public class GUIButton extends BasicGUIElement {
 		Rectangle shape = new Rectangle(x, y, getWidth(), getHeight());
 
 		area = new MouseOverArea(context, button, shape);
-		setNormalColor(normalColor);
-		setMouseOverColor(mouseOverColor);
+		area.setNormalColor(normalColor);
+		area.setMouseOverColor(mouseOverColor);
 	}
 
 	@Override
@@ -193,6 +200,14 @@ public class GUIButton extends BasicGUIElement {
 	 */
 	public Color getFillColor() {
 		return fillColor;
+	}
+
+	public Object getValue() {
+		return value;
+	}
+
+	public void setValue(Object value) {
+		this.value = value;
 	}
 
 }
