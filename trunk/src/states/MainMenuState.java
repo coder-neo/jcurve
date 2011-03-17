@@ -4,7 +4,6 @@ import gui.GUIButton;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Random;
 
 import main.GameConstants;
@@ -64,6 +63,7 @@ public class MainMenuState extends JCurveState {
 		buttonPlay.addListener(new ComponentListener() {
 			@Override
 			public void componentActivated(AbstractComponent source) {
+				JCurve.createServer = true;
 				game.enterState(GameConstants.STATE_LOBBY);
 			}
 		});
@@ -95,14 +95,24 @@ public class MainMenuState extends JCurveState {
 		addGUIElements(buttonPlay, buttonJoin, buttonOptions, buttonQuit);
 	}
 
+	/**
+	 * Liest die lokale Config-Datei ein und speichert diese.
+	 */
 	private void readConfigFile() {
 		FileMuffin file = new FileMuffin();
 		try {
 			HashMap<Object, Object> data = file.loadFile(GameConstants.APP_LOCAL_OPTIONS_FILENAME);
-			Iterator<Object> it = data.values().iterator();
-			while (it.hasNext()) {
-				System.out.println(it.next());
-			}
+			JCurve.userData.setName(data.get("Name").toString());
+
+			Color color = (Color) data.get("Color");
+			String colorString = "0x" + Integer.toHexString(0x100 | color.getRed()).substring(1).toUpperCase();
+			colorString += Integer.toHexString(0x100 | color.getGreen()).substring(1).toUpperCase();
+			colorString += Integer.toHexString(0x100 | color.getBlue()).substring(1).toUpperCase();
+			colorString = colorString.substring(2);
+			
+			System.out.println(colorString);
+			
+			JCurve.userData.setColorCode(Integer.valueOf(colorString,16));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

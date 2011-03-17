@@ -6,10 +6,16 @@ import gui.GUIPlayerList;
 import gui.GUITextField;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Vector;
 
 import main.GameConstants;
+import main.JCurve;
+import main.NetworkConstants;
 import main.Player;
+import main.client.CurveClient;
+import main.server.CurveServer;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -37,6 +43,7 @@ public class LobbyState extends JCurveState {
 	public static final String MSG_WAIT = "Warte auf Mitspieler";
 	public static final String MSG_WAIT_DOTS = "...";
 
+	public static final int TEXTFIELD_HEIGHT = 24;
 	public static final int MIN_PLAYERS_TO_PLAY = 2;
 
 	private Vector<Player> players = new Vector<Player>();
@@ -49,8 +56,6 @@ public class LobbyState extends JCurveState {
 	private int dotDelta = 0;
 	private int maxDotDelta = 500;
 	private int curDotPos = 1;
-
-	public static final int TEXTFIELD_HEIGHT = 24;
 
 	public LobbyState(int id) {
 		super(id);
@@ -97,16 +102,37 @@ public class LobbyState extends JCurveState {
 	}
 
 	@Override
+	public void enter(GameContainer container, StateBasedGame game) throws SlickException {
+		super.enter(container, game);
+
+		if (JCurve.createServer && JCurve.server == null)
+			JCurve.server = new CurveServer();
+	}
+
+	@Override
 	public void leave(GameContainer container, StateBasedGame game) throws SlickException {
 		super.leave(container, game);
 
-		chatGUI.clear();
-		playerList.clear();
+		JCurve.createServer = false;
+
+		if (JCurve.server != null) {
+			chatGUI.clear();
+			playerList.clear();
+		} else {
+			CurveClient.getInstance().getClient().stop();
+		}
 	}
 
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
 		super.update(container, game, delta);
+
+		HashMap<Integer, Player> playerCons = JCurve.server.getPlayerCons();
+		Iterator<Player> iter = playerCons.values().iterator();
+		while (iter.hasNext()) {
+			Player p = iter.next();
+			addPlayer(p);
+		}
 
 		playerList.updatePlayerVector(players);
 
@@ -198,6 +224,8 @@ public class LobbyState extends JCurveState {
 	 */
 	public void addPlayer(Player p) {
 		p.setReady(false);
+		if (players.contains(p))
+			return;
 		players.add(p);
 		chatGUI.addSystemMessage(MSG_PLAYER_CONNECTED.replace("%s", p.getProperties().getName()));
 	}

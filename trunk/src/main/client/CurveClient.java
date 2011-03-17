@@ -1,6 +1,7 @@
 package main.client;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Vector;
 
@@ -14,85 +15,112 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 
 /**
- * Die CurveClient Klasse repräsentiert die Client Seite des Spiels. Da jeder Spieler lokal nur genau einen Client braucht, ist die Klasse ein Singleton. Sie handelt die empfangenen Pakete.
+ * Die CurveClient Klasse repräsentiert die Client Seite des Spiels. Da jeder
+ * Spieler lokal nur genau einen Client braucht, ist die Klasse ein Singleton.
+ * Sie handelt die empfangenen Pakete.
  * 
- * Alle empfangenen Spielerkoordinaten werden (zugehörig zur ConnectionID) in einer Hashmap gespeichert.
+ * Alle empfangenen Spielerkoordinaten werden (zugehörig zur ConnectionID) in
+ * einer Hashmap gespeichert.
  * 
+ * @author Adam
+ * @author Benjamin
+ * @author Benedikt
  */
 public class CurveClient extends Listener {
-        private Client client = null;
-        private static CurveClient thisObject = null;
+	private Client client = null;
+	private static CurveClient thisObject = null;
 
-//      private HashMap<Integer, Vector<PlayerPoint>> coordinates = new HashMap<Integer, Vector<PlayerPoint>>();
-        private Vector<PlayerProperties> playerProperties = new Vector<PlayerProperties>();
-        
-        private CurveClient() {
-                client = new Client();
-                Network.registerClasses(client);
-                client.addListener(this);
-                client.start();
-                try {
-                        // client.connect(5000, "192.168.22.1", GameConstants.PORT_TCP, GameConstants.PORT_UDP);
-                        client.connect(5000, "localhost", GameConstants.PORT_TCP, GameConstants.PORT_UDP);
-                } catch (IOException e) {
-                        e.printStackTrace();
-                }
-        }
+	private Vector<PlayerProperties> playerProperties = new Vector<PlayerProperties>();
 
-        public static CurveClient getInstance() {
-                if (thisObject == null) {
-                        thisObject = new CurveClient();
-                }
-                return thisObject;
-        }
+	/**
+	 * Initialisiert den Client, verbindet sich aber nicht zu einem Server und
+	 * wartet in einer Art Stand-By-Modus.
+	 */
+	private CurveClient() {
+		client = new Client();
+		Network.registerClasses(client);
+		client.addListener(this);
+		client.start();
+	}
 
-        @Override
-        public void received(Connection connection, Object object) {
-                super.received(connection, object);
-                if (object instanceof HashMap) {
-                        // hier werden Koordinaten empfangen
-                        @SuppressWarnings("unchecked")
-                        HashMap<Integer, PlayerPoint> newPoints = (HashMap<Integer, PlayerPoint>) object;
-                        for (int i = 0; i < playerProperties.size(); i++) {
-                                int conID = playerProperties.get(i).getConnectionID();
-                                if (newPoints.containsKey(conID)){
-                                        playerProperties.get(i).getPoints().add(newPoints.get(conID));
-                                }
-                        }
-//                      Iterator<Integer> conIDs = newPoints.keySet().iterator();
-//                      while (conIDs.hasNext()) {
-//                              int conID = (int) conIDs.next();
-//                              playerProperties
-//                              if (coordinates.containsKey(conID)) {
-//                                      coordinates.get(conID).add(newPoints.get(conID));
-//                              } else {
-//                                      Vector<PlayerPoint> playerPoints = new Vector<PlayerPoint>();
-//                                      playerPoints.add(newPoints.get(conID));
-//                                      coordinates.put(conID, playerPoints);
-//                              }
-//                      }
-                } else if (object instanceof Vector){
-                        // hier werden bei Spielbeginn die Eigenschaften der Spieler übertragen,
-                        // damit jeder Client die Spieler rendern kann.
-                        @SuppressWarnings("unchecked")
-                        Vector<PlayerProperties> props = (Vector<PlayerProperties>) object;
-                        for (int i = 0; i < props.size(); i++) {
-                                
-                        }
-                        System.out.println("properties!");
-                }
-        }
+	/**
+	 * Liefert die einzige Instanz dieser Klasse.
+	 * 
+	 * @return CurveClient
+	 */
+	public static CurveClient getInstance() {
+		if (thisObject == null)
+			thisObject = new CurveClient();
 
-        public Client getClient() {
-                return client;
-        }
+		return thisObject;
+	}
 
-        public Vector<PlayerProperties> getPlayerProperties() {
-                return playerProperties;
-        }
+	/**
+	 * Verbindet den Client zu einem Server anhand der IP-Adresse
+	 * 
+	 * @param ip
+	 *            - InetAddress-Objekt
+	 */
+	public void connect(InetAddress ip) {
+		try {
+			client.connect(5000, ip, GameConstants.PORT_TCP, GameConstants.PORT_UDP);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
-//      public HashMap<Integer, Vector<PlayerPoint>> getCoordinates() {
-//              return coordinates;
-//      }
+	/**
+	 * @see CurveClient#connect(InetAddress)
+	 */
+	public void connect(String hostName) {
+		try {
+			client.connect(5000, hostName, GameConstants.PORT_TCP, GameConstants.PORT_UDP);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public void received(Connection connection, Object object) {
+		super.received(connection, object);
+		if (object instanceof HashMap) {
+			// hier werden Koordinaten empfangen
+			HashMap<Integer, PlayerPoint> newPoints = (HashMap<Integer, PlayerPoint>) object;
+			for (int i = 0; i < playerProperties.size(); i++) {
+				int conID = playerProperties.get(i).getConnectionID();
+				if (newPoints.containsKey(conID)) {
+					playerProperties.get(i).getPoints().add(newPoints.get(conID));
+				}
+			}
+		} else if (object instanceof Vector) {
+			// hier werden bei Spielbeginn die Eigenschaften der Spieler
+			// übertragen,
+			// damit jeder Client die Spieler rendern kann.
+			Vector<PlayerProperties> props = (Vector<PlayerProperties>) object;
+			for (int i = 0; i < props.size(); i++) {
+
+			}
+			System.out.println("properties!");
+		}
+	}
+
+	/**
+	 * Liefert das Client-Objekt dieses Spielers.
+	 * 
+	 * @return Client
+	 */
+	public Client getClient() {
+		return client;
+	}
+
+	/**
+	 * Liefert die Eigenschaften dieses Spielers.
+	 * 
+	 * @return PlayerProperties
+	 */
+	public Vector<PlayerProperties> getPlayerProperties() {
+		return playerProperties;
+	}
 
 }
