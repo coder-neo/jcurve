@@ -102,6 +102,11 @@ public class MainMenuState extends JCurveState {
 		FileMuffin file = new FileMuffin();
 		try {
 			HashMap<Object, Object> data = file.loadFile(GameConstants.APP_LOCAL_OPTIONS_FILENAME);
+			if (data.size() <= 0) {
+				createEmptyConfigFile();
+				return;
+			}
+
 			JCurve.userData.setName(data.get("Name").toString());
 
 			Color color = (Color) data.get("Color");
@@ -109,10 +114,27 @@ public class MainMenuState extends JCurveState {
 			colorString += Integer.toHexString(0x100 | color.getGreen()).substring(1).toUpperCase();
 			colorString += Integer.toHexString(0x100 | color.getBlue()).substring(1).toUpperCase();
 			colorString = colorString.substring(2);
-			
+
 			System.out.println(colorString);
-			
-			JCurve.userData.setColorCode(Integer.valueOf(colorString,16));
+
+			JCurve.userData.setColorCode(Integer.valueOf(colorString, 16));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Erstellt eine "leere" Config-Datei mit Standardwerten, falls keine
+	 * exisitert, bzw. der User noch keine angelegt hat.
+	 */
+	private void createEmptyConfigFile() {
+		FileMuffin file = new FileMuffin();
+		try {
+			HashMap<Object, Object> data = new HashMap<Object, Object>();
+			data.put("Name", "Schlange");
+			data.put("Color", Color.red);
+
+			file.saveFile(data, GameConstants.APP_LOCAL_OPTIONS_FILENAME);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
