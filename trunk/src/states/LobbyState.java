@@ -127,11 +127,13 @@ public class LobbyState extends JCurveState {
 	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
 		super.update(container, game, delta);
 
-		HashMap<Integer, Player> playerCons = JCurve.server.getPlayerCons();
-		Iterator<Player> iter = playerCons.values().iterator();
-		while (iter.hasNext()) {
-			Player p = iter.next();
-			addPlayer(p);
+		if (JCurve.server != null) {
+			HashMap<Integer, Player> playerCons = JCurve.server.getPlayerCons();
+			Iterator<Player> iter = playerCons.values().iterator();
+			while (iter.hasNext()) {
+				Player p = iter.next();
+				addPlayer(p);
+			}
 		}
 
 		playerList.updatePlayerVector(players);
@@ -176,6 +178,8 @@ public class LobbyState extends JCurveState {
 
 	/**
 	 * Trägt eine neue Chatnachricht eines Spielers ein.
+	 * 
+	 * TODO: richtigen namen rausfinden und benutzen und an server schicken
 	 * 
 	 * @param e
 	 *            - das TextField, bzw. Eingabefeld in der Lobby
