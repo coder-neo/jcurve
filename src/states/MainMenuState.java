@@ -104,6 +104,7 @@ public class MainMenuState extends JCurveState {
 			HashMap<Object, Object> data = file.loadFile(GameConstants.APP_LOCAL_OPTIONS_FILENAME);
 			if (data.size() <= 0) {
 				createEmptyConfigFile();
+				readConfigFile();
 				return;
 			}
 
@@ -114,8 +115,6 @@ public class MainMenuState extends JCurveState {
 			colorString += Integer.toHexString(0x100 | color.getGreen()).substring(1).toUpperCase();
 			colorString += Integer.toHexString(0x100 | color.getBlue()).substring(1).toUpperCase();
 			colorString = colorString.substring(2);
-
-			System.out.println(colorString);
 
 			JCurve.userData.setColorCode(Integer.valueOf(colorString, 16));
 		} catch (IOException e) {
