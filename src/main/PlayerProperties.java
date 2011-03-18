@@ -23,7 +23,7 @@ public class PlayerProperties {
 	private int score = 0;
 	private int colorCode = 0xffffff;
 	private String imageKey;
-
+  
 	public PlayerProperties() {
 		this.connectionID = -1;
 	}
