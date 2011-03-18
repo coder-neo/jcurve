@@ -3,8 +3,10 @@ package gui;
 import org.lwjgl.Sys;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Font;
+import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
+import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.gui.AbstractComponent;
 import org.newdawn.slick.gui.ComponentListener;
@@ -124,6 +126,37 @@ public class GUITextField extends AbstractComponent {
 		setLocation(x, y);
 		this.width = width;
 		this.height = height;
+
+	}
+
+	/**
+	 * Create a new text field with a default text
+	 * 
+	 * @param container
+	 *            The container rendering this field
+	 * @param font
+	 *            The font to use in the text field
+	 * @param x
+	 *            The x coordinate of the top left corner of the text field
+	 * @param y
+	 *            The y coordinate of the top left corner of the text field
+	 * @param width
+	 *            The width of the text field
+	 * @param height
+	 *            The height of the text field
+	 * @param name
+	 *            The default text of the text field
+	 */
+	public GUITextField(GUIContext container, Font font, int x, int y, int width, int height, String name) {
+		super(container);
+		
+		this.font = font;
+
+		setLocation(x, y);
+		this.width = width;
+		this.height = height;;
+
+		this.value = name;
 	}
 
 	/**

@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.Vector;
 
 import main.GameConstants;
+import main.JCurve;
+import main.PlayerProperties;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -22,8 +24,7 @@ import utils.ResourceManager;
 
 /**
  * 
- * Hier kann der Spieler Optionen einstellen, die in einer XML-Datein lokal
- * gespeichert werden
+ * Hier kann der Spieler Optionen einstellen, die in einer XML-Datein lokal gespeichert werden
  * 
  * @author Benedikt
  * @author Benjamin
@@ -68,10 +69,18 @@ public class OptionsState extends JCurveState {
 			x += 75;
 		}
 
-		playerName = new GUITextField(container, ResourceManager.getFont("chatFont"), 350, 250, 300, 25);
+		// TODO in JCurve.userData.getName() ist noch nicht gefüllt, da die satetes vorher schon estellt werden, somit ist es null --> schlecht
+		// :-D
+
+		// playerName = new GUITextField(container,
+		// ResourceManager.getFont("chatFont"), 350, 250, 300, 25,
+		// JCurve.userData.getName() );
+		playerName = new GUITextField(container, ResourceManager.getFont("chatFont"), 350, 250, 300, 25, "noch fehler");
 		playerName.setBackgroundColor(Color.white);
 		playerName.setTextColor(Color.black);
 
+		
+		//TODO beim Speichern muss auch die Farbe gespeichert werden
 		GUIButton buttonSave = new GUIButton("Speichern", container, 100, 450);
 		buttonSave.addListener(new ComponentListener() {
 			@Override

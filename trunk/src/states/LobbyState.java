@@ -12,7 +12,6 @@ import java.util.Vector;
 
 import main.GameConstants;
 import main.JCurve;
-import main.NetworkConstants;
 import main.Player;
 import main.client.CurveClient;
 import main.server.CurveServer;
@@ -186,7 +185,14 @@ public class LobbyState extends JCurveState {
 	 */
 	private void enterChatMessage(AbstractComponent e) {
 		GUITextField field = (GUITextField) e;
-		String playerName = "todo";
+		String playerName = null;
+		
+		if(JCurve.userData.getName().trim().equals("")){
+			playerName = "anonym";
+		}else{
+			playerName = JCurve.userData.getName();
+		}
+		
 		chatGUI.addMessage(playerName, field.getText());
 		field.setText("");
 	}

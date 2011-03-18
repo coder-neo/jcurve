@@ -14,7 +14,7 @@ import org.newdawn.slick.geom.Rectangle;
  * @author Benjamin
  */
 public abstract class BasicGUIElement {
-
+   
 	private BasicGUIElement parent = null;
 
 	private Vector<BasicGUIElement> children = new Vector<BasicGUIElement>();

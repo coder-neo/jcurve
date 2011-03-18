@@ -11,7 +11,7 @@ public class PlayerOptions {
 	
 	public PlayerOptions(){
 		
-	}
+	} 
 	
 	public String getName() {
 		return name;
