@@ -26,10 +26,12 @@ public class PlayerProperties {
   
 	public PlayerProperties() {
 		this.connectionID = -1;
+		imageKey = "laser";
 	}
 
 	public PlayerProperties(int connectionID) {
 		this.connectionID = connectionID;
+		imageKey = "laser";
 	}
 
 	public void render(Graphics g) {
@@ -70,10 +72,6 @@ public class PlayerProperties {
 
 	public String getImageKey() {
 		return imageKey;
-	}
-
-	public void setImageKey(String imageKey) {
-		this.imageKey = imageKey;
 	}
 
 	public int getColorCode() {

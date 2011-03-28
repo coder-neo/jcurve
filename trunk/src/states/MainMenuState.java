@@ -48,8 +48,8 @@ public class MainMenuState extends JCurveState {
 
 		ResourceManager.addImage("laser", "data/images/laser.png");
 
-		bot = new Player();
-		bot.getProperties().getPoints().add(new PlayerPoint((GameConstants.APP_WIDHT / 2) + 140, 200, 0));
+		bot = new Player(new PlayerPoint((GameConstants.APP_WIDHT / 2) + 140, 200, 0));
+//		bot.getProperties().getPoints().add(new PlayerPoint((GameConstants.APP_WIDHT / 2) + 140, 200, 0));
 		botColor = new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255));
 
 		readConfigFile();

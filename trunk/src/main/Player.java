@@ -66,8 +66,16 @@ public class Player {
 	private Vector<Bullet> bullets = new Vector<Bullet>();
 
 	public Player() {
+		System.out.println("player erstellt");
 		properties = new PlayerProperties();
-		properties.setImageKey("laser");
+		initPlayerPosition();
+		players.add(this);
+	}
+	
+	public Player(PlayerPoint p) {
+		System.out.println("player erstellt");
+		properties = new PlayerProperties();
+		properties.getPoints().add(p);
 		players.add(this);
 	}
 
@@ -77,9 +85,9 @@ public class Player {
 	 * @param connection
 	 */
 	public Player(Connection connection) {
+		System.out.println("player erstellt");
 		this.connection = connection;
 		properties = new PlayerProperties(connection.getID());
-		properties.setImageKey("laser");
 		initPlayerPosition();
 		players.add(this);
 		try {
@@ -217,6 +225,9 @@ public class Player {
 	}
 
 	private void computeNextPoint() {
+		if (properties.getPoints().size() < 1){
+			initPlayerPosition();
+		}
 		Point lastPoint = properties.getPoints().lastElement();
 		int deltaX = (int) Math.round(Math.cos(angle) * speed);
 		int deltaY = (int) Math.round(Math.sin(angle) * speed);

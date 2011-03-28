@@ -101,7 +101,6 @@ public class CurveClient extends Listener {
 			for (int i = 0; i < props.size(); i++) {
 
 			}
-			System.out.println("properties!");
 		}
 	}
 
