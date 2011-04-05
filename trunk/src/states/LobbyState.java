@@ -130,34 +130,9 @@ public class LobbyState extends JCurveState {
 		super.update(container, game, delta);
 
 		if (JCurve.server != null) {
-			HashMap<Integer, Player> playerCons = JCurve.server.getPlayerCons();
-			Iterator<Player> iter = playerCons.values().iterator();
-			while (iter.hasNext()) {
-				Player p = iter.next();
-				addPlayer(p);
-			}
-
-			// add server creator
-			for (int i = 0; i < players.size(); i++) {
-				if (players.get(i).getProperties() == JCurve.userData)
-					return;
-			}
-			
-			Player own = new Player();
-			own.setProperties(JCurve.userData);
-			addPlayer(own);
+			updateServerLobby();
 		} else {
-			Vector<PlayerProperties> properties = CurveClient.getInstance().getPlayerProperties();
-			for (int i = 0; i < properties.size(); i++) {
-				for (int j = 0; j < players.size(); j++) {
-					if (players.get(j).getProperties().getName().equals(properties.get(j).getName()))
-						return;
-				}
-
-				Player p = new Player();
-				p.setProperties(properties.get(i));
-				addPlayer(p);
-			}
+			updateClientLobby();
 		}
 
 		playerList.updatePlayerVector(players);
@@ -185,6 +160,29 @@ public class LobbyState extends JCurveState {
 			addPlayer(p);
 		} else if (container.getInput().isKeyPressed(Input.KEY_F2)) {
 			removePlayer(0);
+		}
+	}
+
+	private void updateClientLobby() {
+		Vector<PlayerProperties> properties = CurveClient.getInstance().getPlayerProperties();
+		for (int i = 0; i < properties.size(); i++) {
+			for (int j = 0; j < players.size(); j++) {
+				if (players.get(j).getProperties().getName().equals(properties.get(j).getName()))
+					return;
+			}
+
+			Player p = new Player();
+			p.setProperties(properties.get(i));
+			addPlayer(p);
+		}
+	}
+
+	private void updateServerLobby() {
+		HashMap<Integer, Player> playerCons = JCurve.server.getPlayerCons();
+		Iterator<Player> iter = playerCons.values().iterator();
+		while (iter.hasNext()) {
+			Player p = iter.next();
+			addPlayer(p);
 		}
 	}
 
