@@ -111,7 +111,7 @@ public class GUIButton extends BasicGUIElement {
 			texture.fillRect(0, 0, getWidth(), getHeight());
 
 		texture.flush();
-
+		
 		area.render(context, g);
 	}
 
