@@ -113,5 +113,9 @@ public class CurveServer extends Listener {
 		}
 		server.sendToAllUDP(newPoints);
 	}
+	
+	public void sendPlayerToAll(PlayerProperties playerProperties){
+		server.sendToAllTCP(playerProperties);
+	}
 
 }

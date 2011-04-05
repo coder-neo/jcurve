@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Vector;
 
 import main.GameConstants;
+import main.JCurve;
 import main.PlayerPoint;
 import main.PlayerProperties;
 import main.server.Network;
@@ -67,6 +68,7 @@ public class CurveClient extends Listener {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		CurveClient.getInstance().getClient().sendTCP(JCurve.userData);
 	}
 
 	/**
@@ -78,6 +80,7 @@ public class CurveClient extends Listener {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		CurveClient.getInstance().getClient().sendTCP(JCurve.userData);
 	}
 
 	@Override
@@ -95,12 +98,12 @@ public class CurveClient extends Listener {
 			}
 		} else if (object instanceof Vector) {
 			// hier werden bei Spielbeginn die Eigenschaften der Spieler
-			// übertragen,
-			// damit jeder Client die Spieler rendern kann.
-			Vector<PlayerProperties> props = (Vector<PlayerProperties>) object;
-			for (int i = 0; i < props.size(); i++) {
-
-			}
+			// übertragen, damit jeder Client die Spieler rendern kann.
+			// Vector<PlayerProperties> props = (Vector<PlayerProperties>) object;
+			// for (int i = 0; i < props.size(); i++) {
+			// }
+		} else if (object instanceof PlayerProperties) {
+			playerProperties.add((PlayerProperties) object);
 		}
 	}
 
