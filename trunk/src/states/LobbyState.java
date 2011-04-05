@@ -46,7 +46,7 @@ public class LobbyState extends JCurveState {
 	public static final int TEXTFIELD_HEIGHT = 24;
 	public static final int MIN_PLAYERS_TO_PLAY = 2;
 
-	private Vector<Player> players = new Vector<Player>();
+	private Vector<PlayerProperties> players = new Vector<PlayerProperties>();
 
 	private GUIChat chatGUI = null;
 	private GUIPlayerList playerList = null;
@@ -157,7 +157,7 @@ public class LobbyState extends JCurveState {
 		if (container.getInput().isKeyPressed(Input.KEY_F1)) {
 			Player p = new Player();
 			p.getProperties().setName(new Date().getTime() + "");
-			addPlayer(p);
+			addPlayer(p.getProperties());
 		} else if (container.getInput().isKeyPressed(Input.KEY_F2)) {
 			removePlayer(0);
 		}
@@ -166,15 +166,10 @@ public class LobbyState extends JCurveState {
 	private void updateClientLobby() {
 		Vector<PlayerProperties> properties = CurveClient.getInstance().getPlayerProperties();
 		for (int i = 0; i < properties.size(); i++) {
-			// for (int j = 0; j < players.size(); j++) {
-			// if
-			// (players.get(j).getProperties().getName().equals(properties.get(j).getName()))
-			// continue;
-			// }
+			if (players.contains(properties.get(i)))
+				continue;
 
-			Player p = new Player();
-			p.setProperties(properties.get(i));
-			addPlayer(p);
+			addPlayer(properties.get(i));
 		}
 	}
 
@@ -182,7 +177,7 @@ public class LobbyState extends JCurveState {
 		HashMap<Integer, Player> playerCons = JCurve.server.getPlayerCons();
 		Iterator<Player> iter = playerCons.values().iterator();
 		while (iter.hasNext()) {
-			Player p = iter.next();
+			PlayerProperties p = iter.next().getProperties();
 			addPlayer(p);
 		}
 	}
@@ -231,7 +226,7 @@ public class LobbyState extends JCurveState {
 		if (!players.contains(players.get(index)))
 			return;
 
-		String name = players.get(index).getProperties().getName();
+		String name = players.get(index).getName();
 		players.remove(index);
 		chatGUI.addSystemMessage(MSG_PLAYER_DISCONNECTED.replace("%s", name));
 	}
@@ -242,7 +237,7 @@ public class LobbyState extends JCurveState {
 	 * @param p
 	 *            - das Objekt
 	 */
-	public void removePlayer(Player p) {
+	public void removePlayer(PlayerProperties p) {
 		for (int i = 0; i < players.size(); i++) {
 			if (players.get(i).equals(p)) {
 				removePlayer(i);
@@ -256,15 +251,15 @@ public class LobbyState extends JCurveState {
 	 * @param p
 	 *            - das Spielerobjekt
 	 */
-	public void addPlayer(Player p) {
+	public void addPlayer(PlayerProperties p) {
 		if (players.contains(p))
 			return;
 
 		players.add(p);
 
 		if (JCurve.server != null)
-			JCurve.server.sendPlayerToAll(p.getProperties());
+			JCurve.server.sendPlayerToAll(p);
 
-		chatGUI.addSystemMessage(MSG_PLAYER_CONNECTED.replace("%s", p.getProperties().getName()));
+		chatGUI.addSystemMessage(MSG_PLAYER_CONNECTED.replace("%s", p.getName()));
 	}
 }
