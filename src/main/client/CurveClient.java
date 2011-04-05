@@ -96,14 +96,17 @@ public class CurveClient extends Listener {
 					playerProperties.get(i).getPoints().add(newPoints.get(conID));
 				}
 			}
-		} else if (object instanceof Vector) {
-			// hier werden bei Spielbeginn die Eigenschaften der Spieler
-			// übertragen, damit jeder Client die Spieler rendern kann.
-			// Vector<PlayerProperties> props = (Vector<PlayerProperties>)
-			// object;
-			// for (int i = 0; i < props.size(); i++) {
-			// }
-		} else if (object instanceof PlayerProperties) {
+		}
+		// Eine Sammlung von Spielern, wenn ein neuer Spieler die Spielerliste
+		// bei Eintritt in die Lobby anfordert.
+		else if (object instanceof Vector) {
+			Vector<PlayerProperties> props = (Vector<PlayerProperties>) object;
+			for (int i = 0; i < props.size(); i++) {
+				playerProperties.add(props.get(i));
+			}
+		}
+		// Ein einzelner neuer Spieler, der nach einem selbst connected.
+		else if (object instanceof PlayerProperties) {
 			playerProperties.add((PlayerProperties) object);
 		}
 	}
