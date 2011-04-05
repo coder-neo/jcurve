@@ -138,8 +138,6 @@ public class ServerListState extends JCurveState {
 	 */
 	private void connectToServer(InetAddress ipAddress, StateBasedGame game) {
 		CurveClient.getInstance().connect(ipAddress);
-		CurveClient.getInstance().getClient().sendTCP(JCurve.userData);
-
 		game.enterState(GameConstants.STATE_LOBBY);
 	}
 

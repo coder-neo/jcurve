@@ -49,7 +49,7 @@ public class MainMenuState extends JCurveState {
 		ResourceManager.addImage("laser", "data/images/laser.png");
 
 		bot = new Player(new PlayerPoint((GameConstants.APP_WIDHT / 2) + 140, 200, 0));
-//		bot.getProperties().getPoints().add(new PlayerPoint((GameConstants.APP_WIDHT / 2) + 140, 200, 0));
+		//		bot.getProperties().getPoints().add(new PlayerPoint((GameConstants.APP_WIDHT / 2) + 140, 200, 0));
 		botColor = new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255));
 
 		readConfigFile();
@@ -111,6 +111,9 @@ public class MainMenuState extends JCurveState {
 			JCurve.userData.setName(data.get("Name").toString());
 
 			Color color = (Color) data.get("Color");
+			if (color == null) {
+				color = Color.white;
+			}
 			String colorString = "0x" + Integer.toHexString(0x100 | color.getRed()).substring(1).toUpperCase();
 			colorString += Integer.toHexString(0x100 | color.getGreen()).substring(1).toUpperCase();
 			colorString += Integer.toHexString(0x100 | color.getBlue()).substring(1).toUpperCase();
@@ -148,7 +151,8 @@ public class MainMenuState extends JCurveState {
 		ResourceManager.getFont("header").drawString(100, 100, GameConstants.APP_NAME, Color.red);
 
 		int strWidth = ResourceManager.getFont("small").getWidth(GameConstants.APP_VERSION) / 2;
-		ResourceManager.getFont("small").drawString(GameConstants.APP_WIDHT - (strWidth * 2) - 20, GameConstants.APP_HEIGHT - strWidth, GameConstants.APP_VERSION);
+		ResourceManager.getFont("small").drawString(GameConstants.APP_WIDHT - (strWidth * 2) - 20, GameConstants.APP_HEIGHT - strWidth,
+				GameConstants.APP_VERSION);
 	}
 
 	@Override
