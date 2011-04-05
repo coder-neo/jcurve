@@ -66,14 +66,12 @@ public class Player {
 	private Vector<Bullet> bullets = new Vector<Bullet>();
 
 	public Player() {
-		System.out.println("player erstellt");
 		properties = new PlayerProperties();
 		initPlayerPosition();
 		players.add(this);
 	}
 	
 	public Player(PlayerPoint p) {
-		System.out.println("player erstellt");
 		properties = new PlayerProperties();
 		properties.getPoints().add(p);
 		players.add(this);
@@ -85,7 +83,6 @@ public class Player {
 	 * @param connection
 	 */
 	public Player(Connection connection) {
-		System.out.println("player erstellt");
 		this.connection = connection;
 		properties = new PlayerProperties(connection.getID());
 		initPlayerPosition();

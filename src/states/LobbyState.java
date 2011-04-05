@@ -71,8 +71,7 @@ public class LobbyState extends JCurveState {
 		playerList = new GUIPlayerList(0, 0, 300, GameConstants.APP_HEIGHT - 300);
 		playerList.setBorder(Color.red);
 
-		chatField = new GUITextField(container, ResourceManager.getFont("chatFont"), 0, GameConstants.APP_HEIGHT - TEXTFIELD_HEIGHT, 298,
-				TEXTFIELD_HEIGHT - 2);
+		chatField = new GUITextField(container, ResourceManager.getFont("chatFont"), 0, GameConstants.APP_HEIGHT - TEXTFIELD_HEIGHT, 298, TEXTFIELD_HEIGHT - 2);
 		chatField.setBorderColor(Color.red);
 		chatField.setBackgroundColor(Color.white);
 		chatField.setTextColor(Color.black);
@@ -122,7 +121,7 @@ public class LobbyState extends JCurveState {
 			chatGUI.clear();
 			playerList.clear();
 		} else {
-			CurveClient.getInstance().getClient().stop();
+			CurveClient.getInstance().getClient().close();
 		}
 	}
 
@@ -137,9 +136,24 @@ public class LobbyState extends JCurveState {
 				Player p = iter.next();
 				addPlayer(p);
 			}
+
+			// add server creator
+			for (int i = 0; i < players.size(); i++) {
+				if (players.get(i).getProperties() == JCurve.userData)
+					return;
+			}
+			
+			Player own = new Player();
+			own.setProperties(JCurve.userData);
+			addPlayer(own);
 		} else {
 			Vector<PlayerProperties> properties = CurveClient.getInstance().getPlayerProperties();
 			for (int i = 0; i < properties.size(); i++) {
+				for (int j = 0; j < players.size(); j++) {
+					if (players.get(j).getProperties().getName().equals(properties.get(j).getName()))
+						return;
+				}
+
 				Player p = new Player();
 				p.setProperties(properties.get(i));
 				addPlayer(p);
@@ -180,8 +194,7 @@ public class LobbyState extends JCurveState {
 
 		if (players.size() < MIN_PLAYERS_TO_PLAY) {
 			int strWidth = ResourceManager.getFont("standard").getWidth(MSG_WAIT) / 2;
-			ResourceManager.getFont("standard").drawString(GameConstants.APP_WIDHT / 2 - strWidth, GameConstants.APP_HEIGHT / 2,
-					MSG_WAIT + " " + MSG_WAIT_DOTS.substring(0, curDotPos));
+			ResourceManager.getFont("standard").drawString(GameConstants.APP_WIDHT / 2 - strWidth, GameConstants.APP_HEIGHT / 2, MSG_WAIT + " " + MSG_WAIT_DOTS.substring(0, curDotPos));
 		}
 
 		chatField.render(container, g);
@@ -247,10 +260,12 @@ public class LobbyState extends JCurveState {
 	public void addPlayer(Player p) {
 		if (players.contains(p))
 			return;
+
 		players.add(p);
+
 		if (JCurve.server != null)
 			JCurve.server.sendPlayerToAll(p.getProperties());
+
 		chatGUI.addSystemMessage(MSG_PLAYER_CONNECTED.replace("%s", p.getProperties().getName()));
 	}
-
 }
