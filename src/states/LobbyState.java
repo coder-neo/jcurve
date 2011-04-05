@@ -166,10 +166,11 @@ public class LobbyState extends JCurveState {
 	private void updateClientLobby() {
 		Vector<PlayerProperties> properties = CurveClient.getInstance().getPlayerProperties();
 		for (int i = 0; i < properties.size(); i++) {
-			for (int j = 0; j < players.size(); j++) {
-				if (players.get(j).getProperties().getName().equals(properties.get(j).getName()))
-					return;
-			}
+			// for (int j = 0; j < players.size(); j++) {
+			// if
+			// (players.get(j).getProperties().getName().equals(properties.get(j).getName()))
+			// continue;
+			// }
 
 			Player p = new Player();
 			p.setProperties(properties.get(i));

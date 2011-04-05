@@ -19,7 +19,7 @@ import utils.ResourceManager;
 public class PlayerProperties {
 	private int connectionID;
 	private Vector<PlayerPoint> points = new Vector<PlayerPoint>();
-	private String name;
+	private String name = "Noname";
 	private int score = 0;
 	private int colorCode = 0xffffff;
 	private String imageKey;

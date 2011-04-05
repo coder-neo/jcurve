@@ -107,6 +107,7 @@ public class CurveClient extends Listener {
 		}
 		// Ein einzelner neuer Spieler, der nach einem selbst connected.
 		else if (object instanceof PlayerProperties) {
+			System.out.println("CurveClient: "+ object.toString() + " received");
 			playerProperties.add((PlayerProperties) object);
 		}
 	}
