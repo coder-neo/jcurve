@@ -23,6 +23,13 @@ public class PlayerProperties {
 	private int score = 0;
 	private int colorCode = 0xffffff;
 	private String imageKey;
+	
+	/**
+	 * Ein Flag, der anzeigt ob der Spieler disconnectet.
+	 * Wenn die Clients PP Objekt mit dem entsprechendem Flag bekommen,
+	 * können sie den Spieler entfernen und ihre Lobby Ansicht updaten.
+	 */
+	private boolean disconnected = false;
   
 	public PlayerProperties() {
 		this.connectionID = -1;
@@ -88,6 +95,22 @@ public class PlayerProperties {
 
 	public void setConnectionID(int connectionID) {
 		this.connectionID = connectionID;
+	}
+	
+	@Override
+	public String toString() {
+		return getClass().getName() + "[Name("+name+"), ConnectionID("+connectionID+")]";
+	}
+
+	/**
+	 * @return the disconnect
+	 */
+	public boolean isDisconnected() {
+		return disconnected;
+	}
+
+	public void disconnect() {
+		this.disconnected = true;
 	}
 
 }

@@ -2,8 +2,6 @@ package main.server;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Vector;
 
 import main.GameConstants;
 import main.NetworkConstants;
@@ -15,9 +13,8 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 
-public class CurveServer extends Listener {
+public final class CurveServer extends Listener {
 	private Server server;
-	private HashMap<Integer, Player> playerCons = new HashMap<Integer, Player>();
 
 	public CurveServer() {
 		try {
@@ -34,29 +31,29 @@ public class CurveServer extends Listener {
 	@Override
 	public void connected(Connection connection) {
 		super.connected(connection);
-
-		playerCons.put(connection.getID(), new Player(connection));
-
-		// TODO: erst schicken, wenn alle spieler bereit sind
-		Vector<PlayerProperties> props = new Vector<PlayerProperties>();
-		Iterator<Player> players = playerCons.values().iterator();
-		while (players.hasNext())
-			props.add(players.next().getProperties());
-		server.sendToTCP(connection.getID(), props);
+		
+		/*
+		 *	Hier wird quasi eine Player-Hülle erzeugt. Die Eigenschaften werden danach
+		 *	vom Player übermittelt. 
+		 */
+		new Player(connection);
 	}
 
 	@Override
 	public void disconnected(Connection connection) {
 		super.disconnected(connection);
-
-		playerCons.remove(connection.getID());
+		PlayerProperties playerProps = Player.getPlayer(connection.getID()).getProperties();
+		playerProps.disconnect();
+		server.sendToAllTCP(playerProps);
+		Player.remove(connection.getID());
 	}
 
 	@Override
 	public void received(Connection connection, Object object) {
 		super.received(connection, object);
 
-		Player p = playerCons.get(connection.getID());
+		System.out.println("Server Received from ID: "+connection.getID());
+		Player p = Player.getPlayer(connection.getID());
 
 		if (object instanceof Integer) {
 			switch (Integer.valueOf(object.toString())) {
@@ -82,40 +79,34 @@ public class CurveServer extends Listener {
 					p.shoot();
 					break;
 				case NetworkConstants.PLAYER_DISCONNECT:
-					playerCons.remove(connection.getID());
+					Player.remove(connection.getID());
 					break;
 				default:
 					break;
 			}
 		} else if (object instanceof PlayerProperties) {
+			/**
+			 * Ein einzelner Spieler teilt dem Server seine Properties mit.
+			 */
 			PlayerProperties properties = (PlayerProperties) object;
+			properties.setConnectionID(connection.getID());
 			p.setProperties(properties);
+			System.out.println("server receive props: "+p.getProperties());
+			server.sendToAllTCP(properties);
+			server.sendToTCP(connection.getID(), Player.getAllPlayerProperties());
 		}
-	}
-
-	public HashMap<Integer, Player> getPlayerCons() {
-		return playerCons;
-	}
-
-	public void setPlayerCons(HashMap<Integer, Player> playerCons) {
-		this.playerCons = playerCons;
 	}
 
 	/**
-	 * Sendet allen Clients die neuen Koordinaten aller Spieler.
+	 * Sendet allen Clients die letzte Koordinate aller Spieler.
 	 */
 	public void sendAllPlayerCoordinates() {
 		HashMap<Integer, PlayerPoint> newPoints = new HashMap<Integer, PlayerPoint>();
-		Iterator<Integer> conIDs = playerCons.keySet().iterator();
-		while (conIDs.hasNext()) {
-			int conID = (int) conIDs.next();
-			newPoints.put(conID, playerCons.get(conID).getProperties().getPoints().lastElement());
+		PlayerProperties playerProps;
+		for (int i = 0; i < Player.getAllPlayerProperties().size(); i++){
+			playerProps = Player.getAllPlayerProperties().get(i);
+			newPoints.put(playerProps.getConnectionID(), playerProps.getPoints().lastElement());
 		}
 		server.sendToAllUDP(newPoints);
 	}
-	
-	public void sendPlayerToAll(PlayerProperties playerProperties){
-		server.sendToAllTCP(playerProperties);
-	}
-
 }

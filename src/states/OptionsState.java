@@ -8,8 +8,6 @@ import java.util.HashMap;
 import java.util.Vector;
 
 import main.GameConstants;
-import main.JCurve;
-import main.PlayerProperties;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;

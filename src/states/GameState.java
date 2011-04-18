@@ -1,6 +1,5 @@
 package states;
 
-import java.util.Iterator;
 import java.util.Vector;
 
 import main.JCurve;
@@ -76,11 +75,13 @@ public class GameState extends JCurveState {
 		// darf sie spawnen, bzw. berechnen
 
 		if (curveServer != null) {
-			Iterator<Player> players = curveServer.getPlayerCons().values().iterator();
-			while (players.hasNext()) {
-				Player p = players.next();
-				p.render(g);
+//			Iterator<Player> players = curveServer.getPlayerCons().values().iterator();
+//			while (players.hasNext()) {
+			for (int i = 0; i < Player.getPlayers().size(); i++){
+//				Player p = players.next();
+				Player.getPlayers().get(i).render(g);
 			}
+//			}
 			for (int i = 0; i < Powerup.getPowerups().size(); i++) {
 				Powerup.getPowerups().get(i).render();
 			}
@@ -149,14 +150,18 @@ public class GameState extends JCurveState {
 		if (playerCurDelta > playerDelta - loopDuration) {
 			loopDuration = System.currentTimeMillis();
 			playerCurDelta = 0;
-			Iterator<Player> players = curveServer.getPlayerCons().values().iterator();
-			while (players.hasNext()) {
-				Player p = players.next();
+//			Iterator<Player> players = curveServer.getPlayerCons().values().iterator();
+			for (int i = 0; i < Player.getPlayers().size(); i++){
+				Player p = Player.getPlayers().get(i);
 				p.update(delta);
 				if (!p.move()) {
 					p.die();
 				}
 			}
+
+//			while (players.hasNext()) {
+//				Player p = players.next();
+//			}
 			curveServer.sendAllPlayerCoordinates();
 			loopDuration = System.currentTimeMillis() - loopDuration;
 		}

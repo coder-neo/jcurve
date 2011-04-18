@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Vector;
 
 import main.GameConstants;
-import main.JCurve;
 import main.client.CurveClient;
 
 import org.newdawn.slick.Color;
