@@ -45,13 +45,9 @@ public class MainMenuState extends JCurveState {
 
 	public MainMenuState(int id) {
 		super(id);
-
 		ResourceManager.addImage("laser", "data/images/laser.png");
-
 		bot = new Player(new PlayerPoint((GameConstants.APP_WIDHT / 2) + 140, 200, 0));
-		//		bot.getProperties().getPoints().add(new PlayerPoint((GameConstants.APP_WIDHT / 2) + 140, 200, 0));
 		botColor = new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255));
-
 		readConfigFile();
 	}
 
@@ -101,6 +97,7 @@ public class MainMenuState extends JCurveState {
 	private void readConfigFile() {
 		FileMuffin file = new FileMuffin();
 		try {
+			@SuppressWarnings("unchecked")
 			HashMap<Object, Object> data = file.loadFile(GameConstants.APP_LOCAL_OPTIONS_FILENAME);
 			if (data.size() <= 0) {
 				createEmptyConfigFile();

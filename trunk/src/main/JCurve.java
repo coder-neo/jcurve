@@ -20,10 +20,11 @@ public class JCurve extends StateBasedGame {
 
 	public static boolean createServer = false;
 	public static CurveServer server = null;
+	
+	private static LobbyState lobby = null;
 
 	public JCurve(String name) {
 		super(name);
-
 		userData = new PlayerProperties();
 	}
 
@@ -33,7 +34,8 @@ public class JCurve extends StateBasedGame {
 		addState(new ServerListState(GameConstants.STATE_SERVER_LIST));
 		addState(new GameState(GameConstants.STATE_GAME));
 		addState(new MainMenuState(GameConstants.STATE_MAIN_MENU));
-		addState(new LobbyState(GameConstants.STATE_LOBBY));
+		lobby = new LobbyState(GameConstants.STATE_LOBBY);
+		addState(lobby);
 
 		enterState(GameConstants.STATE_MAIN_MENU);
 	}
@@ -44,5 +46,9 @@ public class JCurve extends StateBasedGame {
 		app.setShowFPS(false);
 		app.setTargetFrameRate(60);
 		app.start();
+	}
+	
+	public static LobbyState getLobby(){
+		return lobby;
 	}
 }

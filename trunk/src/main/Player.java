@@ -71,10 +71,15 @@ public class Player {
 		players.add(this);
 	}
 	
+	/**
+	 * Konstruktor für den Bot
+	 * Erzeugt eine neue Instanz der Klasse "Player".
+	 * @param p
+	 */
 	public Player(PlayerPoint p) {
 		properties = new PlayerProperties();
 		properties.getPoints().add(p);
-		players.add(this);
+//		players.add(this);
 	}
 
 	/**
@@ -414,6 +419,35 @@ public class Player {
 		}
 		alive = false;
 	}
+	
+	/**
+	 * Entfernt Player anhand der connectionID aus dem Vector.
+	 * @param connectionID
+	 * @since 13.04.2011 von Adam Laszlo
+	 */
+	public static void remove(int connectionID){
+		for (int i = 0; i < players.size(); i++){
+			if (players.get(i).getConnection().getID() == connectionID){
+				players.remove(i);
+				return;
+			}
+		}
+	}
+	
+	/**
+	 * Holt ein Player anhand der connectionID aus dem Vector.
+	 * @param connectionID
+	 * @return Player
+	 * @since 13.04.2011 von Adam Laszlo
+	 */
+	public static Player getPlayer(int connectionID){
+		for (int i = 0; i < players.size(); i++){
+			if (players.get(i).getConnection().getID() == connectionID){
+				return players.get(i);
+			}
+		}
+		return null;
+	}
 
 	// ------------------- Getter & Setter ---------------------
 
@@ -467,5 +501,13 @@ public class Player {
 
 	public void setProperties(PlayerProperties properties) {
 		this.properties = properties;
+	}
+	
+	public static Vector<PlayerProperties> getAllPlayerProperties(){
+		Vector<PlayerProperties> props = new Vector<PlayerProperties>();
+		for (int i = 0; i < players.size(); i++){
+			props.add(players.get(i).getProperties());
+		}
+		return props;
 	}
 }
