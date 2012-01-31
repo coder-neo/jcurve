@@ -3,6 +3,7 @@ package gui;
 import java.util.Vector;
 
 import main.GameConstants;
+import main.Player;
 import main.PlayerProperties;
 
 import org.newdawn.slick.Graphics;
@@ -12,7 +13,7 @@ import utils.StaticUtils;
 
 public class GUIPlayerList extends BasicGUIElement {
 
-	private Vector<PlayerProperties> players = new Vector<PlayerProperties>();
+	private Vector<Player> players = new Vector<Player>();
 
 	public GUIPlayerList(float x, float y, int width, int height) {
 		super(x, y, width, height);
@@ -26,12 +27,12 @@ public class GUIPlayerList extends BasicGUIElement {
 
 		int startY = (int) (getY() + GUIChat.CHAT_PADDING_LINE) * 2;
 		for (int i = 0; i < players.size(); i++) {
-			PlayerProperties p = players.get(i);
+			PlayerProperties p = players.get(i).getProperties();
 			ResourceManager.getFont("small").drawString(getX() + GUIChat.CHAT_PADDING_LEFT, startY + (i * GUIChat.CHAT_PADDING_LINE), p.getName(), StaticUtils.getColorByCode(p.getColorCode()));
 		}
 	}
 
-	public void updatePlayerVector(Vector<PlayerProperties> players) {
+	public void updatePlayerVector(Vector<Player> players) {
 		this.players = players;
 	}
 
