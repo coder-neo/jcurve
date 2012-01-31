@@ -6,6 +6,9 @@ import gui.GUIPlayerList;
 import gui.GUITextField;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Vector;
 
 import main.GameConstants;
 import main.JCurve;
@@ -26,22 +29,21 @@ import org.newdawn.slick.state.StateBasedGame;
 import utils.ResourceManager;
 
 /**
- * In dieser State halten die Spieler sich auf, wenn sie bereits auf einem
- * Server sind, aber noch kein Spiel gestartet haben. Hier sieht man alle
- * Mitspieler auf einen Blick und hat einen Chat zur Kommunikation zur
- * Verfügung. Wenn alle Spieler bereit sind, startet der Server das Spiel.
+ * In dieser State halten die Spieler sich auf, wenn sie bereits auf einem Server sind, aber noch kein Spiel gestartet haben. Hier sieht man alle Mitspieler auf einen Blick und hat einen Chat zur Kommunikation zur Verfügung. Wenn alle Spieler bereit sind, startet der Server das Spiel.
  * 
  * @author Benjamin
  */
 public class LobbyState extends JCurveState {
 
-	public static final String MSG_PLAYER_CONNECTED = "%s hat sich dem Spiel angeschlossen";
-	public static final String MSG_PLAYER_DISCONNECTED = "%s hat uns verlassen";
-	public static final String MSG_WAIT = "Warte auf Mitspieler";
+	public static final String MSG_PLAYER_CONNECTED = "%s joined.";
+	public static final String MSG_PLAYER_DISCONNECTED = "%s left.";
+	public static final String MSG_WAIT = "Waiting for players";
 	public static final String MSG_WAIT_DOTS = "...";
 
 	public static final int TEXTFIELD_HEIGHT = 24;
 	public static final int MIN_PLAYERS_TO_PLAY = 2;
+
+	private Vector<Player> players = new Vector<Player>();
 
 	private GUIChat chatGUI = null;
 	private GUIPlayerList playerList = null;
@@ -77,7 +79,7 @@ public class LobbyState extends JCurveState {
 			}
 		});
 
-		buttonPlay = new GUIButton("Spiel starten", container, GameConstants.APP_WIDHT / 2 - 100, GameConstants.APP_HEIGHT - 100);
+		buttonPlay = new GUIButton("Start game", container, GameConstants.APP_WIDHT / 2 - 100, GameConstants.APP_HEIGHT - 100);
 		buttonPlay.addListener(new ComponentListener() {
 			@Override
 			public void componentActivated(AbstractComponent source) {
@@ -85,7 +87,7 @@ public class LobbyState extends JCurveState {
 			}
 		});
 
-		buttonCancel = new GUIButton("Abbrechen", container, GameConstants.APP_WIDHT / 2 + 100, GameConstants.APP_HEIGHT - 100);
+		buttonCancel = new GUIButton("Cancel", container, GameConstants.APP_WIDHT / 2 + 100, GameConstants.APP_HEIGHT - 100);
 		buttonCancel.addListener(new ComponentListener() {
 			@Override
 			public void componentActivated(AbstractComponent source) {
@@ -102,7 +104,10 @@ public class LobbyState extends JCurveState {
 
 		if (JCurve.createServer && JCurve.server == null) {
 			JCurve.server = new CurveServer();
-			CurveClient.getInstance().connect("localhost");
+
+			// add self to server
+			CurveClient.getInstance().connect(JCurve.server.getIP());
+			CurveClient.getInstance().getClient().sendTCP(JCurve.userData);
 		}
 	}
 
@@ -116,7 +121,7 @@ public class LobbyState extends JCurveState {
 			chatGUI.clear();
 			playerList.clear();
 		} else {
-			CurveClient.getInstance().getClient().close();
+			CurveClient.getInstance().getClient().stop();
 		}
 	}
 
@@ -124,11 +129,25 @@ public class LobbyState extends JCurveState {
 	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
 		super.update(container, game, delta);
 
-		updateLobby();
+		if (JCurve.server != null) {
+			HashMap<Integer, Player> playerCons = JCurve.server.getPlayerCons();
+			Iterator<Player> iter = playerCons.values().iterator();
+			while (iter.hasNext()) {
+				Player p = iter.next();
+				addPlayer(p);
+			}
+		} else {
+			Vector<PlayerProperties> properties = CurveClient.getInstance().getPlayerProperties();
+			for (int i = 0; i < properties.size(); i++) {
+				Player player = new Player();
+				player.setProperties(properties.get(i));
+				addPlayer(player);
+			}
+		}
 
-		playerList.updatePlayerVector(CurveClient.getInstance().getPlayerProperties());
+//		playerList.updatePlayerVector(players);
 
-		if (CurveClient.getInstance().getPlayerProperties().size() < MIN_PLAYERS_TO_PLAY) {
+		if (players.size() < MIN_PLAYERS_TO_PLAY) {
 			buttonPlay.setEnabled(false);
 			dotDelta += delta;
 			if (dotDelta >= maxDotDelta) {
@@ -148,21 +167,17 @@ public class LobbyState extends JCurveState {
 		if (container.getInput().isKeyPressed(Input.KEY_F1)) {
 			Player p = new Player();
 			p.getProperties().setName(new Date().getTime() + "");
-			addPlayer(p.getProperties());
+			addPlayer(p);
 		} else if (container.getInput().isKeyPressed(Input.KEY_F2)) {
 			removePlayer(0);
 		}
-	}
-
-	private void updateLobby() {
-		playerList.updatePlayerVector(CurveClient.getInstance().getPlayerProperties());
 	}
 
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
 		super.render(container, game, g);
 
-		if (CurveClient.getInstance().getPlayerProperties().size() < MIN_PLAYERS_TO_PLAY) {
+		if (players.size() < MIN_PLAYERS_TO_PLAY) {
 			int strWidth = ResourceManager.getFont("standard").getWidth(MSG_WAIT) / 2;
 			ResourceManager.getFont("standard").drawString(GameConstants.APP_WIDHT / 2 - strWidth, GameConstants.APP_HEIGHT / 2, MSG_WAIT + " " + MSG_WAIT_DOTS.substring(0, curDotPos));
 		}
@@ -183,7 +198,7 @@ public class LobbyState extends JCurveState {
 		String playerName = null;
 
 		if (JCurve.userData.getName().trim().equals("")) {
-			playerName = "anonym";
+			playerName = "???";
 		} else {
 			playerName = JCurve.userData.getName();
 		}
@@ -199,13 +214,12 @@ public class LobbyState extends JCurveState {
 	 *            - der Index
 	 */
 	public void removePlayer(int index) {
-		removePlayer(CurveClient.getInstance().getPlayerProperties().get(index));
-//		if (!CurveClient.getInstance().getPlayerProperties().contains(CurveClient.getInstance().getPlayerProperties().get(index)))
-//			return;
-//
-//		String name = CurveClient.getInstance().getPlayerProperties().get(index).getName();
-//		CurveClient.getInstance().getPlayerProperties().remove(index);
-//		chatGUI.addSystemMessage(MSG_PLAYER_DISCONNECTED.replace("%s", name));
+		if (!players.contains(players.get(index)))
+			return;
+
+		String name = players.get(index).getProperties().getName();
+		players.remove(index);
+		chatGUI.addSystemMessage(MSG_PLAYER_DISCONNECTED.replace("%s", name));
 	}
 
 	/**
@@ -214,18 +228,12 @@ public class LobbyState extends JCurveState {
 	 * @param p
 	 *            - das Objekt
 	 */
-	public void removePlayer(PlayerProperties p) {
-		if (p == null) {
-			return;
+	public void removePlayer(Player p) {
+		for (int i = 0; i < players.size(); i++) {
+			if (players.get(i).equals(p)) {
+				removePlayer(i);
+			}
 		}
-		String name = p.getName();
-		chatGUI.addSystemMessage(MSG_PLAYER_DISCONNECTED.replace("%s", name));
-//		for (int i = 0; i < CurveClient.getInstance().getPlayerProperties().size(); i++) {
-//			if (CurveClient.getInstance().getPlayerProperties().get(i).equals(p)) {
-//				removePlayer(i);
-//				return;
-//			}
-//		}
 	}
 
 	/**
@@ -234,7 +242,19 @@ public class LobbyState extends JCurveState {
 	 * @param p
 	 *            - das Spielerobjekt
 	 */
-	public void addPlayer(PlayerProperties p) {
-		chatGUI.addSystemMessage(MSG_PLAYER_CONNECTED.replace("%s", p.getName()));
+	public void addPlayer(Player p) {
+		p.setReady(false);
+		for (int i = 0; i < players.size(); i++) {
+			if (players.get(i).getProperties().getConnectionID() == p.getProperties().getConnectionID()) {
+				players.get(i).setProperties(p.getProperties());
+				return;
+			}
+		}
+		if (players.contains(p)) {
+			return;
+		}
+		players.add(p);
+		chatGUI.addSystemMessage(MSG_PLAYER_CONNECTED.replace("%s", p.getProperties().getName()));
 	}
+
 }

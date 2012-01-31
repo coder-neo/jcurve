@@ -22,7 +22,7 @@ public class GUIPlayerList extends BasicGUIElement {
 	public void render(Graphics g) {
 		super.render(g);
 
-		ResourceManager.getFont("small").drawString(getX() + GUIChat.CHAT_PADDING_LEFT, getY(), "Spieler in der Lobby (" + players.size() + "/" + GameConstants.MAX_PLAYERS + ")");
+		ResourceManager.getFont("small").drawString(getX() + GUIChat.CHAT_PADDING_LEFT, getY(), "Connected players (" + players.size() + "/" + GameConstants.MAX_PLAYERS + ")");
 
 		int startY = (int) (getY() + GUIChat.CHAT_PADDING_LINE) * 2;
 		for (int i = 0; i < players.size(); i++) {

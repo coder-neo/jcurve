@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Vector;
 
 import main.GameConstants;
+import main.JCurve;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -52,13 +53,26 @@ public class OptionsState extends JCurveState {
 		colors.add(Color.cyan);
 
 		int x = 350;
+
+		Color c = Color.decode(String.valueOf(JCurve.userData.getColorCode()));
+
+		final Vector<GUIButton> buttons = new Vector<GUIButton>();
+
 		for (int i = 0; i < colors.size(); i++) {
 			final GUIButton button = new GUIButton(container, colors.get(i), x, 300, 50, 50);
-			button.setMouseOverColor(colors.get(i));
+			buttons.add(button);
+			if (colors.get(i).equals(c)) {
+				button.setActive(true);
+			}
+			button.setMouseOverColor(colors.get(i).darker(.25f));
 			button.addListener(new ComponentListener() {
 				@Override
 				public void componentActivated(AbstractComponent source) {
 					playerColor = button.getFillColor();
+					for (int i = 0; i < buttons.size(); i++) {
+						buttons.get(i).setActive(false);
+					}
+					button.setActive(true);
 				}
 			});
 
@@ -67,19 +81,19 @@ public class OptionsState extends JCurveState {
 			x += 75;
 		}
 
-		// TODO in JCurve.userData.getName() ist noch nicht gefüllt, da die satetes vorher schon estellt werden, somit ist es null --> schlecht
+		// TODO in JCurve.userData.getName() ist noch nicht gefüllt, da die
+		// satetes vorher schon estellt werden, somit ist es null --> schlecht
 		// :-D
 
 		// playerName = new GUITextField(container,
 		// ResourceManager.getFont("chatFont"), 350, 250, 300, 25,
 		// JCurve.userData.getName() );
-		playerName = new GUITextField(container, ResourceManager.getFont("chatFont"), 350, 250, 300, 25, "noch fehler");
+		playerName = new GUITextField(container, ResourceManager.getFont("chatFont"), 350, 250, 300, 25, "");
 		playerName.setBackgroundColor(Color.white);
 		playerName.setTextColor(Color.black);
 
-		
-		//TODO beim Speichern muss auch die Farbe gespeichert werden
-		GUIButton buttonSave = new GUIButton("Speichern", container, 100, 450);
+		// TODO beim Speichern muss auch die Farbe gespeichert werden
+		GUIButton buttonSave = new GUIButton("Save", container, 100, 450);
 		buttonSave.addListener(new ComponentListener() {
 			@Override
 			public void componentActivated(AbstractComponent source) {
@@ -88,7 +102,7 @@ public class OptionsState extends JCurveState {
 			}
 		});
 
-		GUIButton buttonCancel = new GUIButton("Abbrechen", container, 100, 500);
+		GUIButton buttonCancel = new GUIButton("Cancel", container, 100, 500);
 		buttonCancel.addListener(new ComponentListener() {
 			@Override
 			public void componentActivated(AbstractComponent source) {
@@ -97,6 +111,13 @@ public class OptionsState extends JCurveState {
 		});
 
 		addGUIElements(buttonCancel, buttonSave);
+	}
+
+	@Override
+	public void enter(GameContainer container, StateBasedGame game) throws SlickException {
+		String name = JCurve.userData.getName();
+		playerName.setText(name);
+
 	}
 
 	/**
@@ -112,16 +133,17 @@ public class OptionsState extends JCurveState {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		MainMenuState.readConfigFile();
 	}
 
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
 		super.render(container, game, g);
 
-		ResourceManager.getFont("header").drawString(100, 100, "Optionen", Color.red);
+		ResourceManager.getFont("header").drawString(100, 100, "Options", Color.red);
 
 		ResourceManager.getFont("standard").drawString(100, 250, "Name:");
-		ResourceManager.getFont("standard").drawString(100, 300, "Farbe:");
+		ResourceManager.getFont("standard").drawString(100, 300, "Color:");
 
 		playerName.render(container, g);
 	}
