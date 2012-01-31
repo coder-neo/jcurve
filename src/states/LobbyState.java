@@ -145,7 +145,7 @@ public class LobbyState extends JCurveState {
 			}
 		}
 
-//		playerList.updatePlayerVector(players);
+		 playerList.updatePlayerVector(players);
 
 		if (players.size() < MIN_PLAYERS_TO_PLAY) {
 			buttonPlay.setEnabled(false);
