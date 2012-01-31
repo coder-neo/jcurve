@@ -32,6 +32,8 @@ public class GUIButton extends BasicGUIElement {
 	private Color mouseOverColor = Color.orange;
 	private Color disabledColor = Color.gray;
 	private Color fillColor;
+	
+	private boolean active = false;
 
 	/**
 	 * Erstellt einen neuen Button an der bestimmten Position.
@@ -107,12 +109,20 @@ public class GUIButton extends BasicGUIElement {
 
 		if (text != "")
 			texture.drawString(text, 0, 0);
-		else
-			texture.fillRect(0, 0, getWidth(), getHeight());
+		else {
+			if(active){
+				texture.setColor(Color.white);
+				texture.fillRect(0, 0, getWidth(), getHeight());
+				texture.setColor(getFillColor());
+				texture.fillRect(3, 3, getWidth()-6, getHeight()-6);
+			} else {
+				texture.fillRect(0, 0, getWidth(), getHeight());
+			}
+		}
 
 		texture.flush();
-		
 		area.render(context, g);
+
 	}
 
 	/**
@@ -208,6 +218,14 @@ public class GUIButton extends BasicGUIElement {
 
 	public void setValue(Object value) {
 		this.value = value;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 
 }

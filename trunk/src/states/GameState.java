@@ -1,5 +1,6 @@
 package states;
 
+import java.util.Iterator;
 import java.util.Vector;
 
 import main.JCurve;
@@ -19,15 +20,9 @@ import org.newdawn.slick.state.StateBasedGame;
 import utils.ResourceManager;
 
 /**
- * Die Hauptstate des Spiels. Hier läuft das eigentliche Spiel ab. Die Spieler
- * steuern ihre Schlange durch die Spielwelt und müssen versuchen, anderen
- * Spielern sowie der Wand auszuweichen. Ab und an erscheinen Powerups, mit
- * welchen der Spieler entweder einen vorübergehenden Boost bekommt, bzw. drei
- * mal schießen kann.
+ * Die Hauptstate des Spiels. Hier läuft das eigentliche Spiel ab. Die Spieler steuern ihre Schlange durch die Spielwelt und müssen versuchen, anderen Spielern sowie der Wand auszuweichen. Ab und an erscheinen Powerups, mit welchen der Spieler entweder einen vorübergehenden Boost bekommt, bzw. drei mal schießen kann.
  * 
- * Da jeder Client auch ein Server sein kann, laufen hier grundsätzlich beide
- * Berechnungen ab. Der "Serverspieler" schickt dann die berechneten Koordinaten
- * an alle Spieler.
+ * Da jeder Client auch ein Server sein kann, laufen hier grundsätzlich beide Berechnungen ab. Der "Serverspieler" schickt dann die berechneten Koordinaten an alle Spieler.
  * 
  * @author Adam
  * @author Benedikt
@@ -62,9 +57,13 @@ public class GameState extends JCurveState {
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) throws SlickException {
 		super.enter(container, game);
-
-		if (JCurve.server != null)
+		
+		if (JCurve.server != null) {
+			System.out.println("This player is the server. Server is running...");
 			curveServer = JCurve.server;
+		} else {
+			System.out.println("This player is just a client. Running...");
+		}
 	}
 
 	@Override
@@ -75,13 +74,16 @@ public class GameState extends JCurveState {
 		// darf sie spawnen, bzw. berechnen
 
 		if (curveServer != null) {
-//			Iterator<Player> players = curveServer.getPlayerCons().values().iterator();
-//			while (players.hasNext()) {
-			for (int i = 0; i < Player.getPlayers().size(); i++){
-//				Player p = players.next();
-				Player.getPlayers().get(i).render(g);
+			Iterator<Player> players = curveServer.getPlayerCons().values().iterator();
+			for (int i = 0; i < curveServer.getPlayers().size(); i++) {
+				System.out.println("> Rendering: " + curveServer.getPlayers().get(i).getProperties().getName());
+				curveServer.getPlayers().get(i).render(g);
 			}
-//			}
+			while (players.hasNext()) {
+				Player p = players.next();
+				System.out.println("> Rendering: " + p.getProperties().getName());
+				p.render(g);
+			}
 			for (int i = 0; i < Powerup.getPowerups().size(); i++) {
 				Powerup.getPowerups().get(i).render();
 			}
@@ -103,8 +105,7 @@ public class GameState extends JCurveState {
 	}
 
 	/**
-	 * Update-Schleife des Clients, in welcher er Tastenbefehle an den Server
-	 * schickt.
+	 * Update-Schleife des Clients, in welcher er Tastenbefehle an den Server schickt.
 	 * 
 	 * @param delta
 	 *            - ms seit letztem Update
@@ -135,12 +136,9 @@ public class GameState extends JCurveState {
 	}
 
 	/**
-	 * Update-Schleife des Servers. Er schickt die Koordinaten an alle Spieler
-	 * und sorgt dafür, dass Powerups zufällig auf der Karte erscheinen.
+	 * Update-Schleife des Servers. Er schickt die Koordinaten an alle Spieler und sorgt dafür, dass Powerups zufällig auf der Karte erscheinen.
 	 * 
-	 * TODO: das darf nur der server machen und muss es an die clients
-	 * schickenmomentan berechnet jeder client das für sich selber inkls. spawnt
-	 * eigene poweurps.
+	 * TODO: das darf nur der server machen und muss es an die clients schickenmomentan berechnet jeder client das für sich selber inkls. spawnt eigene poweurps.
 	 * 
 	 * @param delta
 	 *            - ms seit letztem Update
@@ -150,18 +148,14 @@ public class GameState extends JCurveState {
 		if (playerCurDelta > playerDelta - loopDuration) {
 			loopDuration = System.currentTimeMillis();
 			playerCurDelta = 0;
-//			Iterator<Player> players = curveServer.getPlayerCons().values().iterator();
-			for (int i = 0; i < Player.getPlayers().size(); i++){
-				Player p = Player.getPlayers().get(i);
+			Iterator<Player> players = curveServer.getPlayerCons().values().iterator();
+			while (players.hasNext()) {
+				Player p = players.next();
 				p.update(delta);
 				if (!p.move()) {
 					p.die();
 				}
 			}
-
-//			while (players.hasNext()) {
-//				Player p = players.next();
-//			}
 			curveServer.sendAllPlayerCoordinates();
 			loopDuration = System.currentTimeMillis() - loopDuration;
 		}

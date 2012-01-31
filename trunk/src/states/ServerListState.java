@@ -33,7 +33,7 @@ public class ServerListState extends JCurveState {
 	private Vector<GUIButton> serverButtons = new Vector<GUIButton>();
 	private Vector<String> addedButtonNames = new Vector<String>();
 
-	private static final String MSG_WAIT = "Suche Server, bitte warten";
+	private static final String MSG_WAIT = "Looking for servers, please wait";
 	private int dotDelta = 0;
 	private int maxDotDelta = 500;
 	private int curDotPos = 1;
@@ -53,7 +53,7 @@ public class ServerListState extends JCurveState {
 		serverList = new GUIServerList(100, 200, 400, GameConstants.APP_HEIGHT - 400);
 		serverList.setBorder(Color.red);
 
-		buttonSearch = new GUIButton("Suche starten", container, GameConstants.APP_WIDHT / 2 - 150, GameConstants.APP_HEIGHT - 100);
+		buttonSearch = new GUIButton("Start search", container, GameConstants.APP_WIDHT / 2 - 150, GameConstants.APP_HEIGHT - 100);
 		buttonSearch.addListener(new ComponentListener() {
 			@Override
 			public void componentActivated(AbstractComponent source) {
@@ -62,7 +62,7 @@ public class ServerListState extends JCurveState {
 			}
 		});
 
-		GUIButton buttonCancel = new GUIButton("Abbrechen", container, GameConstants.APP_WIDHT / 2 + 100, GameConstants.APP_HEIGHT - 100);
+		GUIButton buttonCancel = new GUIButton("Cancel", container, GameConstants.APP_WIDHT / 2 + 100, GameConstants.APP_HEIGHT - 100);
 		buttonCancel.addListener(new ComponentListener() {
 			@Override
 			public void componentActivated(AbstractComponent source) {
@@ -144,7 +144,7 @@ public class ServerListState extends JCurveState {
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
 		super.render(container, game, g);
 
-		ResourceManager.getFont("header").drawString(100, 100, "Offene Server", Color.red);
+		ResourceManager.getFont("header").drawString(100, 100, "Available servers", Color.red);
 
 		// Server gefunden (min. 1)
 		if (serverList.getServer() != null && serverList.getServer().size() > 0) {
@@ -156,7 +156,7 @@ public class ServerListState extends JCurveState {
 		}
 		// keine Server gefunden
 		else if (serverList.getServer() != null && serverList.getServer().size() <= 0 && !isSearching) {
-			ResourceManager.getFont("standard").drawString(115, 215, "keine Gefunden");
+			ResourceManager.getFont("standard").drawString(115, 215, "No open servers");
 		}
 
 		// Suche läuft noch

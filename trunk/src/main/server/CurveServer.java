@@ -1,7 +1,11 @@
 package main.server;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Vector;
 
 import main.GameConstants;
 import main.NetworkConstants;
@@ -13,8 +17,11 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 
-public final class CurveServer extends Listener {
+public class CurveServer extends Listener {
 	private Server server;
+	private HashMap<Integer, Player> playerCons = new HashMap<Integer, Player>();
+
+	private Vector<Player> players = new Vector<Player>();
 
 	public CurveServer() {
 		try {
@@ -28,85 +35,106 @@ public final class CurveServer extends Listener {
 		}
 	}
 
+	public InetAddress getIP() {
+		try {
+			return InetAddress.getLocalHost();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
 	@Override
 	public void connected(Connection connection) {
 		super.connected(connection);
-		
-		/*
-		 *	Hier wird quasi eine Player-Hülle erzeugt. Die Eigenschaften werden danach
-		 *	vom Player übermittelt. 
-		 */
-		new Player(connection);
+
+		playerCons.put(connection.getID(), new Player(connection));
+
+		Vector<PlayerProperties> props = new Vector<PlayerProperties>();
+		Iterator<Player> players = playerCons.values().iterator();
+		while (players.hasNext()) {
+			props.add(players.next().getProperties());
+		}
+		System.out.println("[SERVER] sending " + props.size() + " to new client");
+		server.sendToTCP(connection.getID(), props);
 	}
 
 	@Override
 	public void disconnected(Connection connection) {
 		super.disconnected(connection);
-		PlayerProperties playerProps = Player.getPlayer(connection.getID()).getProperties();
-		playerProps.disconnect();
-		server.sendToAllTCP(playerProps);
-		Player.remove(connection.getID());
+
+		playerCons.remove(connection.getID());
 	}
 
 	@Override
 	public void received(Connection connection, Object object) {
 		super.received(connection, object);
 
-		System.out.println("Server Received from ID: "+connection.getID());
-		Player p = Player.getPlayer(connection.getID());
+		Player p = playerCons.get(connection.getID());
 
 		if (object instanceof Integer) {
 			switch (Integer.valueOf(object.toString())) {
-				case NetworkConstants.GAME_START:
-					p.setReady(true);
-					break;
-				case NetworkConstants.PLAYER_MOVE_LEFT:
-					p.steerLeft();
-					break;
-				case NetworkConstants.PLAYER_MOVE_RIGHT:
-					p.steerRight();
-					break;
-				case NetworkConstants.PLAYER_MOVE_STRAIGHT:
-					p.steerStraight();
-					break;
-				case NetworkConstants.PLAYER_BOOST_ENABLE:
-					p.setBoost(true);
-					break;
-				case NetworkConstants.PLAYER_BOOST_DISABLE:
-					p.setBoost(false);
-					break;
-				case NetworkConstants.PLAYER_SHOOT:
-					p.shoot();
-					break;
-				case NetworkConstants.PLAYER_DISCONNECT:
-					Player.remove(connection.getID());
-					break;
-				default:
-					break;
+			case NetworkConstants.GAME_START:
+				p.setReady(true);
+				break;
+			case NetworkConstants.PLAYER_MOVE_LEFT:
+				p.steerLeft();
+				break;
+			case NetworkConstants.PLAYER_MOVE_RIGHT:
+				p.steerRight();
+				break;
+			case NetworkConstants.PLAYER_MOVE_STRAIGHT:
+				p.steerStraight();
+				break;
+			case NetworkConstants.PLAYER_BOOST_ENABLE:
+				p.setBoost(true);
+				break;
+			case NetworkConstants.PLAYER_BOOST_DISABLE:
+				p.setBoost(false);
+				break;
+			case NetworkConstants.PLAYER_SHOOT:
+				p.shoot();
+				break;
+			case NetworkConstants.PLAYER_DISCONNECT:
+				playerCons.remove(connection.getID());
+				break;
+			default:
+				break;
 			}
 		} else if (object instanceof PlayerProperties) {
-			/**
-			 * Ein einzelner Spieler teilt dem Server seine Properties mit.
-			 */
 			PlayerProperties properties = (PlayerProperties) object;
-			properties.setConnectionID(connection.getID());
 			p.setProperties(properties);
-			System.out.println("server receive props: "+p.getProperties());
-			server.sendToAllTCP(properties);
-			server.sendToTCP(connection.getID(), Player.getAllPlayerProperties());
 		}
 	}
 
+	public HashMap<Integer, Player> getPlayerCons() {
+		return playerCons;
+	}
+
+	public void setPlayerCons(HashMap<Integer, Player> playerCons) {
+		this.playerCons = playerCons;
+	}
+
 	/**
-	 * Sendet allen Clients die letzte Koordinate aller Spieler.
+	 * Sendet allen Clients die neuen Koordinaten aller Spieler.
 	 */
 	public void sendAllPlayerCoordinates() {
 		HashMap<Integer, PlayerPoint> newPoints = new HashMap<Integer, PlayerPoint>();
-		PlayerProperties playerProps;
-		for (int i = 0; i < Player.getAllPlayerProperties().size(); i++){
-			playerProps = Player.getAllPlayerProperties().get(i);
-			newPoints.put(playerProps.getConnectionID(), playerProps.getPoints().lastElement());
+		Iterator<Integer> conIDs = playerCons.keySet().iterator();
+		while (conIDs.hasNext()) {
+			int conID = (int) conIDs.next();
+			newPoints.put(conID, playerCons.get(conID).getProperties().getPoints().lastElement());
 		}
 		server.sendToAllUDP(newPoints);
 	}
+
+	public Vector<Player> getPlayers() {
+		return players;
+	}
+
+	public void setPlayers(Vector<Player> players) {
+		this.players = players;
+	}
+
 }

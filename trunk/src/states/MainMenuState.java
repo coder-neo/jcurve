@@ -24,10 +24,7 @@ import org.newdawn.slick.state.StateBasedGame;
 import utils.ResourceManager;
 
 /**
- * Die erste State, die der Spieler sieht. Hier kann er ein Spiel starten oder
- * auf ein bestehendes joinen (beitreten). Auch kann er diverse Optionen
- * anpassen, wie seinen Namen und seine Spielerfarbe. Als kleines Gimmick huscht
- * rechts auf dem Bildschirm eine Schlange umher.
+ * Die erste State, die der Spieler sieht. Hier kann er ein Spiel starten oder auf ein bestehendes joinen (beitreten). Auch kann er diverse Optionen anpassen, wie seinen Namen und seine Spielerfarbe. Als kleines Gimmick huscht rechts auf dem Bildschirm eine Schlange umher.
  * 
  * @author Benjamin
  */
@@ -45,9 +42,13 @@ public class MainMenuState extends JCurveState {
 
 	public MainMenuState(int id) {
 		super(id);
+
 		ResourceManager.addImage("laser", "data/images/laser.png");
+
 		bot = new Player(new PlayerPoint((GameConstants.APP_WIDHT / 2) + 140, 200, 0));
+		// bot.getProperties().getPoints().add(new PlayerPoint((GameConstants.APP_WIDHT / 2) + 140, 200, 0));
 		botColor = new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255));
+
 		readConfigFile();
 	}
 
@@ -55,7 +56,7 @@ public class MainMenuState extends JCurveState {
 	public void init(GameContainer container, final StateBasedGame game) throws SlickException {
 		super.init(container, game);
 
-		GUIButton buttonPlay = new GUIButton("Neues Spiel starten", container, 100, 250);
+		GUIButton buttonPlay = new GUIButton("Start new game", container, 100, 250);
 		buttonPlay.addListener(new ComponentListener() {
 			@Override
 			public void componentActivated(AbstractComponent source) {
@@ -64,7 +65,7 @@ public class MainMenuState extends JCurveState {
 			}
 		});
 
-		GUIButton buttonJoin = new GUIButton("Spiel beitreten", container, 100, 300);
+		GUIButton buttonJoin = new GUIButton("Join game", container, 100, 300);
 		buttonJoin.addListener(new ComponentListener() {
 			@Override
 			public void componentActivated(AbstractComponent source) {
@@ -72,7 +73,7 @@ public class MainMenuState extends JCurveState {
 			}
 		});
 
-		GUIButton buttonOptions = new GUIButton("Optionen", container, 100, 350);
+		GUIButton buttonOptions = new GUIButton("Options", container, 100, 350);
 		buttonOptions.addListener(new ComponentListener() {
 			@Override
 			public void componentActivated(AbstractComponent source) {
@@ -80,7 +81,7 @@ public class MainMenuState extends JCurveState {
 			}
 		});
 
-		GUIButton buttonQuit = new GUIButton("Beenden", container, 100, 450);
+		GUIButton buttonQuit = new GUIButton("Quit", container, 100, 450);
 		buttonQuit.addListener(new ComponentListener() {
 			@Override
 			public void componentActivated(AbstractComponent source) {
@@ -94,10 +95,9 @@ public class MainMenuState extends JCurveState {
 	/**
 	 * Liest die lokale Config-Datei ein und speichert diese.
 	 */
-	private void readConfigFile() {
+	public static void readConfigFile() {
 		FileMuffin file = new FileMuffin();
 		try {
-			@SuppressWarnings("unchecked")
 			HashMap<Object, Object> data = file.loadFile(GameConstants.APP_LOCAL_OPTIONS_FILENAME);
 			if (data.size() <= 0) {
 				createEmptyConfigFile();
@@ -123,10 +123,9 @@ public class MainMenuState extends JCurveState {
 	}
 
 	/**
-	 * Erstellt eine "leere" Config-Datei mit Standardwerten, falls keine
-	 * exisitert, bzw. der User noch keine angelegt hat.
+	 * Erstellt eine "leere" Config-Datei mit Standardwerten, falls keine exisitert, bzw. der User noch keine angelegt hat.
 	 */
-	private void createEmptyConfigFile() {
+	public static void createEmptyConfigFile() {
 		FileMuffin file = new FileMuffin();
 		try {
 			HashMap<Object, Object> data = new HashMap<Object, Object>();
@@ -148,8 +147,7 @@ public class MainMenuState extends JCurveState {
 		ResourceManager.getFont("header").drawString(100, 100, GameConstants.APP_NAME, Color.red);
 
 		int strWidth = ResourceManager.getFont("small").getWidth(GameConstants.APP_VERSION) / 2;
-		ResourceManager.getFont("small").drawString(GameConstants.APP_WIDHT - (strWidth * 2) - 20, GameConstants.APP_HEIGHT - strWidth,
-				GameConstants.APP_VERSION);
+		ResourceManager.getFont("small").drawString(GameConstants.APP_WIDHT - (strWidth * 2) - 20, GameConstants.APP_HEIGHT - strWidth, GameConstants.APP_VERSION);
 	}
 
 	@Override
@@ -160,8 +158,7 @@ public class MainMenuState extends JCurveState {
 	}
 
 	/**
-	 * Zeichnet eine Schlange, die im Hauptmenü zufällig durch den Screen
-	 * huscht.
+	 * Zeichnet eine Schlange, die im Hauptmenü zufällig durch den Screen huscht.
 	 * 
 	 * @param g
 	 *            - Graphics-Objekt
