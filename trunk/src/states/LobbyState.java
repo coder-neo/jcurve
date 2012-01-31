@@ -120,6 +120,8 @@ public class LobbyState extends JCurveState {
 		if (JCurve.server != null) {
 			chatGUI.clear();
 			playerList.clear();
+			JCurve.server.shutdown();
+			JCurve.server = null;
 		} else {
 			CurveClient.getInstance().getClient().stop();
 		}
@@ -145,7 +147,7 @@ public class LobbyState extends JCurveState {
 			}
 		}
 
-		 playerList.updatePlayerVector(players);
+		playerList.updatePlayerVector(players);
 
 		if (players.size() < MIN_PLAYERS_TO_PLAY) {
 			buttonPlay.setEnabled(false);

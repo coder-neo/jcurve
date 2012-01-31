@@ -64,11 +64,11 @@ public class GUIChat extends BasicGUIElement {
 	 */
 	public void clear() {
 		messages.removeAllElements();
+		curWriteLine = 0;
 	}
 
 	/**
-	 * Fügt eine neue Nachricht des Systems in den Chat hinzu, zB wenn ein
-	 * Spieler die Lobby betritt oder verlässt.
+	 * Fügt eine neue Nachricht des Systems in den Chat hinzu, zB wenn ein Spieler die Lobby betritt oder verlässt.
 	 * 
 	 * @param msg
 	 *            - die Nachricht
@@ -78,8 +78,7 @@ public class GUIChat extends BasicGUIElement {
 	}
 
 	/**
-	 * Fügt eine neue Nachricht in den Chat hinzu. Ist diese zu lang für eine
-	 * Zeile, wird sie automatisch umgebrochen.
+	 * Fügt eine neue Nachricht in den Chat hinzu. Ist diese zu lang für eine Zeile, wird sie automatisch umgebrochen.
 	 * 
 	 * @param name
 	 *            - der Spieler, der die Nachricht abschickt
