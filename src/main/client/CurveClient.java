@@ -90,9 +90,11 @@ public class CurveClient extends Listener {
 				}
 			}
 		} else if (object instanceof Vector) {
-			// beim joinen bekommt der client alle spielerdaten vom server in der lobby
+			// dies sind die playerproperties der spieler
 			Vector<PlayerProperties> props = (Vector<PlayerProperties>) object;
-			System.out.println("[CLIENT] received " + props.size() + " from server");
+			for (PlayerProperties playerProperties : props) {
+				System.out.println("[CLIENT] received props, name: " + playerProperties.getName());
+			}
 			playerProperties = props;
 		}
 	}

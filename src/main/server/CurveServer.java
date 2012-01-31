@@ -35,6 +35,10 @@ public class CurveServer extends Listener {
 		}
 	}
 
+	public void shutdown() {
+		server.stop();
+	}
+
 	public InetAddress getIP() {
 		try {
 			return InetAddress.getLocalHost();
@@ -51,13 +55,18 @@ public class CurveServer extends Listener {
 
 		playerCons.put(connection.getID(), new Player(connection));
 
+		sendPropertiesToAllPlayers();
+	}
+
+	private void sendPropertiesToAllPlayers() {
 		Vector<PlayerProperties> props = new Vector<PlayerProperties>();
 		Iterator<Player> players = playerCons.values().iterator();
 		while (players.hasNext()) {
-			props.add(players.next().getProperties());
+			PlayerProperties curProps = players.next().getProperties();
+			System.out.println("[SERVER] sending to client name: " + curProps.getName());
+			props.add(curProps);
 		}
-		System.out.println("[SERVER] sending " + props.size() + " to new client");
-		server.sendToTCP(connection.getID(), props);
+		server.sendToAllTCP(props);
 	}
 
 	@Override
@@ -71,30 +80,30 @@ public class CurveServer extends Listener {
 	public void received(Connection connection, Object object) {
 		super.received(connection, object);
 
-		Player p = playerCons.get(connection.getID());
+		Player sendingPlayer = playerCons.get(connection.getID());
 
 		if (object instanceof Integer) {
 			switch (Integer.valueOf(object.toString())) {
 			case NetworkConstants.GAME_START:
-				p.setReady(true);
+				sendingPlayer.setReady(true);
 				break;
 			case NetworkConstants.PLAYER_MOVE_LEFT:
-				p.steerLeft();
+				sendingPlayer.steerLeft();
 				break;
 			case NetworkConstants.PLAYER_MOVE_RIGHT:
-				p.steerRight();
+				sendingPlayer.steerRight();
 				break;
 			case NetworkConstants.PLAYER_MOVE_STRAIGHT:
-				p.steerStraight();
+				sendingPlayer.steerStraight();
 				break;
 			case NetworkConstants.PLAYER_BOOST_ENABLE:
-				p.setBoost(true);
+				sendingPlayer.setBoost(true);
 				break;
 			case NetworkConstants.PLAYER_BOOST_DISABLE:
-				p.setBoost(false);
+				sendingPlayer.setBoost(false);
 				break;
 			case NetworkConstants.PLAYER_SHOOT:
-				p.shoot();
+				sendingPlayer.shoot();
 				break;
 			case NetworkConstants.PLAYER_DISCONNECT:
 				playerCons.remove(connection.getID());
@@ -104,7 +113,8 @@ public class CurveServer extends Listener {
 			}
 		} else if (object instanceof PlayerProperties) {
 			PlayerProperties properties = (PlayerProperties) object;
-			p.setProperties(properties);
+			sendingPlayer.setProperties(properties);
+			sendPropertiesToAllPlayers();
 		}
 	}
 
