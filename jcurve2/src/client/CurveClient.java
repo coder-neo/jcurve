@@ -19,8 +19,8 @@ public class CurveClient extends Listener {
 	private static CurveClient object = null;
 	private static Client client = null;
 
-	private ArrayList<ConnectedPlayer> connectedPlayers = null;
-	private ArrayList<ChatMessage> chatMessages = null;
+	private ArrayList<ConnectedPlayer> connectedPlayers = new ArrayList<ConnectedPlayer>();
+	private ArrayList<ChatMessage> chatMessages = new ArrayList<ChatMessage>();
 
 	public static CurveClient getInstance() {
 		if (object == null) {
