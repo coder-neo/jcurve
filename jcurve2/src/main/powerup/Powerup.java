@@ -25,7 +25,7 @@ public abstract class Powerup {
 	
 	public Powerup(String imageKey){
 		image = ResourceManager.getImage(imageKey).copy();
-		int x = (int) Math.round((Math.random()*(GameConstants.APP_WIDHT-image.getWidth())-image.getWidth())+image.getWidth()/2);
+		int x = (int) Math.round((Math.random()*(GameConstants.APP_WIDTH-image.getWidth())-image.getWidth())+image.getWidth()/2);
 		int y = (int) Math.round((Math.random()*(GameConstants.APP_HEIGHT-image.getHeight())-image.getHeight())+image.getHeight()/2);
 		position = new Point(x, y);
 		powerups.add(this);

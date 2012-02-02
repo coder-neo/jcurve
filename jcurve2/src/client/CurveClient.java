@@ -3,12 +3,15 @@ package client;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import main.JCurve;
 import shared.ChatMessage;
 import shared.ConnectedPlayer;
+import shared.GameCommand;
 import shared.GameConstants;
 import shared.Network;
+import shared.NetworkConstants;
 
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
@@ -55,6 +58,17 @@ public class CurveClient extends Listener {
 				ArrayList<ChatMessage> messagesFromServer = (ArrayList<ChatMessage>) object;
 				chatMessages = messagesFromServer;
 			}
+		} else if (object instanceof GameCommand) {
+			GameCommand cmd = (GameCommand) object;
+			// befehl des servers ausführen
+			if (cmd.getCommand() == NetworkConstants.GAME_START) {
+				JCurve.lobbyState.startGame();
+			} else {
+				JCurve.runningGameState.parseCommand(cmd);
+			}
+		} else if (object instanceof HashMap) {
+			HashMap<Integer, PlayerPoint> newPoints = (HashMap<Integer, PlayerPoint>) object;
+
 		}
 	}
 

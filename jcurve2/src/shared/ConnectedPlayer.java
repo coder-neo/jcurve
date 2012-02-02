@@ -2,6 +2,8 @@ package shared;
 
 public class ConnectedPlayer {
 
+	private boolean host = false;
+
 	private int connectionID = -1;
 	private PlayerProperties properties = new PlayerProperties();
 
@@ -27,6 +29,14 @@ public class ConnectedPlayer {
 
 	public void setConnectionID(int connectionID) {
 		this.connectionID = connectionID;
+	}
+
+	public boolean isHost() {
+		return host;
+	}
+
+	public void setHost(boolean host) {
+		this.host = host;
 	}
 
 }

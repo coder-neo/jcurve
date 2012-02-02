@@ -64,10 +64,11 @@ public class GUIChat extends BasicGUIElement {
 		if (msgs == null) {
 			return;
 		}
-		
+
 		messages.removeAllElements();
 		curWriteLine = 0;
-		for (shared.ChatMessage msg : msgs) {
+		for (int i = 0; i < msgs.size(); i++) {
+			shared.ChatMessage msg = msgs.get(i);
 			addMessage(msg.getName(), msg.getText());
 		}
 	}
@@ -102,7 +103,7 @@ public class GUIChat extends BasicGUIElement {
 		if (msg.trim().isEmpty())
 			return;
 
-		msg = "<" + name + ">: " + msg;
+		msg = name + ": " + msg;
 
 		String newMsg = "";
 		int strWidth = ResourceManager.getFont("chatFont").getWidth(msg);

@@ -19,6 +19,7 @@ import org.newdawn.slick.particles.ConfigurableEmitter;
 import org.newdawn.slick.particles.ParticleIO;
 import org.newdawn.slick.particles.ParticleSystem;
 
+import shared.ConnectedPlayer;
 import shared.GameConstants;
 import shared.PlayerProperties;
 import utils.ResourceManager;
@@ -48,6 +49,8 @@ public class Player {
 	private int tmpColorCode;
 	private int dyingColorCode = 0xffffff;
 
+	private ConnectedPlayer ownerConnectedPlayer = null;
+
 	private int numBullets = 1;
 	private int maxBullets = 3;
 
@@ -73,26 +76,9 @@ public class Player {
 		players.add(this);
 	}
 
-	/**
-	 * Konstruktor für den Bot Erzeugt eine neue Instanz der Klasse "Player".
-	 * 
-	 * @param p
-	 */
-	public Player(PlayerPoint p) {
-		properties = new PlayerProperties();
-		properties.getPoints().add(p);
-		// players.add(this);
-	}
-
-	/**
-	 * Erstellt einen neuen Player und knüpft ihn an eine Connection
-	 * 
-	 * @param connection
-	 */
-	public Player(Connection connection) {
-		this.connection = connection;
-		properties = new PlayerProperties(connection.getID());
-		initPlayerPosition();
+	public Player(ConnectedPlayer connectedPlayer) {
+		this.properties = connectedPlayer.getProperties();
+		this.ownerConnectedPlayer = connectedPlayer;
 		players.add(this);
 		try {
 			particleSystem = new ParticleSystem("data/emitters/particle.tga", 1000);
@@ -105,10 +91,42 @@ public class Player {
 		}
 	}
 
-	private void initPlayerPosition() {
-		int x = (int) Math.round((Math.random() * (GameConstants.APP_WIDHT - 50)));
+	/**
+	 * Konstruktor für den Bot Erzeugt eine neue Instanz der Klasse "Player".
+	 * 
+	 * @param p
+	 */
+	public Player(PlayerPoint p) {
+		properties = new PlayerProperties();
+		properties.getPoints().add(p);
+		// players.add(this);
+	}
+
+	// /**
+	// * Erstellt einen neuen Player und knüpft ihn an eine Connection
+	// *
+	// * @param connection
+	// */
+	// public Player(Connection connection) {
+	// this.connection = connection;
+	// properties = new PlayerProperties(connection.getID());
+	// initPlayerPosition();
+	// players.add(this);
+	// try {
+	// particleSystem = new ParticleSystem("data/emitters/particle.tga", 1000);
+	// boostEmitter = ParticleIO.loadEmitter("data/emitters/boostEmitter.xml");
+	// explosionSystem = ParticleIO.loadConfiguredSystem("data/emitters/explosionSystem.xml");
+	// boostEmitter.setEnabled(false);
+	// particleSystem.addEmitter(boostEmitter);
+	// } catch (IOException e) {
+	// e.printStackTrace();
+	// }
+	// }
+
+	public void initPlayerPosition() {
+		int x = (int) Math.round((Math.random() * (GameConstants.APP_WIDTH - 50)));
 		int y = (int) Math.round((Math.random() * (GameConstants.APP_HEIGHT - 50)));
-		int middleX = GameConstants.APP_WIDHT / 2;
+		int middleX = GameConstants.APP_WIDTH / 2;
 		int middleY = GameConstants.APP_HEIGHT / 2;
 		if (x > middleX) {
 			angle = (float) (Math.atan((middleY - y) / (double) (middleX - x)) - Math.PI);
@@ -293,7 +311,7 @@ public class Player {
 
 	private boolean checkCollisionBounds() {
 		Point lastPoint = properties.getPoints().lastElement();
-		if (lastPoint.x < 0 || lastPoint.x > GameConstants.APP_WIDHT || lastPoint.y < 0 || lastPoint.y > GameConstants.APP_HEIGHT) {
+		if (lastPoint.x < 0 || lastPoint.x > GameConstants.APP_WIDTH || lastPoint.y < 0 || lastPoint.y > GameConstants.APP_HEIGHT) {
 			return true;
 		}
 		return false;
@@ -513,5 +531,13 @@ public class Player {
 			props.add(players.get(i).getProperties());
 		}
 		return props;
+	}
+
+	public ConnectedPlayer getOwnerConnectedPlayer() {
+		return ownerConnectedPlayer;
+	}
+
+	public void setOwnerConnectedPlayer(ConnectedPlayer ownerConnectedPlayer) {
+		this.ownerConnectedPlayer = ownerConnectedPlayer;
 	}
 }

@@ -22,7 +22,8 @@ public class JCurve extends StateBasedGame {
 	public static boolean createServer = false;
 	public static CurveServer server = null;
 
-	private static LobbyState lobby = null;
+	public static GameState runningGameState = null;
+	public static LobbyState lobbyState = null;
 
 	public JCurve(String name) {
 		super(name);
@@ -35,20 +36,18 @@ public class JCurve extends StateBasedGame {
 		addState(new ServerListState(GameConstants.STATE_SERVER_LIST));
 		addState(new GameState(GameConstants.STATE_GAME));
 		addState(new MainMenuState(GameConstants.STATE_MAIN_MENU));
-		addState(new LobbyState(GameConstants.STATE_LOBBY));
+		lobbyState = new LobbyState(GameConstants.STATE_LOBBY);
+		addState(lobbyState);
 
 		enterState(GameConstants.STATE_MAIN_MENU);
 	}
 
 	public static void main(String[] args) throws SlickException {
-		app = new AppGameContainer(new JCurve(GameConstants.APP_NAME), GameConstants.APP_WIDHT, GameConstants.APP_HEIGHT, GameConstants.APP_IS_FULLSCREEN);
+		app = new AppGameContainer(new JCurve(GameConstants.APP_NAME), GameConstants.APP_WIDTH, GameConstants.APP_HEIGHT, GameConstants.APP_IS_FULLSCREEN);
 		app.setVSync(true);
-		app.setShowFPS(true);
+		app.setShowFPS(false);
 		app.setTargetFrameRate(60);
 		app.start();
 	}
 
-	public static LobbyState getLobby() {
-		return lobby;
-	}
 }

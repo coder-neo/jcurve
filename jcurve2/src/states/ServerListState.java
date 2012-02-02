@@ -52,7 +52,7 @@ public class ServerListState extends JCurveState {
 		serverList = new GUIServerList(100, 200, 400, GameConstants.APP_HEIGHT - 400);
 		serverList.setBorder(Color.red);
 
-		buttonSearch = new GUIButton("Start search", container, GameConstants.APP_WIDHT / 2 - 150, GameConstants.APP_HEIGHT - 100);
+		buttonSearch = new GUIButton("Refresh", container, GameConstants.APP_WIDTH / 2 - 150, GameConstants.APP_HEIGHT - 100);
 		buttonSearch.addListener(new ComponentListener() {
 			@Override
 			public void componentActivated(AbstractComponent source) {
@@ -61,7 +61,7 @@ public class ServerListState extends JCurveState {
 			}
 		});
 
-		GUIButton buttonCancel = new GUIButton("Cancel", container, GameConstants.APP_WIDHT / 2 + 100, GameConstants.APP_HEIGHT - 100);
+		GUIButton buttonCancel = new GUIButton("Cancel", container, GameConstants.APP_WIDTH / 2 + 100, GameConstants.APP_HEIGHT - 100);
 		buttonCancel.addListener(new ComponentListener() {
 			@Override
 			public void componentActivated(AbstractComponent source) {
@@ -103,7 +103,7 @@ public class ServerListState extends JCurveState {
 			if (addedButtonNames.contains(name))
 				continue;
 
-			final GUIButton button = new GUIButton(name, container, -GameConstants.APP_WIDHT, -GameConstants.APP_HEIGHT);
+			final GUIButton button = new GUIButton(name, container, -GameConstants.APP_WIDTH, -GameConstants.APP_HEIGHT);
 			button.setValue(serverList.getServer().get(i).getIp());
 			button.addListener(new ComponentListener() {
 				@Override
@@ -162,7 +162,7 @@ public class ServerListState extends JCurveState {
 		if (isSearching) {
 			container.getInput().pause();
 
-			Rectangle blacker = new Rectangle(0, 0, GameConstants.APP_WIDHT, GameConstants.APP_HEIGHT);
+			Rectangle blacker = new Rectangle(0, 0, GameConstants.APP_WIDTH, GameConstants.APP_HEIGHT);
 			Color blackerColor = new Color(0, 0, 0, .3f);
 			Color oldColor = g.getColor();
 			g.setColor(blackerColor);
@@ -170,7 +170,7 @@ public class ServerListState extends JCurveState {
 			g.setColor(oldColor);
 
 			int strWidth = ResourceManager.getFont("standard").getWidth(MSG_WAIT) / 2;
-			ResourceManager.getFont("standard").drawString(GameConstants.APP_WIDHT / 2 - strWidth, GameConstants.APP_HEIGHT / 2, MSG_WAIT + " " + LobbyState.MSG_WAIT_DOTS.substring(0, curDotPos));
+			ResourceManager.getFont("standard").drawString(GameConstants.APP_WIDTH / 2 - strWidth, GameConstants.APP_HEIGHT / 2, MSG_WAIT + " " + LobbyState.MSG_WAIT_DOTS.substring(0, curDotPos));
 		} else {
 			container.getInput().resume();
 		}

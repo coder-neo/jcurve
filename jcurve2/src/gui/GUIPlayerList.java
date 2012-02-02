@@ -26,13 +26,25 @@ public class GUIPlayerList extends BasicGUIElement {
 
 		int startY = (int) (getY() + GUIChat.CHAT_PADDING_LINE) * 2;
 		for (int i = 0; i < connectedPlayers.size(); i++) {
-			PlayerProperties p = connectedPlayers.get(i).getProperties();
-			ResourceManager.getFont("small").drawString(getX() + GUIChat.CHAT_PADDING_LEFT, startY + (i * GUIChat.CHAT_PADDING_LINE), p.getName(), StaticUtils.getColorByCode(p.getColorCode()));
+			ConnectedPlayer connectedPlayer = connectedPlayers.get(i);
+			PlayerProperties p = connectedPlayer.getProperties();
+			String name;
+			if (connectedPlayer.isHost()) {
+				name = "[Server] " + p.getName();
+			} else {
+				name = p.getName();
+			}
+
+			ResourceManager.getFont("small").drawString(getX() + GUIChat.CHAT_PADDING_LEFT, startY + (i * GUIChat.CHAT_PADDING_LINE), name, StaticUtils.getColorByCode(p.getColorCode()));
 		}
 	}
 
 	public void updateList(ArrayList<ConnectedPlayer> connectedPlayers) {
-		this.connectedPlayers = connectedPlayers;
+		// no reference, so we copy this object
+		this.connectedPlayers.clear();
+		for (int i = 0; i < connectedPlayers.size(); i++) {
+			this.connectedPlayers.add(connectedPlayers.get(i));
+		}
 	}
 
 	public void clear() {

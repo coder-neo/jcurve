@@ -12,9 +12,7 @@ import org.newdawn.slick.gui.MouseOverArea;
 import utils.ResourceManager;
 
 /**
- * Ein Button, der eine gewisse Aktion ausführen kann. Der Button kann entweder
- * beschriftet sein, wie etwa ein Menüpunkt, oder einfach eine mit Farbe
- * gefüllte Fläche sein, zB. wenn der Spieler seine Farbe wählt.
+ * Ein Button, der eine gewisse Aktion ausführen kann. Der Button kann entweder beschriftet sein, wie etwa ein Menüpunkt, oder einfach eine mit Farbe gefüllte Fläche sein, zB. wenn der Spieler seine Farbe wählt.
  * 
  * @author Benjamin
  */
@@ -32,7 +30,7 @@ public class GUIButton extends BasicGUIElement {
 	private Color mouseOverColor = Color.orange;
 	private Color disabledColor = Color.gray;
 	private Color fillColor;
-	
+
 	private boolean active = false;
 
 	/**
@@ -41,8 +39,7 @@ public class GUIButton extends BasicGUIElement {
 	 * @param text
 	 *            - der Text des Button
 	 * @param context
-	 *            - der GUIContext (das GameContainer-Objekt der init, render
-	 *            oder update-Methoden)
+	 *            - der GUIContext (das GameContainer-Objekt der init, render oder update-Methoden)
 	 * @param x
 	 *            - die xPos
 	 * @param y
@@ -110,11 +107,11 @@ public class GUIButton extends BasicGUIElement {
 		if (text != "")
 			texture.drawString(text, 0, 0);
 		else {
-			if(active){
+			if (active) {
 				texture.setColor(Color.white);
 				texture.fillRect(0, 0, getWidth(), getHeight());
 				texture.setColor(getFillColor());
-				texture.fillRect(3, 3, getWidth()-6, getHeight()-6);
+				texture.fillRect(3, 3, getWidth() - 6, getHeight() - 6);
 			} else {
 				texture.fillRect(0, 0, getWidth(), getHeight());
 			}
@@ -122,7 +119,6 @@ public class GUIButton extends BasicGUIElement {
 
 		texture.flush();
 		area.render(context, g);
-
 	}
 
 	/**

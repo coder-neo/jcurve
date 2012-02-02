@@ -3,18 +3,15 @@ package gui;
 import org.lwjgl.Sys;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Font;
-import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
-import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.gui.AbstractComponent;
 import org.newdawn.slick.gui.ComponentListener;
 import org.newdawn.slick.gui.GUIContext;
 
 /**
- * Hauptsächlich eine Kopie der TextField Klasse von Slick2D, allerdings mit
- * Support für Umlaute und andere ASCII-Zeichen.
+ * Hauptsächlich eine Kopie der TextField Klasse von Slick2D, allerdings mit Support für Umlaute und andere ASCII-Zeichen.
  * 
  * @author Benjamin
  */
@@ -149,14 +146,19 @@ public class GUITextField extends AbstractComponent {
 	 */
 	public GUITextField(GUIContext container, Font font, int x, int y, int width, int height, String name) {
 		super(container);
-		
+
 		this.font = font;
 
 		setLocation(x, y);
 		this.width = width;
-		this.height = height;;
+		this.height = height;
+		;
 
 		this.value = name;
+	}
+
+	public void clear() {
+		setText("");
 	}
 
 	/**
@@ -256,8 +258,7 @@ public class GUITextField extends AbstractComponent {
 	}
 
 	/**
-	 * @see org.newdawn.slick.gui.AbstractComponent#render(org.newdawn.slick.gui.GUIContext,
-	 *      org.newdawn.slick.Graphics)
+	 * @see org.newdawn.slick.gui.AbstractComponent#render(org.newdawn.slick.gui.GUIContext, org.newdawn.slick.Graphics)
 	 */
 	public void render(GUIContext container, Graphics g) {
 		if (lastKey != -1) {
@@ -449,6 +450,10 @@ public class GUITextField extends AbstractComponent {
 				if (consume) {
 					container.getInput().consumeEvent();
 				}
+			} else if (key == Input.KEY_END) {
+				setCursorPos(Integer.MAX_VALUE);
+			} else if (key == Input.KEY_HOME) {
+				setCursorPos(0);
 			} else if (key == Input.KEY_RIGHT) {
 				if (cursorPos < value.length()) {
 					cursorPos++;

@@ -12,6 +12,7 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.gui.AbstractComponent;
 import org.newdawn.slick.gui.ComponentListener;
@@ -45,11 +46,14 @@ public class MainMenuState extends JCurveState {
 
 		ResourceManager.addImage("laser", "data/images/laser.png");
 
-		bot = new Player(new PlayerPoint((GameConstants.APP_WIDHT / 2) + 140, 200, 0));
-		// bot.getProperties().getPoints().add(new PlayerPoint((GameConstants.APP_WIDHT / 2) + 140, 200, 0));
-		botColor = new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255));
+		bot = new Player(new PlayerPoint((GameConstants.APP_WIDTH / 2) + 140, 200, 0));
+		createRandomBotColor();
 
 		readConfigFile();
+	}
+
+	private void createRandomBotColor() {
+		botColor = new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255));
 	}
 
 	@Override
@@ -147,7 +151,7 @@ public class MainMenuState extends JCurveState {
 		ResourceManager.getFont("header").drawString(100, 100, GameConstants.APP_NAME, Color.red);
 
 		int strWidth = ResourceManager.getFont("small").getWidth(GameConstants.APP_VERSION) / 2;
-		ResourceManager.getFont("small").drawString(GameConstants.APP_WIDHT - (strWidth * 2) - 20, GameConstants.APP_HEIGHT - strWidth, GameConstants.APP_VERSION);
+		ResourceManager.getFont("small").drawString(GameConstants.APP_WIDTH - (strWidth * 2) - 20, GameConstants.APP_HEIGHT - strWidth * 2, GameConstants.APP_VERSION);
 	}
 
 	@Override
@@ -155,6 +159,10 @@ public class MainMenuState extends JCurveState {
 		super.update(container, game, delta);
 
 		updateBotSnake(delta);
+
+		if (container.getInput().isKeyPressed(Input.KEY_SPACE)) {
+			createRandomBotColor();
+		}
 	}
 
 	/**
@@ -182,8 +190,8 @@ public class MainMenuState extends JCurveState {
 	private void updateBotSnake(int delta) {
 		bot.steerStraight();
 
-		int borderLeft = GameConstants.APP_WIDHT / 2;
-		int borderRight = GameConstants.APP_WIDHT;
+		int borderLeft = GameConstants.APP_WIDTH / 2;
+		int borderRight = GameConstants.APP_WIDTH;
 
 		PlayerPoint lastPoint = bot.getProperties().getPoints().lastElement();
 

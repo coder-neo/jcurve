@@ -21,10 +21,11 @@ import org.newdawn.slick.state.StateBasedGame;
 import server.CurveServer;
 import shared.ChatMessage;
 import shared.ConnectedPlayer;
+import shared.GameCommand;
 import shared.GameConstants;
+import shared.NetworkConstants;
 import utils.ResourceManager;
 import client.CurveClient;
-import client.Player;
 
 /**
  * In dieser State halten die Spieler sich auf, wenn sie bereits auf einem Server sind, aber noch kein Spiel gestartet haben. Hier sieht man alle Mitspieler auf einen Blick und hat einen Chat zur Kommunikation zur Verfügung. Wenn alle Spieler bereit sind, startet der Server das Spiel.
@@ -33,13 +34,15 @@ import client.Player;
  */
 public class LobbyState extends JCurveState {
 
+	private StateBasedGame game = null;
+
 	public static final String MSG_PLAYER_CONNECTED = "%s joined.";
 	public static final String MSG_PLAYER_DISCONNECTED = "%s left.";
 	public static final String MSG_WAIT = "Waiting for players";
 	public static final String MSG_WAIT_DOTS = "...";
 
 	public static final int TEXTFIELD_HEIGHT = 24;
-	public static final int MIN_PLAYERS_TO_PLAY = 2;
+	public static final int MIN_PLAYERS_TO_PLAY = 1;
 
 	private ArrayList<ConnectedPlayer> connectedPlayers = new ArrayList<ConnectedPlayer>();
 	private ArrayList<ChatMessage> chatMessages = new ArrayList<ChatMessage>();
@@ -61,6 +64,8 @@ public class LobbyState extends JCurveState {
 	public void init(GameContainer container, final StateBasedGame game) throws SlickException {
 		super.init(container, game);
 
+		this.game = game;
+
 		chatGUI = new GUIChat(0, GameConstants.APP_HEIGHT - 300, 300, 300);
 		chatGUI.setBorder(Color.red);
 
@@ -78,19 +83,26 @@ public class LobbyState extends JCurveState {
 			}
 		});
 
-		buttonPlay = new GUIButton("Start game", container, GameConstants.APP_WIDHT / 2 - 100, GameConstants.APP_HEIGHT - 100);
+		buttonPlay = new GUIButton("Start game", container, GameConstants.APP_WIDTH / 2 - 100, GameConstants.APP_HEIGHT - 100);
 		buttonPlay.addListener(new ComponentListener() {
 			@Override
 			public void componentActivated(AbstractComponent source) {
-				game.enterState(GameConstants.STATE_GAME);
+				JCurve.server.getKryonetServer().sendToAllTCP(new GameCommand(NetworkConstants.GAME_START));
+				startGame();
 			}
 		});
 
-		buttonCancel = new GUIButton("Cancel", container, GameConstants.APP_WIDHT / 2 + 100, GameConstants.APP_HEIGHT - 100);
+		buttonCancel = new GUIButton("Cancel", container, GameConstants.APP_WIDTH / 2 + 100, GameConstants.APP_HEIGHT - 100);
 		buttonCancel.addListener(new ComponentListener() {
 			@Override
 			public void componentActivated(AbstractComponent source) {
 				game.enterState(GameConstants.STATE_MAIN_MENU);
+				if (JCurve.server != null) {
+					JCurve.server.shutdown();
+					JCurve.server = null;
+				} else {
+					CurveClient.getInstance().getClient().stop();
+				}
 			}
 		});
 
@@ -102,10 +114,13 @@ public class LobbyState extends JCurveState {
 		super.enter(container, game);
 
 		if (JCurve.createServer && JCurve.server == null) {
+			JCurve.app.setTitle(GameConstants.APP_NAME + " [SERVER]");
 			JCurve.server = new CurveServer();
 
 			// add self to server
 			CurveClient.getInstance().connect(JCurve.server.getIP());
+		} else {
+			JCurve.app.setTitle(GameConstants.APP_NAME + " [CLIENT]");
 		}
 	}
 
@@ -114,15 +129,10 @@ public class LobbyState extends JCurveState {
 		super.leave(container, game);
 
 		JCurve.createServer = false;
+		JCurve.app.setTitle(GameConstants.APP_NAME);
 
-		if (JCurve.server != null) {
-			chatGUI.clear();
-			playerList.clear();
-			JCurve.server.shutdown();
-			JCurve.server = null;
-		} else {
-			CurveClient.getInstance().getClient().stop();
-		}
+		chatGUI.clear();
+		playerList.clear();
 	}
 
 	@Override
@@ -146,20 +156,18 @@ public class LobbyState extends JCurveState {
 			if (dotDelta >= maxDotDelta) {
 				dotDelta = 0;
 				curDotPos++;
-				if (curDotPos > 3)
+				if (curDotPos > MSG_WAIT_DOTS.length()) {
 					curDotPos = 1;
+				}
 			}
 		} else {
-			if (!buttonPlay.isEnabled())
+			if (!buttonPlay.isEnabled()) {
 				buttonPlay.setEnabled(true);
+			}
 		}
 
-		if (container.getInput().isKeyPressed(Input.KEY_ENTER) && !chatField.hasFocus())
+		if (container.getInput().isKeyPressed(Input.KEY_ENTER) && !chatField.hasFocus()) {
 			chatField.setFocus(true);
-
-		if (container.getInput().isKeyPressed(Input.KEY_F1)) {
-			ConnectedPlayer player = new ConnectedPlayer();
-			player.getProperties().setName("Bot");
 		}
 	}
 
@@ -169,7 +177,7 @@ public class LobbyState extends JCurveState {
 
 		if (connectedPlayers.size() < MIN_PLAYERS_TO_PLAY) {
 			int strWidth = ResourceManager.getFont("standard").getWidth(MSG_WAIT) / 2;
-			ResourceManager.getFont("standard").drawString(GameConstants.APP_WIDHT / 2 - strWidth, GameConstants.APP_HEIGHT / 2, MSG_WAIT + " " + MSG_WAIT_DOTS.substring(0, curDotPos));
+			ResourceManager.getFont("standard").drawString(GameConstants.APP_WIDTH / 2 - strWidth, GameConstants.APP_HEIGHT / 2, MSG_WAIT + " " + MSG_WAIT_DOTS.substring(0, curDotPos));
 		}
 
 		chatField.render(container, g);
@@ -178,8 +186,6 @@ public class LobbyState extends JCurveState {
 	/**
 	 * Trägt eine neue Chatnachricht eines Spielers ein.
 	 * 
-	 * TODO: richtigen namen rausfinden und benutzen und an server schicken
-	 * 
 	 * @param e
 	 *            - das TextField, bzw. Eingabefeld in der Lobby
 	 */
@@ -187,65 +193,14 @@ public class LobbyState extends JCurveState {
 		GUITextField field = (GUITextField) e;
 		CurveClient.getInstance().sendChatMessage(field.getText());
 
-		// String playerName = null;
-		//
-		// if (JCurve.userData.getName().trim().equals("")) {
-		// playerName = "???";
-		// } else {
-		// playerName = JCurve.userData.getName();
-		// }
-		//
-		// chatGUI.addMessage(playerName, field.getText());
-		field.setText("");
+		field.clear();
 	}
 
 	/**
-	 * Entfernt einen Spieler aus der Lobby anhand des Vector-Index.
-	 * 
-	 * @param index
-	 *            - der Index
+	 * Wechselt die State und startet somit das Spiel.
 	 */
-	public void removePlayer(int index) {
-		// if (!players.contains(players.get(index)))
-		// return;
-		//
-		// String name = players.get(index).getProperties().getName();
-		// players.remove(index);
-		// chatGUI.addSystemMessage(MSG_PLAYER_DISCONNECTED.replace("%s", name));
-	}
-
-	/**
-	 * Entfernt einen Spieler aus der Lobby anhand des Player-Objektes
-	 * 
-	 * @param p
-	 *            - das Objekt
-	 */
-	public void removePlayer(Player p) {
-		// for (int i = 0; i < players.size(); i++) {
-		// if (players.get(i).equals(p)) {
-		// removePlayer(i);
-		// }
-		// }
-	}
-
-	/**
-	 * Registriert einen neuen Spieler in dieser Lobby.
-	 * 
-	 * @param p
-	 *            - das Spielerobjekt
-	 */
-	public void addPlayer(ConnectedPlayer p) {
-		// for (int i = 0; i < players.size(); i++) {
-		// if (players.get(i).getProperties().getConnectionID() == p.getProperties().getConnectionID()) {
-		// players.get(i).setProperties(p.getProperties());
-		// return;
-		// }
-		// }
-		// if (players.contains(p)) {
-		// return;
-		// }
-		// players.add(p);
-		// chatGUI.addSystemMessage(MSG_PLAYER_CONNECTED.replace("%s", p.getProperties().getName()));
+	public void startGame() {
+		game.enterState(GameConstants.STATE_GAME);
 	}
 
 }

@@ -45,26 +45,31 @@ public class OptionsState extends JCurveState {
 		colors.add(Color.red);
 		colors.add(Color.green);
 		colors.add(Color.blue);
-		colors.add(Color.yellow);
-		colors.add(Color.pink);
-		colors.add(Color.orange);
-		colors.add(Color.magenta);
-		colors.add(Color.gray);
-		colors.add(Color.cyan);
-
-		int x = 350;
-
-		Color c = Color.decode(String.valueOf(JCurve.userData.getColorCode()));
+		colors.add(new Color(0xF4A460));
+		colors.add(new Color(0x800080));
+		colors.add(new Color(0x3CB371));
+		colors.add(new Color(0xFF7F00));
+		colors.add(new Color(0xFF1493));
+		colors.add(new Color(0xB23AEE));
+		colors.add(new Color(0x8B795E));
 
 		final Vector<GUIButton> buttons = new Vector<GUIButton>();
+		Color c = Color.decode(String.valueOf(JCurve.userData.getColorCode()));
 
+		int x = 350;
+		int y = 300;
 		for (int i = 0; i < colors.size(); i++) {
-			final GUIButton button = new GUIButton(container, colors.get(i), x, 300, 50, 50);
+			if (i % 5 == 0 && i > 0) {
+				y += 100;
+				x = 350;
+			}
+
+			final GUIButton button = new GUIButton(container, colors.get(i), x, y, 50, 50);
 			buttons.add(button);
 			if (colors.get(i).equals(c)) {
 				button.setActive(true);
 			}
-			button.setMouseOverColor(colors.get(i).darker(.25f));
+			button.setMouseOverColor(colors.get(i));
 			button.addListener(new ComponentListener() {
 				@Override
 				public void componentActivated(AbstractComponent source) {
@@ -81,19 +86,11 @@ public class OptionsState extends JCurveState {
 			x += 75;
 		}
 
-		// TODO in JCurve.userData.getName() ist noch nicht gefüllt, da die
-		// satetes vorher schon estellt werden, somit ist es null --> schlecht
-		// :-D
-
-		// playerName = new GUITextField(container,
-		// ResourceManager.getFont("chatFont"), 350, 250, 300, 25,
-		// JCurve.userData.getName() );
 		playerName = new GUITextField(container, ResourceManager.getFont("chatFont"), 350, 250, 300, 25, "");
 		playerName.setBackgroundColor(Color.white);
 		playerName.setTextColor(Color.black);
 
-		// TODO beim Speichern muss auch die Farbe gespeichert werden
-		GUIButton buttonSave = new GUIButton("Save", container, 100, 450);
+		GUIButton buttonSave = new GUIButton("Save", container, GameConstants.APP_WIDTH / 2 - 100, GameConstants.APP_HEIGHT - 100);
 		buttonSave.addListener(new ComponentListener() {
 			@Override
 			public void componentActivated(AbstractComponent source) {
@@ -102,7 +99,7 @@ public class OptionsState extends JCurveState {
 			}
 		});
 
-		GUIButton buttonCancel = new GUIButton("Cancel", container, 100, 500);
+		GUIButton buttonCancel = new GUIButton("Cancel", container, GameConstants.APP_WIDTH / 2 + 100, GameConstants.APP_HEIGHT - 100);
 		buttonCancel.addListener(new ComponentListener() {
 			@Override
 			public void componentActivated(AbstractComponent source) {

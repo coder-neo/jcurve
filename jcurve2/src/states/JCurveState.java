@@ -16,8 +16,7 @@ import client.CurveClient;
 import com.esotericsoftware.kryonet.Client;
 
 /**
- * Die abstrakte Oberklasse unserer einzelnen States. Bietet
- * Basisfunktionalitäten, die häufig gebraucht werden.
+ * Die abstrakte Oberklasse unserer einzelnen States. Bietet Basisfunktionalitäten, die häufig gebraucht werden.
  * 
  * @author Benjamin
  */
@@ -40,7 +39,7 @@ public abstract class JCurveState extends BasicGameState {
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
 		this.container = container;
 
-		ResourceManager.addFont("chatFont", "data/fonts/tempesta.ttf", 12, false, false);
+		ResourceManager.addFont("chatFont", "data/fonts/chat.ttf", 20, false, false);
 		ResourceManager.addFont("header", "data/fonts/cool.ttf", 60, false, false);
 		ResourceManager.addFont("standard", "data/fonts/cool.ttf", 30, false, false);
 		ResourceManager.addFont("small", "data/fonts/cool.ttf", 20, false, false);

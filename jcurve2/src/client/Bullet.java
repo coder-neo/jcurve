@@ -56,7 +56,7 @@ public class Bullet {
 	}
 	
 	public boolean isInsideScreen(){
-		if (position.x + img.getWidth() < 0 || position.y + img.getHeight() < 0 || position.x > GameConstants.APP_WIDHT || position.y > GameConstants.APP_HEIGHT){
+		if (position.x + img.getWidth() < 0 || position.y + img.getHeight() < 0 || position.x > GameConstants.APP_WIDTH || position.y > GameConstants.APP_HEIGHT){
 			return false;
 		}
 		return true;
