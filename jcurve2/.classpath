@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="lib" path="lib/slick/lib/hiero.jar"/>
+	<classpathentry kind="lib" path="lib/slick/lib/ibxm.jar"/>
+	<classpathentry kind="lib" path="lib/slick/lib/jinput.jar"/>
+	<classpathentry kind="lib" path="lib/slick/lib/jnlp.jar"/>
+	<classpathentry kind="lib" path="lib/slick/lib/jogg-0.0.7.jar"/>
+	<classpathentry kind="lib" path="lib/slick/lib/jorbis-0.0.15.jar"/>
+	<classpathentry kind="lib" path="lib/slick/lib/lwjgl.jar"/>
+	<classpathentry kind="lib" path="lib/slick/lib/natives-linux.jar"/>
+	<classpathentry kind="lib" path="lib/slick/lib/natives-mac.jar"/>
+	<classpathentry kind="lib" path="lib/slick/lib/natives-win32.jar"/>
+	<classpathentry kind="lib" path="lib/slick/lib/packulike.jar"/>
+	<classpathentry kind="lib" path="lib/slick/lib/pedigree.jar"/>
+	<classpathentry kind="lib" path="lib/slick/lib/scalar.jar"/>
+	<classpathentry kind="lib" path="lib/slick/lib/slick-examples.jar" sourcepath="lib/slick/src"/>
+	<classpathentry kind="lib" path="lib/slick/lib/slick-sources.jar" sourcepath="lib/slick/src"/>
+	<classpathentry kind="lib" path="lib/slick/lib/slick-util-src.zip" sourcepath="lib/slick/src"/>
+	<classpathentry kind="lib" path="lib/slick/lib/slick-util.jar" sourcepath="lib/slick/src"/>
+	<classpathentry kind="lib" path="lib/slick/lib/slick.jar" sourcepath="lib/slick/src">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="jcurve2/lib/slick"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/slick/lib/tinylinepp.jar"/>
+	<classpathentry kind="lib" path="lib/kryonet-1.04/onejar/kryonet-1.04-all.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/appl/server/xampp/htdocs/jcurve2/lib/kryonet-1.04/api/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
