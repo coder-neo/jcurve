@@ -139,9 +139,9 @@ public class GameState extends JCurveState {
 		System.out.println("[CLIENT] Received cmd: " + cmd.getCommand());
 
 		switch (cmd.getCommand()) {
-		case NetworkConstants.GAME_END:
-			stopGame();
-			break;
+			case NetworkConstants.GAME_END:
+				stopGame();
+				break;
 		}
 	}
 
@@ -163,24 +163,24 @@ public class GameState extends JCurveState {
 
 		if (sendingPlayer != null) {
 			switch (cmd.getCommand()) {
-			case NetworkConstants.PLAYER_MOVE_STRAIGHT:
-				sendingPlayer.steerStraight();
-				break;
-			case NetworkConstants.PLAYER_MOVE_LEFT:
-				sendingPlayer.steerLeft();
-				break;
-			case NetworkConstants.PLAYER_MOVE_RIGHT:
-				sendingPlayer.steerRight();
-				break;
-			case NetworkConstants.PLAYER_BOOST_ENABLE:
-				sendingPlayer.setBoost(true);
-				break;
-			case NetworkConstants.PLAYER_BOOST_DISABLE:
-				sendingPlayer.setBoost(false);
-				break;
-			case NetworkConstants.PLAYER_SHOOT:
-				sendingPlayer.shoot();
-				break;
+				case NetworkConstants.PLAYER_MOVE_STRAIGHT:
+					sendingPlayer.steerStraight();
+					break;
+				case NetworkConstants.PLAYER_MOVE_LEFT:
+					sendingPlayer.steerLeft();
+					break;
+				case NetworkConstants.PLAYER_MOVE_RIGHT:
+					sendingPlayer.steerRight();
+					break;
+				case NetworkConstants.PLAYER_BOOST_ENABLE:
+					sendingPlayer.setBoost(true);
+					break;
+				case NetworkConstants.PLAYER_BOOST_DISABLE:
+					sendingPlayer.setBoost(false);
+					break;
+				case NetworkConstants.PLAYER_SHOOT:
+					sendingPlayer.shoot();
+					break;
 			}
 		}
 
@@ -194,6 +194,9 @@ public class GameState extends JCurveState {
 		HashMap<Integer, PlayerPoint> newPoints = new HashMap<Integer, PlayerPoint>();
 		for (int i = 0; i < Player.getPlayers().size(); i++) {
 			Player curPlayer = Player.getPlayers().get(i);
+			if (curPlayer.getProperties().getPoints().isEmpty()) {
+				continue;
+			}
 			newPoints.put(curPlayer.getOwnerConnectedPlayer().getConnectionID(), curPlayer.getProperties().getPoints().lastElement());
 		}
 		sendUDP(newPoints);
