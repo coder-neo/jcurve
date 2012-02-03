@@ -188,8 +188,6 @@ public class GameState extends JCurveState {
 					break;
 			}
 		}
-
-		sendCoordinates();
 	}
 
 	/**
@@ -271,8 +269,11 @@ public class GameState extends JCurveState {
 	 *            - ms seit letztem Update
 	 */
 	private void updateServerLogic(int delta) {
-		curStartDelay += delta;
-		if (curStartDelay >= startDelay) {
+		playerCurDelta += delta;
+		if (playerCurDelta > playerDelta - loopDuration) {
+			loopDuration = System.currentTimeMillis();
+			playerCurDelta = 0;
+			
 			boolean allPlayersDead = true;
 
 			for (int i = 0; i < Player.getPlayers().size(); i++) {
@@ -291,7 +292,11 @@ public class GameState extends JCurveState {
 			if (allPlayersDead) {
 				sendTCP(new GameCommand(NetworkConstants.GAME_END));
 				stopGame();
+				return;
 			}
+
+			sendCoordinates();
+			loopDuration = System.currentTimeMillis() - loopDuration;
 		}
 	}
 

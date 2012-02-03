@@ -42,7 +42,7 @@ public class LobbyState extends JCurveState {
 	public static final String MSG_WAIT_DOTS = "...";
 
 	public static final int TEXTFIELD_HEIGHT = 24;
-	public static final int MIN_PLAYERS_TO_PLAY = 1;
+	public static final int MIN_PLAYERS_TO_PLAY = 2;
 
 	private ArrayList<ConnectedPlayer> connectedPlayers = new ArrayList<ConnectedPlayer>();
 	private ArrayList<ChatMessage> chatMessages = new ArrayList<ChatMessage>();
