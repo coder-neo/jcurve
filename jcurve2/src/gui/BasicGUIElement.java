@@ -15,16 +15,17 @@ import org.newdawn.slick.geom.Rectangle;
  */
 public abstract class BasicGUIElement {
    
-	private BasicGUIElement parent = null;
+	protected BasicGUIElement parent = null;
 
-	private Vector<BasicGUIElement> children = new Vector<BasicGUIElement>();
-	private Vector<ControlledInputReciever> listener = new Vector<ControlledInputReciever>();
+	protected Vector<BasicGUIElement> children = new Vector<BasicGUIElement>();
+	protected Vector<ControlledInputReciever> listener = new Vector<ControlledInputReciever>();
 
-	private float x, y;
-	private int width, height;
-	private Color backgroundColor, fontColor, borderColor;
-	private Image image;
-	private Rectangle border;
+	protected String fontName;
+	protected float x, y;
+	protected int width, height;
+	protected Color backgroundColor, fontColor, borderColor;
+	protected Image image;
+	protected Rectangle border;
 
 	public BasicGUIElement(float x, float y) {
 		this(x, y, 0, 0);
