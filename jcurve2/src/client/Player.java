@@ -288,18 +288,19 @@ public class Player {
 			for (int j = 0; j < end; j++) {
 				PlayerPoint p = other.getProperties().getPoints().get(j);
 				if (!p.isActive()) {
-					continue;
+//					continue;
+					return true;
 				}
-				if (this.getProperties().getPoints().lastElement().distance(p) < 10) {
-					// ----- pixelgenaue Prüfung -----
-					Shape rect = new Rectangle(p.x, p.y, img.getWidth(), img.getHeight());
-					rect = rect.transform(Transform.createRotateTransform(p.getAngle(), rect.getCenterX(), rect.getCenterY()));
-					Shape rect2 = new Rectangle(this.getProperties().getPoints().lastElement().x, properties.getPoints().lastElement().y, img.getWidth(), img.getHeight());
-					rect2 = rect2.transform(Transform.createRotateTransform(this.getProperties().getPoints().lastElement().getAngle(), rect2.getCenterX(), rect2.getCenterY()));
-					if (rect.intersects(rect2)) {
-						return true;
-					}
-				}
+//				if (this.getProperties().getPoints().lastElement().distance(p) < 10) {
+//					// ----- pixelgenaue Prüfung -----
+//					Shape rect = new Rectangle(p.x, p.y, img.getWidth(), img.getHeight());
+//					rect = rect.transform(Transform.createRotateTransform(p.getAngle(), rect.getCenterX(), rect.getCenterY()));
+//					Shape rect2 = new Rectangle(this.getProperties().getPoints().lastElement().x, properties.getPoints().lastElement().y, img.getWidth(), img.getHeight());
+//					rect2 = rect2.transform(Transform.createRotateTransform(this.getProperties().getPoints().lastElement().getAngle(), rect2.getCenterX(), rect2.getCenterY()));
+//					if (rect.intersects(rect2)) {
+//						return true;
+//					}
+//				}
 			}
 			checkCollisionBullets();
 			checkCollisionPowerups();

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 import main.JCurve;
 import shared.ChatMessage;
@@ -69,6 +70,12 @@ public class CurveClient extends Listener {
 		} else if (object instanceof HashMap) {
 			HashMap<Integer, PlayerPoint> newPoints = (HashMap<Integer, PlayerPoint>) object;
 			if (!newPoints.isEmpty()) {
+//				Set<Integer> cons = newPoints.keySet();
+//				for (Integer con : cons) {
+//					System.out.println("ConID: "+ con);
+//				}
+//				System.out.println(newPoints.get(1).toString());
+//				System.out.println(newPoints.get(2).toString());
 				JCurve.runningGameState.updatePoints(newPoints);
 			}
 		}

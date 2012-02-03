@@ -28,5 +28,10 @@ public class PlayerPoint extends Point{
 	public void setActive(boolean isActive) {
 		this.isActive = isActive;
 	}
+	
+	@Override
+	public String toString() {
+		return "PlayerPoint [ "+x+" | "+y+" ]";
+	}
 
 }
