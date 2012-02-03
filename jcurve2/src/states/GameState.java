@@ -303,9 +303,9 @@ public class GameState extends JCurveState {
 	public void updatePoints(HashMap<Integer, PlayerPoint> newPoints) {
 		Vector<Player> players = Player.getPlayers();
 		for (int j = 0; j < players.size(); j++) {
-			PlayerPoint pp = newPoints.get(players.get(j).getProperties().getConnectionID());
-			players.get(j).getProperties().getPoints().add(pp);
+			PlayerPoint pp = newPoints.get(players.get(j).getOwnerConnectedPlayer().getConnectionID());
+			players.get(j).addPoint(pp);
 		}
-		Player.setPlayers(players);
+//		Player.setPlayers(players);
 	}
 }

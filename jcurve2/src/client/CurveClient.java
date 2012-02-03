@@ -68,7 +68,9 @@ public class CurveClient extends Listener {
 			}
 		} else if (object instanceof HashMap) {
 			HashMap<Integer, PlayerPoint> newPoints = (HashMap<Integer, PlayerPoint>) object;
-			
+			if (!newPoints.isEmpty()) {
+				JCurve.runningGameState.updatePoints(newPoints);
+			}
 		}
 	}
 

@@ -542,4 +542,8 @@ public class Player {
 	public void setOwnerConnectedPlayer(ConnectedPlayer ownerConnectedPlayer) {
 		this.ownerConnectedPlayer = ownerConnectedPlayer;
 	}
+
+	public void addPoint(PlayerPoint pp) {
+		properties.getPoints().add(pp);
+	}
 }
