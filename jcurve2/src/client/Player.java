@@ -508,6 +508,10 @@ public class Player {
 	public static Vector<Player> getPlayers() {
 		return players;
 	}
+	
+	public static void setPlayers(Vector<Player> players) {
+		Player.players = players;
+	}
 
 	public PlayerProperties getProperties() {
 		return properties;

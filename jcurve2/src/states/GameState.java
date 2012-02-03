@@ -303,5 +303,6 @@ public class GameState extends JCurveState {
 			PlayerPoint pp = newPoints.get(players.get(j).getConnection().getID());
 			players.get(j).getProperties().getPoints().add(pp);
 		}
+		Player.setPlayers(players);
 	}
 }
