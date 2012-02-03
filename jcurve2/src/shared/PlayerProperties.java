@@ -10,9 +10,7 @@ import utils.ResourceManager;
 import client.PlayerPoint;
 
 /**
- * PlayerProperties ist eine Klasse, die Spieler Informationen enthält für die
- * Übertragung über das Netzwerk. Sie enthält nur die Informationen, die für
- * jeden Client zum rendern notwendig sind.
+ * PlayerProperties ist eine Klasse, die Spieler Informationen enthält für die Übertragung über das Netzwerk. Sie enthält nur die Informationen, die für jeden Client zum rendern notwendig sind.
  * 
  * @author Adam Laszlo
  * 
@@ -24,7 +22,7 @@ public class PlayerProperties {
 	private int score = 0;
 	private int colorCode = 0xffffff;
 	private String imageKey;
-  
+
 	public PlayerProperties() {
 		this.connectionID = -1;
 		imageKey = "laser";
@@ -48,6 +46,11 @@ public class PlayerProperties {
 	}
 
 	public Vector<PlayerPoint> getPoints() {
+		for (int i = 0; i < points.size(); i++) {
+			if (points.get(i) == null) {
+				points.remove(i);
+			}
+		}
 		return points;
 	}
 

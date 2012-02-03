@@ -248,11 +248,6 @@ public class Player {
 		if (properties.getPoints().size() < 1) {
 			initPlayerPosition();
 		}
-		if (properties.getPoints().firstElement() == null) {
-			properties.getPoints().remove(0);
-			computeNextPoint();
-			return;
-		}
 		Point lastPoint = properties.getPoints().lastElement();
 		int deltaX = (int) Math.round(Math.cos(angle) * speed);
 		int deltaY = (int) Math.round(Math.sin(angle) * speed);
