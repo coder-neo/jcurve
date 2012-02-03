@@ -77,7 +77,8 @@ public class GameState extends JCurveState {
 			System.out.println("[CLIENT] I'm just a client!");
 			for (int i = 0; i < CurveClient.getInstance().getConnectedPlayers().size(); i++) {
 				ConnectedPlayer connectedPlayer = CurveClient.getInstance().getConnectedPlayers().get(i);
-				new Player(connectedPlayer);
+				Player player = new Player(connectedPlayer);
+				player.initPlayerPosition();
 			}
 		}
 	}
@@ -197,7 +198,11 @@ public class GameState extends JCurveState {
 			if (curPlayer.getProperties().getPoints().isEmpty()) {
 				continue;
 			}
-			newPoints.put(curPlayer.getOwnerConnectedPlayer().getConnectionID(), curPlayer.getProperties().getPoints().lastElement());
+			// System.out.println("[SERVER] adding new point of " + curPlayer.getOwnerConnectedPlayer().getConnectionID() + " : " + curPlayer.getProperties().getPoints());
+			PlayerPoint pp = curPlayer.getProperties().getPoints().lastElement();
+			if (pp != null) {
+				newPoints.put(curPlayer.getOwnerConnectedPlayer().getConnectionID(), pp);
+			}
 		}
 		sendUDP(newPoints);
 	}
@@ -306,6 +311,6 @@ public class GameState extends JCurveState {
 			PlayerPoint pp = newPoints.get(players.get(j).getOwnerConnectedPlayer().getConnectionID());
 			players.get(j).addPoint(pp);
 		}
-//		Player.setPlayers(players);
+		// Player.setPlayers(players);
 	}
 }
