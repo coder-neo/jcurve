@@ -80,8 +80,9 @@ public class GameState extends JCurveState {
 			System.out.println("[CLIENT] I'm just a client!");
 			for (int i = 0; i < CurveClient.getInstance().getConnectedPlayers().size(); i++) {
 				ConnectedPlayer connectedPlayer = CurveClient.getInstance().getConnectedPlayers().get(i);
-				Player player = new Player(connectedPlayer);
-				player.initPlayerPosition();
+				// Player player =
+				new Player(connectedPlayer);
+				// player.initPlayerPosition();
 			}
 		}
 	}
@@ -206,7 +207,7 @@ public class GameState extends JCurveState {
 				newPoints.put(curPlayer.getOwnerConnectedPlayer().getConnectionID(), pp);
 			}
 		}
-		
+
 		sendUDP(newPoints);
 	}
 
@@ -279,6 +280,7 @@ public class GameState extends JCurveState {
 				curPlayer.update(delta);
 				if (!curPlayer.move()) {
 					curPlayer.die();
+					System.out.println("[SERVER] " + curPlayer.getProperties().getName() + " just died.");
 				}
 
 				if (curPlayer.isAlive()) {
