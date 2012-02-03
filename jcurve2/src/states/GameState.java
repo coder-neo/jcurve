@@ -199,14 +199,14 @@ public class GameState extends JCurveState {
 		for (int i = 0; i < Player.getPlayers().size(); i++) {
 			Player curPlayer = Player.getPlayers().get(i);
 			if (curPlayer.getProperties().getPoints().isEmpty()) {
-				continue;
+				return;
 			}
-			System.out.println("[SERVER] adding new point of " + curPlayer.getOwnerConnectedPlayer().getConnectionID() + " : " + curPlayer.getProperties().getPoints());
 			PlayerPoint pp = curPlayer.getProperties().getPoints().lastElement();
 			if (pp != null) {
 				newPoints.put(curPlayer.getOwnerConnectedPlayer().getConnectionID(), pp);
 			}
 		}
+		
 		sendUDP(newPoints);
 	}
 

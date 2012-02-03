@@ -131,7 +131,7 @@ public class Player {
 		} else {
 			angle = (float) Math.atan((middleY - y) / (double) (middleX - x));
 		}
-		// properties.getPoints().add(new PlayerPoint(x, y, angle));
+		properties.getPoints().add(new PlayerPoint(x, y, angle));
 		PlayerPoint pp = new PlayerPoint(x, y, angle);
 		properties.getPoints().add(pp);
 		nextPoint = pp;
