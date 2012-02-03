@@ -32,7 +32,7 @@ import utils.ResourceManager;
  */
 public class Player {
 	private static Vector<Player> players = new Vector<Player>();
-//	private Connection connection;
+	// private Connection connection;
 	private PlayerProperties properties;
 	private PlayerPoint nextPoint;
 	private float angle = 70;
@@ -131,7 +131,7 @@ public class Player {
 		} else {
 			angle = (float) Math.atan((middleY - y) / (double) (middleX - x));
 		}
-		properties.getPoints().add(new PlayerPoint(x, y, angle));
+		// properties.getPoints().add(new PlayerPoint(x, y, angle));
 		PlayerPoint pp = new PlayerPoint(x, y, angle);
 		properties.getPoints().add(pp);
 		nextPoint = pp;
@@ -247,6 +247,11 @@ public class Player {
 	private void computeNextPoint() {
 		if (properties.getPoints().size() < 1) {
 			initPlayerPosition();
+		}
+		if (properties.getPoints().firstElement() == null) {
+			properties.getPoints().remove(0);
+			computeNextPoint();
+			return;
 		}
 		Point lastPoint = properties.getPoints().lastElement();
 		int deltaX = (int) Math.round(Math.cos(angle) * speed);
@@ -438,36 +443,36 @@ public class Player {
 		alive = false;
 	}
 
-//	/**
-//	 * Entfernt Player anhand der connectionID aus dem Vector.
-//	 * 
-//	 * @param connectionID
-//	 * @since 13.04.2011 von Adam Laszlo
-//	 */
-//	public static void remove(int connectionID) {
-//		for (int i = 0; i < players.size(); i++) {
-//			if (players.get(i).getConnection().getID() == connectionID) {
-//				players.remove(i);
-//				return;
-//			}
-//		}
-//	}
+	// /**
+	// * Entfernt Player anhand der connectionID aus dem Vector.
+	// *
+	// * @param connectionID
+	// * @since 13.04.2011 von Adam Laszlo
+	// */
+	// public static void remove(int connectionID) {
+	// for (int i = 0; i < players.size(); i++) {
+	// if (players.get(i).getConnection().getID() == connectionID) {
+	// players.remove(i);
+	// return;
+	// }
+	// }
+	// }
 
-//	/**
-//	 * Holt ein Player anhand der connectionID aus dem Vector.
-//	 * 
-//	 * @param connectionID
-//	 * @return Player
-//	 * @since 13.04.2011 von Adam Laszlo
-//	 */
-//	public static Player getPlayer(int connectionID) {
-//		for (int i = 0; i < players.size(); i++) {
-//			if (players.get(i).getConnection().getID() == connectionID) {
-//				return players.get(i);
-//			}
-//		}
-//		return null;
-//	}
+	// /**
+	// * Holt ein Player anhand der connectionID aus dem Vector.
+	// *
+	// * @param connectionID
+	// * @return Player
+	// * @since 13.04.2011 von Adam Laszlo
+	// */
+	// public static Player getPlayer(int connectionID) {
+	// for (int i = 0; i < players.size(); i++) {
+	// if (players.get(i).getConnection().getID() == connectionID) {
+	// return players.get(i);
+	// }
+	// }
+	// return null;
+	// }
 
 	// ------------------- Getter & Setter ---------------------
 
@@ -479,13 +484,13 @@ public class Player {
 		return angle;
 	}
 
-//	public Connection getConnection() {
-//		return connection;
-//	}
-//
-//	public void setConnection(Connection connection) {
-//		this.connection = connection;
-//	}
+	// public Connection getConnection() {
+	// return connection;
+	// }
+	//
+	// public void setConnection(Connection connection) {
+	// this.connection = connection;
+	// }
 
 	public float getSpeed() {
 		return speed;
@@ -506,7 +511,7 @@ public class Player {
 	public static Vector<Player> getPlayers() {
 		return players;
 	}
-	
+
 	public static void setPlayers(Vector<Player> players) {
 		Player.players = players;
 	}

@@ -42,6 +42,9 @@ public class GameState extends JCurveState {
 
 	private long loopDuration;
 
+	private int startDelay = 1500;
+	private int curStartDelay = 0;
+
 	public GameState(int id) {
 		super(id);
 	}
@@ -71,7 +74,7 @@ public class GameState extends JCurveState {
 				ConnectedPlayer connectedPlayer = JCurve.server.getConnectedPlayers().get(i);
 				Player player = new Player(connectedPlayer);
 				player.initPlayerPosition();
-				System.out.println("[SERVER] Created player: " + connectedPlayer.getProperties().getName());
+				// System.out.println("[SERVER] Created player: " + connectedPlayer.getProperties().getName());
 			}
 		} else {
 			System.out.println("[CLIENT] I'm just a client!");
@@ -198,7 +201,7 @@ public class GameState extends JCurveState {
 			if (curPlayer.getProperties().getPoints().isEmpty()) {
 				continue;
 			}
-			// System.out.println("[SERVER] adding new point of " + curPlayer.getOwnerConnectedPlayer().getConnectionID() + " : " + curPlayer.getProperties().getPoints());
+			System.out.println("[SERVER] adding new point of " + curPlayer.getOwnerConnectedPlayer().getConnectionID() + " : " + curPlayer.getProperties().getPoints());
 			PlayerPoint pp = curPlayer.getProperties().getPoints().lastElement();
 			if (pp != null) {
 				newPoints.put(curPlayer.getOwnerConnectedPlayer().getConnectionID(), pp);
@@ -267,23 +270,26 @@ public class GameState extends JCurveState {
 	 *            - ms seit letztem Update
 	 */
 	private void updateServerLogic(int delta) {
-		boolean allPlayersDead = true;
+		curStartDelay += delta;
+		if (curStartDelay >= startDelay) {
+			boolean allPlayersDead = true;
 
-		for (int i = 0; i < Player.getPlayers().size(); i++) {
-			Player curPlayer = Player.getPlayers().get(i);
-			curPlayer.update(delta);
-			if (!curPlayer.move()) {
-				curPlayer.die();
+			for (int i = 0; i < Player.getPlayers().size(); i++) {
+				Player curPlayer = Player.getPlayers().get(i);
+				curPlayer.update(delta);
+				if (!curPlayer.move()) {
+					curPlayer.die();
+				}
+
+				if (curPlayer.isAlive()) {
+					allPlayersDead = false;
+				}
 			}
 
-			if (curPlayer.isAlive()) {
-				allPlayersDead = false;
+			if (allPlayersDead) {
+				sendTCP(new GameCommand(NetworkConstants.GAME_END));
+				stopGame();
 			}
-		}
-
-		if (allPlayersDead) {
-			sendTCP(new GameCommand(NetworkConstants.GAME_END));
-			stopGame();
 		}
 	}
 
