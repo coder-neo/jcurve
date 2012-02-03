@@ -24,8 +24,6 @@ import shared.GameConstants;
 import shared.PlayerProperties;
 import utils.ResourceManager;
 
-import com.esotericsoftware.kryonet.Connection;
-
 /**
  * Die Klasse Player repräsentiert den Spieler bzw. seine "Schlange". Sie beinhaltet statisch alle Spieler, alle Connections, alle Punkte der jeweiligen Schlange, sowie alle relevanten Spielerinformationen.
  * 
@@ -34,7 +32,7 @@ import com.esotericsoftware.kryonet.Connection;
  */
 public class Player {
 	private static Vector<Player> players = new Vector<Player>();
-	private Connection connection;
+//	private Connection connection;
 	private PlayerProperties properties;
 	private PlayerPoint nextPoint;
 	private float angle = 70;
@@ -440,36 +438,36 @@ public class Player {
 		alive = false;
 	}
 
-	/**
-	 * Entfernt Player anhand der connectionID aus dem Vector.
-	 * 
-	 * @param connectionID
-	 * @since 13.04.2011 von Adam Laszlo
-	 */
-	public static void remove(int connectionID) {
-		for (int i = 0; i < players.size(); i++) {
-			if (players.get(i).getConnection().getID() == connectionID) {
-				players.remove(i);
-				return;
-			}
-		}
-	}
+//	/**
+//	 * Entfernt Player anhand der connectionID aus dem Vector.
+//	 * 
+//	 * @param connectionID
+//	 * @since 13.04.2011 von Adam Laszlo
+//	 */
+//	public static void remove(int connectionID) {
+//		for (int i = 0; i < players.size(); i++) {
+//			if (players.get(i).getConnection().getID() == connectionID) {
+//				players.remove(i);
+//				return;
+//			}
+//		}
+//	}
 
-	/**
-	 * Holt ein Player anhand der connectionID aus dem Vector.
-	 * 
-	 * @param connectionID
-	 * @return Player
-	 * @since 13.04.2011 von Adam Laszlo
-	 */
-	public static Player getPlayer(int connectionID) {
-		for (int i = 0; i < players.size(); i++) {
-			if (players.get(i).getConnection().getID() == connectionID) {
-				return players.get(i);
-			}
-		}
-		return null;
-	}
+//	/**
+//	 * Holt ein Player anhand der connectionID aus dem Vector.
+//	 * 
+//	 * @param connectionID
+//	 * @return Player
+//	 * @since 13.04.2011 von Adam Laszlo
+//	 */
+//	public static Player getPlayer(int connectionID) {
+//		for (int i = 0; i < players.size(); i++) {
+//			if (players.get(i).getConnection().getID() == connectionID) {
+//				return players.get(i);
+//			}
+//		}
+//		return null;
+//	}
 
 	// ------------------- Getter & Setter ---------------------
 
@@ -481,13 +479,13 @@ public class Player {
 		return angle;
 	}
 
-	public Connection getConnection() {
-		return connection;
-	}
-
-	public void setConnection(Connection connection) {
-		this.connection = connection;
-	}
+//	public Connection getConnection() {
+//		return connection;
+//	}
+//
+//	public void setConnection(Connection connection) {
+//		this.connection = connection;
+//	}
 
 	public float getSpeed() {
 		return speed;
