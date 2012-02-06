@@ -20,8 +20,8 @@ public class Player extends Entity {
 	}
 
 	private void initGraphics() {
-		SpriteSheet sheet = new SpriteSheet(ResourceManager.getImage("linkRunning03"), 45, 41);
-		running = new Animation(sheet, 100);
+		spriteSheet = new SpriteSheet(ResourceManager.getImage("linkRunning03"), 45, 41);
+		running = new Animation(spriteSheet, 100);
 		running.setAutoUpdate(false);
 
 		idle = ResourceManager.getImage("linkStanding03");
@@ -29,7 +29,18 @@ public class Player extends Entity {
 	}
 
 	@Override
+	public void onCollision(Entity otherEntity) {
+	}
+
+	@Override
 	public void update(int delta) {
+		super.update(delta);
+
+		if (!checkCollision()) {
+			state = State.FALLING;
+			y += speed;
+		}
+
 		if (AbstractGameState.getInput().isKeyDown(Input.KEY_RIGHT) || AbstractGameState.getInput().isKeyDown(Input.KEY_D)) {
 			state = State.MOVING;
 			direction = Direction.RIGHT;
@@ -43,20 +54,28 @@ public class Player extends Entity {
 		} else if (AbstractGameState.getInput().isKeyDown(Input.KEY_UP) || AbstractGameState.getInput().isKeyDown(Input.KEY_W)) {
 			state = State.JUMPING;
 			y -= speed / 2;
-			// jump
 		} else if (AbstractGameState.getInput().isKeyPressed(Input.KEY_SPACE)) {
 			state = State.ATTACKING;
-			// attack
 		} else if (AbstractGameState.getInput().isKeyDown(Input.KEY_LSHIFT)) {
 			state = State.BLOCKING;
 		} else {
 			state = State.IDLE;
+		}
+
+		if (checkCollision()) {
+			x = oldX;
+			y = oldY;
+		} else {
+			oldX = x;
+			oldY = y;
 		}
 	}
 
 	@Override
 	public void render(Graphics g) {
 		Image curImage = null;
+
+		g.draw(body);
 
 		if (state == State.MOVING) {
 			if (direction == Direction.RIGHT) {
