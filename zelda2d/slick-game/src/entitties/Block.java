@@ -1,7 +1,7 @@
 package entitties;
 
-import org.newdawn.slick.Color;
-import org.newdawn.slick.Graphics;
+import org.newdawn.fizzy.Rectangle;
+import org.newdawn.fizzy.StaticBody;
 
 public class Block extends Entity {
 
@@ -10,15 +10,14 @@ public class Block extends Entity {
 	}
 
 	@Override
-	public void render(Graphics g) {
-		Color oldColor = g.getColor();
-		g.setColor(Color.red);
-		g.draw(body);
-		g.setColor(oldColor);
+	public void onCollision(Entity otherEntity) {
 	}
 
 	@Override
-	public void onCollision(Entity otherEntity) {
+	public void initBody() {
+		body = new StaticBody<Object>(new Rectangle(width, height), x + width / 2, y + height / 2);
+		body.setFriction(1f);
+		body.setRestitution(0f);
 	}
 
 }

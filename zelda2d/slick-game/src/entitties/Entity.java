@@ -1,11 +1,14 @@
 package entitties;
 
+import main.GameConstants;
+
+import org.newdawn.fizzy.Body;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
-import org.newdawn.slick.geom.Rectangle;
 
 import states.AbstractGameState;
 
@@ -21,10 +24,11 @@ public abstract class Entity {
 
 	protected float speed = 2.0f;
 
-	protected float oldX, oldY;
 	protected float x, y, scale = 1.0f;
 	protected int width, height;
 	protected Color color;
+	
+	protected int health = 3;
 
 	protected boolean solid = true;
 
@@ -35,7 +39,7 @@ public abstract class Entity {
 	protected Direction direction = Direction.RIGHT;
 	protected State state = State.IDLE;
 
-	protected Rectangle body = new Rectangle(0, 0, 0, 0);
+	protected Body<Object> body;
 
 	public Entity(float x, float y) {
 		AbstractGameState.getEntities().add(this);
@@ -52,34 +56,55 @@ public abstract class Entity {
 	}
 
 	public void update(int delta) {
-		updateBody();
+		updateBounds();
+		if (body == null) {
+			initBody();
+			AbstractGameState.getWorld().add(body);
+		}
 	}
 
-	public abstract void render(Graphics g);
+	public abstract void initBody();
 
-	protected boolean checkCollision() {
-		for (int i = 0; i < AbstractGameState.getEntities().size(); i++) {
-			Entity entity = AbstractGameState.getEntities().get(i);
-			if (entity == this || !entity.isSolid() || !isSolid()) {
-				continue;
-			}
-			if (entity.getBody().intersects(getBody())) {
-				onCollision(entity);
-				entity.onCollision(this);
-				return true;
-			}
+	public void render(Graphics g) {
+		if (body == null) {
+			return;
 		}
 
-		return false;
+		if (GameConstants.DEBUG) {
+			try {
+				AbstractGameState.getRenderer().drawBody(g, body);
+			} catch (SlickException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
-	protected void updateBody() {
+	// protected boolean checkCollision() {
+	// for (int i = 0; i < AbstractGameState.getEntities().size(); i++) {
+	// Entity entity = AbstractGameState.getEntities().get(i);
+	// if (entity == this || !entity.isSolid() || !isSolid()) {
+	// continue;
+	// }
+	// if (entity.getBody().intersects(getBody())) {
+	// onCollision(entity);
+	// entity.onCollision(this);
+	// return true;
+	// }
+	// }
+	//
+	// return false;
+	// }
+
+	protected void updateBounds() {
 		if (spriteSheet != null) {
 			width = spriteSheet.getSprite(0, 0).getWidth();
 			height = spriteSheet.getSprite(0, 0).getHeight();
 		}
 
-		body.setBounds(x, y, width, height);
+		if (body != null) {
+			x = body.getX() - width / 2;
+			y = body.getY() - height / 2;
+		}
 	}
 
 	public abstract void onCollision(Entity otherEntity);
@@ -180,20 +205,20 @@ public abstract class Entity {
 		this.image = image;
 	}
 
-	public Rectangle getBody() {
-		return body;
-	}
-
-	public void setBody(Rectangle body) {
-		this.body = body;
-	}
-
 	public boolean isSolid() {
 		return solid;
 	}
 
 	public void setSolid(boolean solid) {
 		this.solid = solid;
+	}
+
+	public int getHealth() {
+		return health;
+	}
+
+	public void setHealth(int health) {
+		this.health = health;
 	}
 
 }

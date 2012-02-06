@@ -10,10 +10,12 @@ import org.newdawn.slick.tiled.TiledMap;
 
 import entitties.Block;
 import entitties.Player;
+import gui.LifeDisplay;
 
 public class GameState extends AbstractGameState {
 
-	private TiledMap map = null;
+	private TiledMap map;
+	private Player player;
 
 	public GameState(int stateID) {
 		super(stateID);
@@ -21,7 +23,9 @@ public class GameState extends AbstractGameState {
 
 	@Override
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
-		new Player(50, 300);
+		super.init(container, game);
+
+		player = new Player(100, 500);
 		map = new TiledMap("data/maps/test.tmx");
 		for (int x = 0; x < map.getWidth(); x++) {
 			for (int y = 0; y < map.getHeight(); y++) {
@@ -30,6 +34,9 @@ public class GameState extends AbstractGameState {
 				}
 			}
 		}
+
+		LifeDisplay lifeDisplay = new LifeDisplay(30, 60, 100, 10);
+		lifeDisplay.setAssociatedEntity(player);
 	}
 
 	@Override
@@ -44,14 +51,12 @@ public class GameState extends AbstractGameState {
 
 		g.translate(0, 100);
 
-		g.drawString("Entities: " + entities.size(), 10, 30);
-		g.drawString("State: " + entities.get(0).getState(), 10, 50);
-	}
+		renderGUI(g);
 
-	@Override
-	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
-		for (int i = 0; i < entities.size(); i++) {
-			entities.get(i).update(delta);
+		if (GameConstants.DEBUG) {
+			g.drawString("FPS: " + container.getFPS(), 10, 10);
+			g.drawString("Entities: " + entities.size(), 10, 30);
+			g.drawString("State: " + entities.get(0).getState(), 10, 50);
 		}
 	}
 

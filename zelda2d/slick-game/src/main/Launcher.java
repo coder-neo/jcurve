@@ -21,7 +21,7 @@ public class Launcher extends StateBasedGame {
 	public static void main(String[] args) throws SlickException {
 		AppGameContainer app = new AppGameContainer(new Launcher(GameConstants.NAME), 800, 600, false);
 		app.setTargetFrameRate(60);
-		app.setVSync(true);
+		app.setShowFPS(false);
 		app.start();
 	}
 
