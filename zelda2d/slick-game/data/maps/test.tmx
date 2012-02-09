@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="50" height="20" tilewidth="32" tileheight="32">
+<map version="1.0" orientation="orthogonal" width="50" height="30" tilewidth="32" tileheight="32">
  <tileset firstgid="1" name="sample" tilewidth="32" tileheight="32">
   <image source="tiles.png" trans="ffffff" width="1024" height="2016"/>
  </tileset>
- <layer name="Tile Layer 1" width="50" height="20">
+ <tileset firstgid="2017" name="tiles1" tilewidth="32" tileheight="32">
+  <image source="../../../../../../../Dokumente und Einstellungen/azubi/Desktop/generic_platformer_tiles.png" trans="2991b3" width="1024" height="768"/>
+ </tileset>
+ <layer name="air" width="50" height="30">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC+3SMQoAMAgDQP//nX6wu9BBiiByB1mzJBEAADDPSYGK/J9X2OFn7+6PVDovtdCkjaAPAAA=
+   H4sIAAAAAAAAC+3ROw2AUBQD0DsSBBBACD9dTwaiqQYWApzhpGubtq6qAb8y9FVnckxOMffPd7pjSe81ttjjeOkOfwEAAAB8wwUFgy/lcBcAAA==
+  </data>
+ </layer>
+ <layer name="foreground" width="50" height="30" opacity="0.98">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3RSQqAMAxG4eyaIzhcxOFguvDe1mHhfwFpQbCC74O3CYQUagYAAADgicnNZrV46Zd83xrMotrUrg51hvt57n4Jlf67Vo1qPT3P3X9bp9u9GtTo6XnuPgAAwB9dvbt/X3AXAAA=
+  </data>
+ </layer>
+ <layer name="water" width="50" height="30">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3PoQ0AIBRDQexfEEZhfSbAYCjhLnmyoq0BAADwo173GgebnVlv5UdWfmTlR1Z+ZOVHVjsL0M9+fXAXAAA=
+  </data>
+ </layer>
+ <layer name="background" width="50" height="30">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3OMQrAIAwFUDf1wt28pkdxK3QsBQfFIR3eg0A+/EBSAgCAOKNGf3DmKt/cyrx3qte9Wb3/uzu/+8hrPQAAiPIAOjcQQHAXAAA=
+  </data>
+ </layer>
+ <layer name="background2" width="50" height="30">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3PMQ6AIBBE0W25f4ccRMSDCHIPWqenoSFC8l8y3RZ/zQAAAIB5vDM7tOD+LumdaoqDXZfuknYv+Mejpqy1gbaim1erC/4BAAAA7O4DhsI9DnAXAAA=
   </data>
  </layer>
 </map>

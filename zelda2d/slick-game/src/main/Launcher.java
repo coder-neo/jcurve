@@ -19,10 +19,9 @@ public class Launcher extends StateBasedGame {
 	}
 
 	public static void main(String[] args) throws SlickException {
-		AppGameContainer app = new AppGameContainer(new Launcher(GameConstants.NAME), 800, 600, false);
+		AppGameContainer app = new AppGameContainer(new Launcher(GameConstants.NAME), GameConstants.SCREEN_WIDTH, GameConstants.SCREEN_HEIGHT, false);
 		app.setTargetFrameRate(60);
 		app.setShowFPS(false);
 		app.start();
 	}
-
 }

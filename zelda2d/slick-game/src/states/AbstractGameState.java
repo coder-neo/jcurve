@@ -47,7 +47,8 @@ public abstract class AbstractGameState extends BasicGameState {
 		world = new World(10f);
 		world.setIterations(30);
 		world.setBounds(container.getWidth(), container.getHeight());
-		camera = new Camera(container, null, container.getWidth() / 2, container.getHeight() - 100);
+		camera = new Camera();
+		camera.setYOffset(-100);
 	}
 
 	@Override
@@ -63,8 +64,8 @@ public abstract class AbstractGameState extends BasicGameState {
 			world.update(1.0f * delta / 100);
 		}
 
-		camera.setFollow(entities.get(0));
-		camera.update(container, delta);
+		camera.setEntity(entities.get(0));
+		camera.update(delta);
 
 		if (container.getInput().isKeyPressed(Input.KEY_F1)) {
 			GameConstants.DEBUG = !GameConstants.DEBUG;

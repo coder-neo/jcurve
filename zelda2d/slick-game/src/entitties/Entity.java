@@ -23,6 +23,7 @@ public abstract class Entity {
 	}
 
 	protected float speed = 2.0f;
+	protected float jumpSpeed = 9.0f;
 
 	protected float x, y, scale = 1.0f;
 	protected int width, height;
@@ -227,6 +228,14 @@ public abstract class Entity {
 
 	public void setBody(Body<Object> body) {
 		this.body = body;
+	}
+
+	public float getJumpSpeed() {
+		return jumpSpeed;
+	}
+
+	public void setJumpSpeed(float jumpSpeed) {
+		this.jumpSpeed = jumpSpeed;
 	}
 
 }

@@ -25,33 +25,33 @@ public class GameState extends AbstractGameState {
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
 		super.init(container, game);
 
-		player = new Player(100, 500);
+		player = new Player(100, 400);
 		map = new TiledMap("data/maps/test.tmx");
 		for (int x = 0; x < map.getWidth(); x++) {
 			for (int y = 0; y < map.getHeight(); y++) {
-				if (map.getTileId(x, y, 0) > 0) {
-					new Block(GameConstants.TILE_SIZE * x, GameConstants.TILE_SIZE * y + (GameConstants.TILE_SIZE / 2), GameConstants.TILE_SIZE, GameConstants.TILE_SIZE / 2);
+				int blockedLayer = map.getLayerIndex("foreground");
+				if (map.getTileId(x, y, blockedLayer) > 0) {
+					new Block(GameConstants.TILE_SIZE * x, GameConstants.TILE_SIZE * y, GameConstants.TILE_SIZE, GameConstants.TILE_SIZE);
 				}
 			}
 		}
 
-		LifeDisplay lifeDisplay = new LifeDisplay(30, 60, 100, 10);
-		lifeDisplay.setAssociatedEntity(player);
+		new LifeDisplay(30, 60, 100, 10).setAssociatedEntity(player);
 	}
 
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
 		super.render(container, game, g);
 
-		g.translate(-camera.cameraX, -camera.cameraY);
-		
+		g.translate(-camera.getX(), -camera.getY());
+
 		map.render(0, 0);
 
 		for (int i = 0; i < entities.size(); i++) {
 			entities.get(i).render(g);
 		}
 
-		g.translate(camera.cameraX, camera.cameraY);
+		g.translate(camera.getX(), camera.getY());
 
 		renderGUI(g);
 

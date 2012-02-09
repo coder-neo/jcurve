@@ -1,8 +1,5 @@
 package entitties;
 
-import main.GameConstants;
-
-import org.jbox2d.common.Vec2;
 import org.newdawn.fizzy.DynamicBody;
 import org.newdawn.fizzy.Rectangle;
 import org.newdawn.slick.Animation;
@@ -29,6 +26,9 @@ public class Player extends Entity {
 	private int jumpDelta = 500;
 	private int curJumpDelta = 0;
 
+	private int jumpDelay = 225;
+	private int curJumpDelay = 0;
+
 	private int idleTime = 0;
 	private int idleAnimationDelay = 10000;
 
@@ -38,7 +38,6 @@ public class Player extends Entity {
 	public Player(float x, float y) {
 		super(x, y);
 		initGraphics();
-		health = 12;
 	}
 
 	private void initGraphics() {
@@ -56,8 +55,9 @@ public class Player extends Entity {
 
 	@Override
 	public void initBody() {
-		speed = 12.0f;
-		body = new DynamicBody<Object>(new Rectangle(width, height), x, y);
+		health = 3;
+		speed = 5.0f;
+		body = new DynamicBody<Object>(new Rectangle(width / 2, height), x, y);
 		body.setFixedRotation(true);
 		body.setRestitution(0f);
 		body.setFriction(0f);
@@ -94,13 +94,11 @@ public class Player extends Entity {
 
 		state = State.IDLE;
 
-		if (AbstractGameState.getInput().isKeyDown(Input.KEY_LSHIFT)) {
-			state = State.BLOCKING;
-			if (!shieldSoundPlayed) {
-				ResourceManager.getSound("linkShield").play();
-				shieldSoundPlayed = true;
-			}
+		// DEBUG
+		if (AbstractGameState.getInput().isKeyPressed(Input.KEY_R)) {
+			body.setPosition(300, 300);
 		}
+		// DEBUG
 
 		if (AbstractGameState.getInput().isKeyDown(Input.KEY_RIGHT) || AbstractGameState.getInput().isKeyDown(Input.KEY_D)) {
 			state = State.MOVING;
@@ -116,19 +114,28 @@ public class Player extends Entity {
 		}
 
 		if (AbstractGameState.getInput().isKeyDown(Input.KEY_UP) || AbstractGameState.getInput().isKeyDown(Input.KEY_W)) {
-			if (body.getYVelocity() <= 0f) {
+			if (body.getYVelocity() <= 0f && curJumpDelay == 0) {
 				curJumpDelta += delta;
 				if (curJumpDelta >= jumpDelta) {
 					curJumpDelta = 0;
-					state = State.FALLING;
+					setFalling();
 					return;
 				}
 				state = State.JUMPING;
-				ySpeed = -15.0f;
+				ySpeed = -jumpSpeed;
 				if (!jumpSoundPlayed) {
 					ResourceManager.getSound("linkJump0" + StaticUtils.getRandomIntegerBetween(1, 2)).play();
 					jumpSoundPlayed = true;
 				}
+			}
+		}
+
+		if (AbstractGameState.getInput().isKeyDown(Input.KEY_LSHIFT)) {
+			xSpeed = 0;
+			state = State.BLOCKING;
+			if (!shieldSoundPlayed) {
+				ResourceManager.getSound("linkShield").play();
+				shieldSoundPlayed = true;
 			}
 		}
 
@@ -138,10 +145,10 @@ public class Player extends Entity {
 			ResourceManager.getSound("linkAttack0" + StaticUtils.getRandomIntegerBetween(1, 4)).play();
 		}
 
-		if (!body.isTouchingAnything()) {
-			state = State.FALLING;
+		if (!body.isTouchingAnything() && body.getYVelocity() > 0f) {
+			setFalling();
 			if (body.getYVelocity() >= 0) {
-				ySpeed = 15.0f;
+				ySpeed = jumpSpeed / 2;
 			}
 		}
 
@@ -150,19 +157,31 @@ public class Player extends Entity {
 			if (idleTime > idleAnimationDelay) {
 				sleeping.update(delta);
 			}
-			shieldSoundPlayed = false;
-			jumpSoundPlayed = false;
-			curJumpDelta = 0;
+			tick(delta);
 		} else if (state == State.MOVING) {
 			idleTime = 0;
 			sleeping.restart();
-			jumpSoundPlayed = false;
-			curJumpDelta = 0;
+			tick(delta);
 		} else {
 			idleTime = 0;
 		}
 
 		body.setVelocity(xSpeed, ySpeed);
+	}
+
+	private void setFalling() {
+		state = State.FALLING;
+		curJumpDelay = jumpDelay;
+	}
+
+	private void tick(int delta) {
+		curJumpDelta = 0;
+		curJumpDelay -= delta;
+		if (curJumpDelay <= 0) {
+			curJumpDelay = 0;
+		}
+		shieldSoundPlayed = false;
+		jumpSoundPlayed = false;
 	}
 
 	@Override

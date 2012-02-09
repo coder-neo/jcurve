@@ -1,127 +1,73 @@
 package main;
 
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.geom.Rectangle;
-import org.newdawn.slick.geom.Vector2f;
-
 import entitties.Entity;
 
 public class Camera {
 
-	private GameContainer container;
+	private Entity entity;
 
-	public float cameraX;
-	public float cameraY;
-	private float renderWidth;
-	private float renderHeight;
-	private Vector2f maxSpeed = null;
-	private int horBorderPixel = 0;
-	private int vertBorderPixel = 0;
-	private Rectangle visibleRect = null;
-	private Rectangle moveRect = null;
+	private float x, y;
+	private float xOffset, yOffset;
 
-	private Entity follow;
+	public void update(int delta) {
+		if (entity != null) {
+			if (entity.getBody() != null) {
+				x = xOffset + (entity.getBody().getX() - GameConstants.SCREEN_WIDTH / 2);
+				y = yOffset + (entity.getBody().getY() - GameConstants.SCREEN_HEIGHT / 2);
 
-	public Camera(GameContainer container, Entity toFollow, int width, int height) {
-		this(container, toFollow, width, height, -1, -1, null);
-	}
+				if (x < 0) {
+					x = 0;
+				} else if (x > GameConstants.SCREEN_WIDTH) {
+					x = GameConstants.SCREEN_WIDTH;
+				}
 
-	public Camera(GameContainer container, Entity toFollow, int width, int height, int horBorderPixel, int vertBorderPixel, Vector2f maxSpeed) {
-		this.container = container;
-		this.cameraX = 0;
-		this.cameraY = 0;
-		this.renderWidth = width;
-		this.renderHeight = height;
-		this.follow = toFollow;
-		this.horBorderPixel = horBorderPixel;
-		this.vertBorderPixel = vertBorderPixel;
-		this.maxSpeed = maxSpeed;
-		if (toFollow != null) {
-			// on startup position camera that toFollow is in the center of the
-			// screen
-			this.cameraX = follow.getX() - (this.renderWidth / 2);
-			this.cameraY = follow.getY() - (this.renderHeight / 2);
-		}
-		this.visibleRect = new Rectangle(cameraX - horBorderPixel, cameraY - vertBorderPixel, renderWidth + horBorderPixel, renderHeight + vertBorderPixel);
-		this.moveRect = new Rectangle(cameraX - horBorderPixel, cameraY - vertBorderPixel, renderWidth + horBorderPixel, renderHeight + vertBorderPixel);
-		setCamera();
-	}
-
-	public void update(GameContainer container, int delta) throws SlickException {
-		setCamera();
-	}
-
-	private void setCamera() {
-		// position camera so that follow is on the center of the screen
-
-		if (follow != null && !moveRect.contains(follow.getX() + follow.getWidth() / 2, follow.getY() + follow.getHeight() / 2)) {
-			float targetCX = follow.getX() - (this.renderWidth / 2);
-			float targetCY = follow.getY() - (this.renderHeight / 2);
-			// now smoothly move camera on position cameraX, cameraY to position
-			// targetCX, targetCY, using
-			// maxSpeed
-			if (maxSpeed != null) {
-				if (Math.abs(targetCX - cameraX) > maxSpeed.x) {
-					if (targetCX > cameraX)
-						cameraX += maxSpeed.x * 2;
-					else
-						cameraX -= maxSpeed.x * 2;
-				} else
-					cameraX = targetCX;
-				if (Math.abs(targetCY - cameraY) > maxSpeed.y) {
-					if (targetCY > cameraY)
-						cameraY += maxSpeed.y * 2;
-					else
-						cameraY -= maxSpeed.y * 2;
-				} else
-					cameraY = targetCY;
-			} else {
-				// move camera directly to new position
-				cameraX = targetCX;
-				cameraY = targetCY;
+				if (y < 0) {
+					y = 0;
+				} else if (y > GameConstants.SCREEN_HEIGHT) {
+					y = GameConstants.SCREEN_HEIGHT;
+				}
 			}
-			// recalculate worldX and worldY based on translateX and translateY
 		}
-		// Log.debug("setCamera(): cameraX = " + cameraX + ", cameraY = " +
-		// cameraY + ", follow.x = " + follow.x + ", follow.y = " + follow.y);
-		// do some border checking. we want to stay inside the world with our
-		// container
-		if (cameraX < 0)
-			cameraX = 0;
-		if (cameraX + renderWidth > container.getWidth())
-			cameraX = container.getWidth() - renderWidth + 1;
-		if (cameraY < 0)
-			cameraY = 0;
-		if (cameraY + renderHeight > container.getHeight())
-			cameraY = container.getHeight() - renderHeight + 1;
-		// Log.debug("setCamera2(): cameraX = " + cameraX + ", cameraY = " +
-		// cameraY + ", follow.x = " + follow.x + ", follow.y = " + follow.y);
-		// also calculate rendering rect to improve speed in contains() method
-		// later on for rendering
-		// visibleRect.setBounds(cameraX - horBorderPixel, cameraY - vertBorderPixel, renderWidth + horBorderPixel, renderHeight + vertBorderPixel);
-		// moveRect.setBounds(cameraX + horBorderPixel / 2 - follow.getBody().getXVelocity(), cameraY + vertBorderPixel / 2, renderWidth - horBorderPixel + follow.getBody().getXVelocity(), renderHeight - vertBorderPixel);
 	}
 
-	public boolean contains(Entity e) {
-		Rectangle entity = new Rectangle(e.getX(), e.getY(), e.getWidth(), e.getHeight());
-		return visibleRect.intersects(entity);
+	public Entity getEntity() {
+		return entity;
 	}
 
-	public Entity getFollow() {
-		return follow;
+	public void setEntity(Entity entity) {
+		this.entity = entity;
 	}
 
-	public void setFollow(Entity follow) {
-		this.follow = follow;
+	public float getX() {
+		return x;
 	}
 
-	public Rectangle getVisibleRect() {
-		return visibleRect;
+	public void setX(float x) {
+		this.x = x;
 	}
 
-	public Rectangle getMoveRect() {
-		return moveRect;
+	public float getY() {
+		return y;
+	}
+
+	public void setY(float y) {
+		this.y = y;
+	}
+
+	public float getXOffset() {
+		return xOffset;
+	}
+
+	public void setXOffset(float xOffset) {
+		this.xOffset = xOffset;
+	}
+
+	public float getYOffset() {
+		return yOffset;
+	}
+
+	public void setYOffset(float yOffset) {
+		this.yOffset = yOffset;
 	}
 
 }
