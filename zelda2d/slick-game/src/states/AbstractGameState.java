@@ -12,9 +12,11 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.tiled.TiledMap;
 
 import physics.Renderer;
 import entitties.Entity;
+import entitties.Player;
 import gui.BasicElement;
 
 public abstract class AbstractGameState extends BasicGameState {
@@ -25,9 +27,12 @@ public abstract class AbstractGameState extends BasicGameState {
 	private static Input input;
 	private static StateBasedGame game;
 
+	protected static Player player;
+
 	protected static World world;
 	protected static Renderer renderer;
 	protected static Camera camera;
+	protected static TiledMap map;
 
 	protected static ArrayList<Entity> entities = new ArrayList<Entity>();
 	protected static ArrayList<BasicElement> elements = new ArrayList<BasicElement>();
@@ -82,7 +87,35 @@ public abstract class AbstractGameState extends BasicGameState {
 
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
+		g.translate(-camera.getX(), -camera.getY());
 
+		int playerLayerIndex = map.getLayerIndex(GameConstants.LAYER_PLAYER);
+
+		for (int i = 0; i < playerLayerIndex; i++) {
+			map.render(0, 0, i);
+		}
+
+		renderEntities(g);
+
+		for (int i = playerLayerIndex; i < map.getLayerCount(); i++) {
+			map.render(0, 0, i);
+		}
+
+		g.translate(camera.getX(), camera.getY());
+
+		renderGUI(g);
+
+		if (GameConstants.DEBUG) {
+			g.drawString("FPS: " + container.getFPS(), 10, 10);
+			g.drawString("Entities: " + entities.size(), 10, 30);
+			g.drawString("State: " + entities.get(0).getState(), 10, 50);
+		}
+	}
+
+	protected void renderEntities(Graphics g) {
+		for (int i = 0; i < entities.size(); i++) {
+			entities.get(i).render(g);
+		}
 	}
 
 	protected void renderGUI(Graphics g) {

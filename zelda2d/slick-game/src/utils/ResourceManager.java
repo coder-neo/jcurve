@@ -44,6 +44,8 @@ public class ResourceManager {
 
 		addSound("linkJump01", "data/sfx/link/jump01.wav");
 		addSound("linkJump02", "data/sfx/link/jump02.wav");
+		
+		addSound("typeLetter", "data/sfx/gui/letter.wav");
 
 		// fonts
 		addFont("triforce20", "data/fonts/triforce.ttf", 20);

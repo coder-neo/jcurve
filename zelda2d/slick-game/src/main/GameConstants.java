@@ -3,6 +3,9 @@ package main;
 public class GameConstants {
 
 	public static final String NAME = "Untitled Slick 2D Game";
+	
+	public static final String LAYER_FOREGROUND = "foreground";
+	public static final String LAYER_PLAYER = "player";
 
 	public static final int STATE_GAME = 10;
 

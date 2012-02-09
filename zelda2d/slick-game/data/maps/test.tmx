@@ -4,31 +4,36 @@
   <image source="tiles.png" trans="ffffff" width="1024" height="2016"/>
  </tileset>
  <tileset firstgid="2017" name="tiles1" tilewidth="32" tileheight="32">
-  <image source="../../../../../../../Dokumente und Einstellungen/azubi/Desktop/generic_platformer_tiles.png" trans="2991b3" width="1024" height="768"/>
+  <image source="generic_platformer_tiles.png" trans="2991b3" width="1024" height="768"/>
  </tileset>
  <layer name="air" width="50" height="30">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC+3ROw2AUBQD0DsSBBBACD9dTwaiqQYWApzhpGubtq6qAb8y9FVnckxOMffPd7pjSe81ttjjeOkOfwEAAAB8wwUFgy/lcBcAAA==
+   H4sIAAAAAAAAC+3RwQ0AEBREQTeiBHUqWSEqcEHyI+Yw97fZXlLqwDdGXotuO+1/cc/O3lbju27/Ft0HAAAAcMMEToXddHAXAAA=
+  </data>
+ </layer>
+ <layer name="background2" width="50" height="30">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3TsQ2AIBQE0N8pQ7umboI0JE4gBBtCfK+95oq7CAAAvjj22Q3Wc6aIK81uMSZv71ltZPzD3dhz6Ww9L/YFAAD6HiQpovxwFwAA
+  </data>
+ </layer>
+ <layer name="background" width="50" height="30">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3SzQmAMAyG4RzNhk4izqIO4t8gVh3GHAuFoqAlwvtccgnkC4kIAAAAnmiqcrNGFZm03LyvbLZD+OketZPcw80cnfX1mva3TvZYMznif5+tLpr2e7nHmckR//tu9dC038s9AAAA8K4L3TRGB3AXAAA=
+  </data>
+ </layer>
+ <layer name="player" width="50" height="30">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3BMQEAAADCoPVPbQhfoAAAAAAAgNcAxA3c/HAXAAA=
   </data>
  </layer>
  <layer name="foreground" width="50" height="30" opacity="0.98">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC+3RSQqAMAxG4eyaIzhcxOFguvDe1mHhfwFpQbCC74O3CYQUagYAAADgicnNZrV46Zd83xrMotrUrg51hvt57n4Jlf67Vo1qPT3P3X9bp9u9GtTo6XnuPgAAwB9dvbt/X3AXAAA=
+   H4sIAAAAAAAAC+3RwQ2AIBAF0b1Bxyrah6VYiqUo6MFfgiQEDM5L5gIH2KwZAAAAcq2+9Q/K2JjjlcOZnSqqpC51u/LvsI9v+cMcg+5GNamgZrX4/PMa9k72AQAA+vYAmmYvuHAXAAA=
   </data>
  </layer>
  <layer name="water" width="50" height="30">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAAC+3PoQ0AIBRDQexfEEZhfSbAYCjhLnmyoq0BAADwo173GgebnVlv5UdWfmTlR1Z+ZOVHVjsL0M9+fXAXAAA=
-  </data>
- </layer>
- <layer name="background" width="50" height="30">
-  <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC+3OMQrAIAwFUDf1wt28pkdxK3QsBQfFIR3eg0A+/EBSAgCAOKNGf3DmKt/cyrx3qte9Wb3/uzu/+8hrPQAAiPIAOjcQQHAXAAA=
-  </data>
- </layer>
- <layer name="background2" width="50" height="30">
-  <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC+3PMQ6AIBBE0W25f4ccRMSDCHIPWqenoSFC8l8y3RZ/zQAAAIB5vDM7tOD+LumdaoqDXZfuknYv+Mejpqy1gbaim1erC/4BAAAA7O4DhsI9DnAXAAA=
   </data>
  </layer>
 </map>
