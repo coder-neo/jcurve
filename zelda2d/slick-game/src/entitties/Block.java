@@ -16,7 +16,7 @@ public class Block extends Entity {
 	@Override
 	public void initBody() {
 		body = new StaticBody<Object>(new Rectangle(width, height), x + width / 2, y + height / 2);
-		body.setFriction(1f);
+		body.setFriction(0f);
 		body.setRestitution(0f);
 	}
 

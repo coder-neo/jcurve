@@ -2,6 +2,7 @@ package states;
 
 import java.util.ArrayList;
 
+import main.Camera;
 import main.GameConstants;
 
 import org.newdawn.fizzy.World;
@@ -26,6 +27,7 @@ public abstract class AbstractGameState extends BasicGameState {
 
 	protected static World world;
 	protected static Renderer renderer;
+	protected static Camera camera;
 
 	protected static ArrayList<Entity> entities = new ArrayList<Entity>();
 	protected static ArrayList<BasicElement> elements = new ArrayList<BasicElement>();
@@ -45,6 +47,7 @@ public abstract class AbstractGameState extends BasicGameState {
 		world = new World(10f);
 		world.setIterations(30);
 		world.setBounds(container.getWidth(), container.getHeight());
+		camera = new Camera(container, null, container.getWidth() / 2, container.getHeight() - 100);
 	}
 
 	@Override
@@ -57,20 +60,28 @@ public abstract class AbstractGameState extends BasicGameState {
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
 		for (int z = 0; z < GameConstants.GAME_SPEED; z++) {
-			world.update(1.0f * delta / 30);
-
-			if (container.getInput().isKeyPressed(Input.KEY_F1)) {
-				GameConstants.DEBUG = !GameConstants.DEBUG;
-			}
-
-			for (int i = 0; i < entities.size(); i++) {
-				entities.get(i).update(delta);
-			}
-
-			for (int i = 0; i < elements.size(); i++) {
-				elements.get(i).update(delta);
-			}
+			world.update(1.0f * delta / 100);
 		}
+
+		camera.setFollow(entities.get(0));
+		camera.update(container, delta);
+
+		if (container.getInput().isKeyPressed(Input.KEY_F1)) {
+			GameConstants.DEBUG = !GameConstants.DEBUG;
+		}
+
+		for (int i = 0; i < entities.size(); i++) {
+			entities.get(i).update(delta);
+		}
+
+		for (int i = 0; i < elements.size(); i++) {
+			elements.get(i).update(delta);
+		}
+	}
+
+	@Override
+	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
+
 	}
 
 	protected void renderGUI(Graphics g) {

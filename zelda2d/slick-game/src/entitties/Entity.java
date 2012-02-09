@@ -221,4 +221,12 @@ public abstract class Entity {
 		this.health = health;
 	}
 
+	public Body<Object> getBody() {
+		return body;
+	}
+
+	public void setBody(Body<Object> body) {
+		this.body = body;
+	}
+
 }

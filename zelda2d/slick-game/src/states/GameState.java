@@ -41,15 +41,17 @@ public class GameState extends AbstractGameState {
 
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
-		g.translate(0, -100);
+		super.render(container, game, g);
 
+		g.translate(-camera.cameraX, -camera.cameraY);
+		
 		map.render(0, 0);
 
 		for (int i = 0; i < entities.size(); i++) {
 			entities.get(i).render(g);
 		}
 
-		g.translate(0, 100);
+		g.translate(camera.cameraX, camera.cameraY);
 
 		renderGUI(g);
 

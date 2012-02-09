@@ -7,7 +7,7 @@ public class GameConstants {
 	public static final int STATE_GAME = 10;
 
 	public static final int TILE_SIZE = 32;
-	public static final int GAME_SPEED = 1;
+	public static final int GAME_SPEED = 3;
 
 	public static boolean DEBUG = false;
 

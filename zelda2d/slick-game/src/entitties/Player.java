@@ -1,5 +1,8 @@
 package entitties;
 
+import main.GameConstants;
+
+import org.jbox2d.common.Vec2;
 import org.newdawn.fizzy.DynamicBody;
 import org.newdawn.fizzy.Rectangle;
 import org.newdawn.slick.Animation;
@@ -154,6 +157,7 @@ public class Player extends Entity {
 			idleTime = 0;
 			sleeping.restart();
 			jumpSoundPlayed = false;
+			curJumpDelta = 0;
 		} else {
 			idleTime = 0;
 		}
