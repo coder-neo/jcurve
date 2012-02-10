@@ -6,17 +6,9 @@ import org.newdawn.fizzy.CompoundShape;
 import org.newdawn.fizzy.Rectangle;
 import org.newdawn.fizzy.Shape;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
-import utils.ResourceManager;
-
 public class Renderer {
-	private Image img;
-
-	public Renderer() throws SlickException { // throws SlickException
-		img = ResourceManager.getImage("linkStanding01");
-	}
 
 	/**
 	 * Draw a body to the canvas
@@ -114,7 +106,7 @@ public class Renderer {
 
 		// hacky way of doing things
 		g.rotate(body.getX(), body.getY(), (float) Math.toDegrees(body.getRotation())); // JBOX USES RADIANS!!!
-//		g.drawImage(img, body.getX() - (shape.getWidth() / 2), body.getY() - (shape.getHeight() / 2));
+		// g.drawImage(img, body.getX() - (shape.getWidth() / 2), body.getY() - (shape.getHeight() / 2));
 		g.drawRect(body.getX() - (shape.getWidth() / 2), body.getY() - (shape.getHeight() / 2), shape.getWidth(), shape.getHeight());
 		g.rotate(body.getX(), body.getY(), -(float) Math.toDegrees(body.getRotation()));
 		/*

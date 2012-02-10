@@ -1,4 +1,4 @@
-package gui;
+package gui.base;
 
 public interface ElementActionListener {
 

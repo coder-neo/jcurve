@@ -8,6 +8,8 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SpriteSheet;
 
+import entitties.base.Entity;
+
 import states.AbstractGameState;
 import utils.ResourceManager;
 import utils.StaticUtils;
@@ -15,7 +17,7 @@ import utils.StaticUtils;
 public class Player extends Entity {
 
 	private Animation running, sleeping;
-	private Image idle, block, attack, jump;
+	private Image idle, block, attack, jump, falling;
 
 	private int attackDelta = 150;
 	private int curAttackDelta = 0;
@@ -51,6 +53,7 @@ public class Player extends Entity {
 		idle = ResourceManager.getImage("linkStanding03");
 		block = ResourceManager.getImage("linkBlocking");
 		jump = ResourceManager.getImage("linkJumping");
+		falling = ResourceManager.getImage("linkFalling");
 	}
 
 	@Override
@@ -213,7 +216,7 @@ public class Player extends Entity {
 		} else if (state == State.JUMPING) {
 			curImage = jump;
 		} else if (state == State.FALLING) {
-			curImage = jump;
+			curImage = falling;
 		}
 
 		if (curImage != null) {

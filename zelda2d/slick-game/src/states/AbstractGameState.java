@@ -15,9 +15,9 @@ import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.tiled.TiledMap;
 
 import physics.Renderer;
-import entitties.Entity;
 import entitties.Player;
-import gui.BasicElement;
+import entitties.base.Entity;
+import gui.base.BasicElement;
 
 public abstract class AbstractGameState extends BasicGameState {
 

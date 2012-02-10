@@ -1,6 +1,6 @@
 package main;
 
-import entitties.Entity;
+import entitties.base.Entity;
 
 public class Camera {
 
@@ -10,22 +10,20 @@ public class Camera {
 	private float xOffset, yOffset;
 
 	public void update(int delta) {
-		if (entity != null) {
-			if (entity.getBody() != null) {
-				x = xOffset + (entity.getBody().getX() - GameConstants.SCREEN_WIDTH / 2);
-				y = yOffset + (entity.getBody().getY() - GameConstants.SCREEN_HEIGHT / 2);
+		if (entity != null && entity.getBody() != null) {
+			x = xOffset + (entity.getBody().getX() - GameConstants.SCREEN_WIDTH / 2);
+			y = yOffset + (entity.getBody().getY() - GameConstants.SCREEN_HEIGHT / 2);
 
-				if (x < 0) {
-					x = 0;
-				} else if (x > GameConstants.SCREEN_WIDTH) {
-					x = GameConstants.SCREEN_WIDTH;
-				}
+			if (x < 0) {
+				x = 0;
+			} else if (x > GameConstants.SCREEN_WIDTH) {
+				x = GameConstants.SCREEN_WIDTH;
+			}
 
-				if (y < 0) {
-					y = 0;
-				} else if (y > GameConstants.SCREEN_HEIGHT) {
-					y = GameConstants.SCREEN_HEIGHT;
-				}
+			if (y < 0) {
+				y = 0;
+			} else if (y > GameConstants.SCREEN_HEIGHT) {
+				y = GameConstants.SCREEN_HEIGHT;
 			}
 		}
 	}

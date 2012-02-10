@@ -1,5 +1,7 @@
 package gui;
 
+import gui.base.BasicElement;
+
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SpriteSheet;
 

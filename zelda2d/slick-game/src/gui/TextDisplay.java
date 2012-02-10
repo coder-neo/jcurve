@@ -1,5 +1,6 @@
 package gui;
 
+import gui.base.BasicElement;
 import main.Writer;
 
 import org.newdawn.slick.Color;

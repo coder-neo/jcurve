@@ -1,4 +1,4 @@
-package entitties;
+package entitties.base;
 
 import main.GameConstants;
 

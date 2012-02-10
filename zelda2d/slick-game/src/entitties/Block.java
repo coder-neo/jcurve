@@ -3,6 +3,8 @@ package entitties;
 import org.newdawn.fizzy.Rectangle;
 import org.newdawn.fizzy.StaticBody;
 
+import entitties.base.Entity;
+
 public class Block extends Entity {
 
 	public Block(float x, float y, int width, int height) {

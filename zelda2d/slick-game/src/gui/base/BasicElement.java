@@ -1,4 +1,4 @@
-package gui;
+package gui.base;
 
 import java.util.ArrayList;
 
@@ -8,7 +8,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
 
 import states.AbstractGameState;
-import entitties.Entity;
+import entitties.base.Entity;
 
 public abstract class BasicElement {
 

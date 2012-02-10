@@ -1,6 +1,6 @@
 package main;
 
-import gui.BasicElement;
+import gui.base.BasicElement;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Font;

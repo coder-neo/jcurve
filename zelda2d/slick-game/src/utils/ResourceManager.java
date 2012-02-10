@@ -26,6 +26,7 @@ public class ResourceManager {
 
 		addImage("linkBlocking", "data/sprites/link/blocking.png");
 		addImage("linkJumping", "data/sprites/link/jump.png");
+		addImage("linkFalling", "data/sprites/link/falling.png");
 		addImage("linkSleeping", "data/sprites/link/sleeping.png");
 
 		addImage("linkAttacking01", "data/sprites/link/attack01.png");
